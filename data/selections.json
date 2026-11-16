@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "items": {
     "bd340631d488": {
-      "status": "approved",
+      "status": "skipped",
       "playlistKey": "shows",
       "window": "week",
-      "windowStart": "2026-11-16T14:32:13.468Z",
-      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "windowStart": null,
+      "windowEnd": null,
       "replacePrevious": false,
       "uploadNow": false,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-16T14:32:13.468Z",
+      "updatedAt": "2026-11-16T15:02:53.240Z",
       "retryAt": null
     },
     "3d823f5d4bec": {
