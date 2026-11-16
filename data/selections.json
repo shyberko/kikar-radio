@@ -91,6 +91,19 @@
       "ruleId": null,
       "updatedAt": "2026-11-16T15:03:38.542Z",
       "retryAt": null
+    },
+    "6afe261aa218": {
+      "status": "approved",
+      "playlistKey": "music",
+      "window": "month",
+      "windowStart": "2026-11-16T15:17:23.605Z",
+      "windowEnd": "2026-11-30T21:59:59.000Z",
+      "replacePrevious": false,
+      "uploadNow": true,
+      "source": "manual",
+      "ruleId": null,
+      "updatedAt": "2026-11-16T15:17:23.605Z",
+      "retryAt": null
     }
   }
 }
