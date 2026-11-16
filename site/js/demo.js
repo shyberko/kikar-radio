@@ -37,7 +37,7 @@ export function demoBundle(now = new Date()) {
           state: "failed",
           errorCode: "download",
           errorMessage: "לא הצלחנו להוריד את הקובץ מהמקור.",
-          attempts: 1,
+          attempts: 3,
           failedAt: iso(10),
           title: items[3].title,
         },
@@ -81,7 +81,7 @@ export function demoBundle(now = new Date()) {
         bulletin: { id: 6, name: "כיכר אוטו – מבזק שעתי" },
       },
     },
-    rules: { schemaVersion: 1, seriesMap: { "ayom-bakikar": { playlistKey: "shows", window: "week", replacePrevious: true } }, rules: [] },
+    rules: { schemaVersion: 1, seriesMap: {}, rules: [] },
     ads: { schemaVersion: 1, campaigns: [], jingles: { everySongs: 4, enabled: true, playlistId: null, files: [] }, sweepers: { everySongs: 3, enabled: true, playlistId: null, files: [] } },
     np: {
       is_online: true,

@@ -13,7 +13,10 @@ import {
   inboxRangeStart,
   formatDayMonth,
   defaultPlaylistKey,
+  defaultWindow,
   cleanSeriesName,
+  bulletinWatchPlan,
+  hePlural,
 } from "../site/js/pure.js";
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage } from "../site/js/policy.js";
 
@@ -141,5 +144,21 @@ assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlis
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "briefs" } }), "briefs");
 assert.equal(cleanSeriesName("חדשות\u200dחרדי", "haredi"), "חדשות חרדי");
 assert.equal(cleanSeriesName("VOD", "vod"), "");
+assert.equal(defaultWindow({ feed: "vod", seriesSlug: "ayom-bakikar", seriesName: "היום בכיכר" }, {}), "next");
+assert.equal(defaultWindow({ feed: "vod", seriesSlug: "davar-rishon", seriesName: "דבר ראשון" }, {}), "next");
+assert.equal(defaultWindow({ feed: "vod", seriesSlug: "haredim-news", seriesName: "חרדים" }, {}), "next");
+assert.equal(defaultWindow({ feed: "vod", seriesSlug: "news-interviews", seriesName: "ראיונות" }, {}), "next");
+assert.equal(defaultWindow({ feed: "music", seriesSlug: "singles", seriesName: "סינגלים" }, {}), "week");
+assert.equal(defaultWindow({ feed: "vod", seriesSlug: "ayom-bakikar" }, { "ayom-bakikar": { window: "today" } }), "today");
+assert.equal(windowEnd("next", monday), null);
+assert.equal(bulletinWatchPlan({ minute: 50, second: 0 }).phase, "sleep-until-hour");
+assert.equal(bulletinWatchPlan({ minute: 50, second: 10 }).waitMs, (10 * 60 - 10) * 1000);
+assert.equal(bulletinWatchPlan({ minute: 3, second: 0 }).phase, "poll");
+assert.equal(bulletinWatchPlan({ minute: 0, second: 0 }).phase, "poll");
+assert.equal(bulletinWatchPlan({ minute: 20, second: 0 }).phase, "poll");
+assert.equal(bulletinWatchPlan({ minute: 21, second: 0 }).phase, "once");
+assert.equal(hePlural(1, "פעולה אחת", "שתי פעולות", "# פעולות"), "פעולה אחת");
+assert.equal(hePlural(2, "פעולה אחת", "שתי פעולות", "# פעולות"), "שתי פעולות");
+assert.equal(hePlural(5, "פעולה אחת", "שתי פעולות", "# פעולות"), "5 פעולות");
 
 console.log("self-check ok");

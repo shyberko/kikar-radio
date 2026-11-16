@@ -174,8 +174,46 @@ export function windowEnd(kind, fromDate, customEnd) {
     const last = new Date(Date.UTC(p.year, p.month, 0));
     return jerusalemToUtc(last.getUTCFullYear(), last.getUTCMonth() + 1, last.getUTCDate(), 23, 59, 59);
   }
+  if (kind === "next") return null;
   if (kind === "custom" && customEnd) return endOfJerusalemDay(new Date(customEnd));
   return endOfJerusalemDay(from);
+}
+
+const DAILY_NEWS_SLUGS = new Set(["ayom-bakikar", "davar-rishon", "haredim-news", "news-interviews"]);
+
+/** Daily news shows stay on air until the next episode of the same series replaces them. */
+export function isDailyNewsSeries(item) {
+  const slug = String(item?.seriesSlug || "");
+  const name = String(item?.seriesName || "");
+  if (DAILY_NEWS_SLUGS.has(slug)) return true;
+  if (/היום בכיכר|דבר ראשון/.test(name)) return true;
+  if (item?.feed === "music") return false;
+  return /(^|-)news($|-)|interview/.test(slug);
+}
+
+export function defaultWindow(item, seriesMap) {
+  const mapped = seriesMap?.[item?.seriesSlug]?.window;
+  if (mapped) return mapped;
+  if (isDailyNewsSeries(item)) return "next";
+  return "week";
+}
+
+export function hePlural(n, one, two, many) {
+  const cat = new Intl.PluralRules("he").select(Number(n));
+  if (cat === "one") return one;
+  if (cat === "two") return two;
+  return many.replace("#", String(n));
+}
+
+/** How a bulletin watcher should behave at a Jerusalem clock time. */
+export function bulletinWatchPlan(parts) {
+  const minute = parts.minute;
+  const second = parts.second || 0;
+  if (minute >= 45) {
+    return { phase: "sleep-until-hour", waitMs: ((60 - minute) * 60 - second) * 1000 };
+  }
+  if (minute <= 20) return { phase: "poll", waitMs: 60_000 };
+  return { phase: "once", waitMs: 0 };
 }
 
 export function inboxRangeStart(kind, now) {

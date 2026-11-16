@@ -11,11 +11,13 @@ import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
 import {
   bulletinEdition,
+  bulletinWatchPlan,
   currentHourEdition,
   collapseWs,
   formatShortDate,
   jerusalemParts,
 } from "../site/js/pure.js";
+import { spawnSync } from "node:child_process";
 
 const FEED = "https://www.kikar.co.il/category/kikar-scoop-news/feed";
 
@@ -40,7 +42,7 @@ async function fetchText(url) {
   return res.text();
 }
 
-async function main() {
+async function runOnce() {
   const key = requireKey();
   const now = new Date();
   const control = readJson(path.join(DATA, "bulletin-control.json"), { paused: false });
@@ -276,7 +278,42 @@ function pushHistory(status, row) {
   status.history = [row, ...(status.history || []).filter((x) => x.key !== row.key)];
 }
 
-main().catch((err) => {
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function commitStatus() {
+  if (!process.env.GITHUB_ACTIONS) return;
+  const result = spawnSync(
+    "bash",
+    ["scripts/ci-commit.sh", "עדכון מבזק שעתי", "data/system.json", "data/status/bulletin.json"],
+    { stdio: "inherit" },
+  );
+  if (result.status) log("status commit failed", { status: result.status });
+}
+
+async function watch() {
+  for (let loop = 0; loop < 30; loop += 1) {
+    const plan = bulletinWatchPlan(jerusalemParts(new Date()));
+    const clock = jerusalemParts(new Date());
+    log("bulletin watch", {
+      israel: `${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")}`,
+      phase: plan.phase,
+      loop,
+    });
+    if (plan.phase === "sleep-until-hour") {
+      await sleep(plan.waitMs);
+      continue;
+    }
+    await runOnce();
+    commitStatus();
+    if (plan.phase === "once") break;
+    await sleep(plan.waitMs);
+  }
+}
+
+const entry = process.env.BULLETIN_WATCH === "1" ? watch : runOnce;
+entry().catch((err) => {
   console.error(String(err?.message || err).slice(0, 400));
   process.exit(1);
 });

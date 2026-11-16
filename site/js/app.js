@@ -21,6 +21,8 @@ import {
   formatTime,
   cleanSeriesName,
   defaultPlaylistKey,
+  defaultWindow,
+  hePlural,
   hebrewWeekday,
   inboxRangeStart,
   jerusalemParts,
@@ -48,6 +50,7 @@ const WINDOWS = [
   ["week", "השבוע"],
   ["month", "החודש"],
 ];
+const AIR_WINDOWS = [...WINDOWS, ["next", "עד הפרק הבא"]];
 const DAY_LETTERS = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"];
 
 const $ = (sel) => document.querySelector(sel);
@@ -157,8 +160,10 @@ function icon(name) {
     pause: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h3v12H8zM13 6h3v12h-3z" fill="currentColor"/></svg>`,
     check: `<svg ${common}><path d="M5 12.5 9.2 17 19 7"/></svg>`,
     more: `<svg ${common}><circle cx="6" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="18" cy="12" r="1" fill="currentColor"/></svg>`,
-    menu: `<svg ${common}><path d="M4 7h16M4 12h16M4 17h16"/></svg>`,
+    menu: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
     search: `<svg ${common}><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>`,
+    filter: `<svg ${common}><path d="M4 6h16M7 12h10M10 18h4"/></svg>`,
+    meter: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="13" width="3" height="7" rx="1" fill="currentColor"/><rect x="8" y="9" width="3" height="11" rx="1" fill="currentColor"/><rect x="13" y="5" width="3" height="15" rx="1" fill="currentColor"/><rect x="18" y="10" width="3" height="10" rx="1" fill="currentColor"/></svg>`,
   };
   return paths[name] || "";
 }
@@ -211,10 +216,11 @@ function itemById(id) {
 }
 function defaultsFor(item) {
   const map = state.rules.seriesMap?.[item.seriesSlug] || {};
+  const windowKind = map.window || defaultWindow(item);
   return {
-    playlistKey: defaultPlaylistKey(item, state.rules.seriesMap),
-    window: map.window || "week",
-    replacePrevious: Boolean(map.replacePrevious),
+    playlistKey: map.playlistKey || defaultPlaylistKey(item, state.rules.seriesMap),
+    window: windowKind,
+    replacePrevious: map.replacePrevious ?? windowKind === "next",
   };
 }
 function playlistChoices() {
@@ -342,14 +348,14 @@ function selectionRecord(item, overrides) {
   const base = defaultsFor(item);
   const now = new Date();
   const kind = overrides.window || base.window;
-  const end = overrides.windowEnd || windowEnd(kind, now, overrides.customEnd);
+  const end = kind === "next" ? null : (overrides.windowEnd || windowEnd(kind, now, overrides.customEnd));
   return {
     status: "approved",
     playlistKey: overrides.playlistKey || base.playlistKey,
     window: kind,
     windowStart: now.toISOString(),
-    windowEnd: end.toISOString(),
-    replacePrevious: overrides.replacePrevious ?? base.replacePrevious,
+    windowEnd: end ? end.toISOString() : null,
+    replacePrevious: overrides.replacePrevious ?? (kind === "next" || base.replacePrevious),
     uploadNow: Boolean(overrides.uploadNow),
     source: "manual",
     ruleId: null,
@@ -661,17 +667,18 @@ function render() {
   const jump = state.ui.focusId && document.querySelector(`[data-card="${CSS.escape(state.ui.focusId)}"] button[data-act="approve"], [data-card="${CSS.escape(state.ui.focusId)}"] h3`);
   if (jump) jump.focus();
   applySearch();
+  document.querySelector(".hour.now")?.scrollIntoView({ inline: "center", block: "nearest" });
 }
 function renderBanner() {
   const host = $("#banner");
   const paused = isPaused();
   if (!navigator.onLine) {
     const when = state.ui.staleAt ? formatTime(state.ui.staleAt) : "";
-    host.innerHTML = `<div class="banner offline"><span>אין חיבור לאינטרנט. מוצגים נתונים מ־<bdi>${esc(when)}</bdi>. פעולות יישמרו ויישלחו כשהחיבור יחזור.</span></div>`;
+    host.innerHTML = `<div class="banner offline"><span>אין חיבור לאינטרנט. מוצגים נתונים מ־<bdi>${esc(when)}</bdi>. הפעולות יישמרו ויישלחו כשהחיבור יחזור.</span></div>`;
     return;
   }
-  if (state.pending.length) {
-    host.innerHTML = `<div class="banner"><span>${state.pending.length} פעולות ממתינות לחיבור</span></div>`;
+  if (state.pending.length && !state.settings.setupDone) {
+    host.innerHTML = `<button class="banner" type="button" data-act="nav" data-path="/setup"><span>${esc(pendingPhrase(state.pending.length))} — חבר מפתחות</span></button>`;
     return;
   }
   if (paused) {
@@ -695,9 +702,9 @@ function renderTop() {
     <div class="np">
       <span class="station">רדיו כיכר</span>
       <b><bdi>${esc(title)}</bdi></b>
-      <span class="dotline"><i class="dot ${live ? "live" : "idle"}"></i><span class="meter ${live ? "play" : ""}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="num">${listeners == null ? "" : `${esc(listeners)} מאזינים`}</span></span>
+      <span class="dotline"><i class="dot ${live ? "live" : "idle"}"></i>${icon("meter")}<span class="num">${listeners == null ? "" : `${esc(listeners)} מאזינים`}</span></span>
     </div>
-    <button class="pill ${esc(summary.kind)}" type="button" data-act="pipeline" data-filter="${esc(summary.filter)}">${esc(summary.text)}</button>
+    ${statusControls()}
     <button class="icon-btn" type="button" data-act="menu" aria-label="תפריט">${icon("menu")}</button>
     <span class="elapsed" aria-hidden="true"><span style="width:${Math.round(ratio * 100)}%"></span></span>`;
   if (summary.text !== state.ui.lastPipe) {
@@ -705,23 +712,28 @@ function renderTop() {
     say(summary.text);
   }
 }
-function statusChip() {
+function pendingPhrase(n) {
+  return hePlural(n, "פעולה אחת ממתינה", "שתי פעולות ממתינות", "# פעולות ממתינות");
+}
+function statusControls() {
   const failed = failedCount();
   const uploading = uploadingCount();
+  const pending = state.settings.setupDone ? state.pending.length : 0;
+  const bits = [];
+  if (uploading) bits.push(`<button class="pill neutral" type="button" data-act="pipeline" data-filter="uploading">${esc(hePlural(uploading, "העלאה אחת", "שתי העלאות", "# העלאות"))}</button>`);
+  if (failed) bits.push(`<button class="pill neutral" type="button" data-act="pipeline" data-filter="failed"><i class="dot live" aria-hidden="true"></i>${esc(hePlural(failed, "כשלון אחד", "שני כשלונות", "# כשלונות"))}</button>`);
+  if (pending) bits.push(`<button class="pill neutral" type="button" data-act="nav" data-path="/settings">${esc(pendingPhrase(pending))}</button>`);
+  if (bits.length) return bits.join("");
   const bulletin = bulletinPillModel();
-  if (bulletin.kind === "bad") return { text: bulletin.text, kind: "bad", filter: "failed" };
-  if (uploading || failed) {
-    const parts = [];
-    if (uploading) parts.push(`${uploading} בהעלאה`);
-    if (failed) parts.push(`${failed} נכשל`);
-    return { text: parts.join(" · "), kind: failed ? "bad" : "warn", filter: failed ? "failed" : "uploading" };
-  }
   const stamp = state.uploads.lastRun?.finishedAt || state.bulletin.updatedAt;
   const when = stamp ? formatTime(stamp) : "";
   const mins = Math.max(1, Math.round((nextCron(new Date(), 5).getTime() - Date.now()) / 60000));
-  const pace = when ? `עודכן ${when} · הבא בעוד ~${mins} דק׳` : `הבא בעוד ~${mins} דק׳`;
-  const text = bulletin.text ? `${bulletin.text} · ${pace}` : pace;
-  return { text, kind: bulletin.kind || "ok", filter: "" };
+  const pace = when ? `עודכן <span class="num">${esc(when)}</span> · הבא בעוד ~<span class="num">${mins}</span> דק׳` : `הבא בעוד ~<span class="num">${mins}</span> דק׳`;
+  const text = bulletin.text ? `${esc(bulletin.text)} · ${pace}` : pace;
+  return `<button class="pill neutral" type="button" data-act="goto-bulletin">${text}</button>`;
+}
+function statusChip() {
+  return { text: "", kind: "ok", filter: "" };
 }
 function uploadingCount() {
   const ids = new Set(state.ui.inflight?.ids || []);
@@ -745,11 +757,10 @@ function bulletinPillModel() {
   return { text: label ? `מבזק ${label}` : "מבזק שעתי", kind: "" };
 }
 function renderNav() {
-  const failed = failedCount();
   const fresh = newCount();
   $("#rail").innerHTML = `${TABS.map((tab) => {
     const current = state.route.path === tab.path ? 'aria-current="page"' : "";
-    const badge = tab.path === "/inbox" && fresh ? `<span class="badge">${fresh}</span>` : tab.path === "/air" && failed ? `<span class="badge dotonly" aria-label="יש כשלון"></span>` : "";
+    const badge = tab.path === "/inbox" && fresh ? `<span class="badge">${fresh}</span>` : "";
     return `<button class="nav-btn" type="button" data-act="nav" data-path="${tab.path}" ${current}>${icon(tab.icon)}<small>${tab.label}</small>${badge}</button>`;
   }).join("")}<div class="rail-foot"><button class="nav-btn" type="button" data-act="nav" data-path="/settings"><small>הגדרות</small></button></div>`;
   if (state.ui.menu) {
@@ -816,7 +827,7 @@ function renderInbox() {
       <button class="icon-btn" type="button" data-act="bulk-exit" aria-label="יציאה מבחירה">✕</button>
     </div></div>` : "";
   const filterBits = [];
-  if (range !== "week") filterBits.push(`פורסם: ${windowName(range)}`);
+  if (range !== "week") filterBits.push(`פורסם ${windowName(range)}`);
   if (selectedSeries.size) filterBits.push(`${selectedSeries.size} סדרות`);
   const oldCount = countOlder(3);
   return `<section class="${state.ui.sheet ? "inbox-open" : ""}">
@@ -827,6 +838,7 @@ function renderInbox() {
         <div class="seg" role="tablist">${seg("tab", [["vod", "VOD"], ["music", "מוזיקה"]], tab)}</div>
         <div class="row">
           <button class="icon-btn" type="button" data-act="search-toggle" aria-label="חיפוש">${icon("search")}</button>
+          <button class="btn" type="button" data-act="open-filters">${icon("filter")} סינון${filterCount(range, selectedSeries) ? ` <span class="num">${filterCount(range, selectedSeries)}</span>` : ""}</button>
           <button class="icon-btn" type="button" data-act="inbox-menu" aria-label="עוד פעולות">${icon("more")}</button>
         </div>
       </div>
@@ -834,10 +846,7 @@ function renderInbox() {
       <div class="status-tabs" role="tablist">
         ${[["new", "חדשים"], ["approved", "אושרו"], ["skipped", "דולגו"]].map(([value, label]) => `<button type="button" data-act="q" data-key="status" data-value="${value}" aria-pressed="${status === value ? "true" : "false"}">${label} <span class="num">${counts[value]}</span></button>`).join("")}
       </div>
-      <div class="row">
-        <button class="btn" type="button" data-act="open-filters">סינון</button>
-        ${filterBits.length ? `<button class="chip on filter-chip" type="button" data-act="clear-filter">${esc(filterBits.join(" · "))} · נקה</button>` : ""}
-      </div>
+      ${filterBits.length ? `<div class="row"><button class="chip on filter-chip" type="button" data-act="clear-filter">${esc(filterBits.join(" · "))} · נקה</button></div>` : ""}
     </div>
     ${state.ui.inboxMenu ? `<div class="menu" role="menu">
       <button type="button" data-act="bulk-start">בחר</button>
@@ -849,6 +858,9 @@ function renderInbox() {
     ${bulkBar}
     <div class="cards" id="cards">${items.length ? items.map(renderCard).join("") : emptyInbox(status, counts)}</div>
   </section>`;
+}
+function filterCount(range, selectedSeries) {
+  return (range !== "week" ? 1 : 0) + selectedSeries.size;
 }
 function countOlder(days) {
   const cutoff = Date.now() - days * 86400000;
@@ -886,7 +898,6 @@ function renderCard(item) {
   const progress = state.ui.progress?.[item.id];
   const label = seriesLabel(item);
   const search = `${item.title} ${item.seriesName} ${item.description}`;
-  const queued = statusOf(item) === "approved" && chip.cls !== "st-live" && chip.cls !== "st-bad" && chip.cls !== "st-old";
   return `<div class="swipe" data-id="${esc(item.id)}">
     <div class="under under-approve">אשר ${icon("check")}</div>
     <div class="under under-skip">דלג</div>
@@ -901,22 +912,31 @@ function renderCard(item) {
         <div class="meta">${label ? `<span class="series">${esc(label)}</span>` : ""}<time datetime="${esc(item.pubDate)}">${esc(formatRelative(item.pubDate))}</time><span class="state-chip ${chip.cls}">${chip.label}</span>${byRule ? `<span class="series">אושר ע״י כלל</span>` : ""}${state.ui.bulk ? `<span class="check" data-act="toggle-select" data-id="${esc(item.id)}" role="checkbox" aria-checked="${state.ui.selected.has(item.id) ? "true" : "false"}" aria-label="בחר"></span>` : ""}</div>
         <h3>${esc(item.title)}</h3>
         <p class="teaser">${esc(item.description || "")}</p>
-        ${chip.cls === "st-bad" ? `<p class="err-inline">${esc(ERROR_TEXT[rec?.errorCode] || rec?.errorMessage || ERROR_TEXT.unknown)}</p>` : ""}
-        ${chip.cls === "st-up" ? `<div class="bar" aria-label="התקדמות העלאה"><span style="width:${Math.round((progress || 0.35) * 100)}%"></span></div><p class="tiny">ממיר ומעלה… ${progress != null ? `${Math.round(progress * 100)}%` : ""}</p>` : ""}
-        <button class="dest" type="button" data-act="more" data-id="${esc(item.id)}">יעלה ל: ${esc(playlistShort(defs.playlistKey))} · ${esc(windowName(defs.window))}</button>
-        <div class="actions">
-          <button class="btn primary grow" type="button" data-act="approve" data-id="${esc(item.id)}" aria-label="אשר: ${esc(item.title)}">אשר</button>
-          <button class="btn grow" type="button" data-act="skip" data-id="${esc(item.id)}" aria-label="דלג: ${esc(item.title)}">דלג</button>
-          ${queued ? `<button class="btn" type="button" data-act="upload-one" data-id="${esc(item.id)}">העלה עכשיו</button>` : ""}
-          ${chip.cls === "st-bad" ? `<button class="btn" type="button" data-act="retry" data-id="${esc(item.id)}">נסה שוב</button>` : ""}
-          <button class="icon-btn" type="button" data-act="more" data-id="${esc(item.id)}" aria-label="אפשרויות נוספות: ${esc(item.title)}">${icon("more")}</button>
-        </div>
+        ${chip.cls === "st-bad" ? `<p class="err-inline">${esc(ERROR_TEXT[rec?.errorCode] || rec?.errorMessage || ERROR_TEXT.unknown)}</p><p class="tiny">${rec?.failedAt ? `נכשל ב־<span class="num">${esc(formatTime(rec.failedAt))}</span>` : ""}${Number(rec?.attempts) >= 3 ? " · לא ננסה שוב אוטומטית אחרי 3 כשלונות" : ""}</p>${item.link ? `<a href="${esc(item.link)}">לכתבה</a>` : ""}` : ""}
+        ${chip.cls === "st-up" ? `<div class="bar" aria-label="התקדמות העלאה"><span style="width:${Math.round((progress || 0.35) * 100)}%"></span></div><p class="tiny">ממיר ומעלה · <span class="num">${progress != null ? Math.round(progress * 100) : 35}%</span></p>` : ""}
+        ${chip.cls === "st-up" ? "" : `<button class="dest" type="button" data-act="more" data-id="${esc(item.id)}">יעלה ל: ${esc(playlistShort(defs.playlistKey))} · ${esc(windowName(defs.window))}</button>`}
+        <div class="actions">${cardActions(item, chip)}</div>
       </div>
     </article>
   </div>`;
 }
+function cardActions(item, chip) {
+  const id = esc(item.id);
+  const more = `<button class="icon-btn" type="button" data-act="more" data-id="${id}" aria-label="אפשרויות נוספות: ${esc(item.title)}">${icon("more")}</button>`;
+  if (chip.cls === "st-up") return "";
+  if (chip.cls === "st-live") {
+    return `<button class="btn danger grow" type="button" data-act="skip" data-id="${id}">הסר מהשידור</button>${more}`;
+  }
+  if (chip.cls === "st-bad") {
+    return `<button class="btn primary grow" type="button" data-act="retry" data-id="${id}">נסה שוב</button><button class="btn" type="button" data-act="skip" data-id="${id}">דלג</button>${more}`;
+  }
+  if (chip.cls === "st-ok") {
+    return `<button class="btn primary grow" type="button" data-act="upload-one" data-id="${id}">העלה עכשיו</button><button class="btn" type="button" data-act="skip" data-id="${id}">בטל אישור</button>${more}`;
+  }
+  return `<button class="btn primary grow" type="button" data-act="approve" data-id="${id}" aria-label="אשר: ${esc(item.title)}">אשר</button><button class="btn grow" type="button" data-act="skip" data-id="${id}" aria-label="דלג: ${esc(item.title)}">דלג</button>${more}`;
+}
 function windowName(kind) {
-  return WINDOWS.find(([key]) => key === kind)?.[1] || "השבוע";
+  return AIR_WINDOWS.find(([key]) => key === kind)?.[1] || "השבוע";
 }
 function applySearch() {
   const q = state.ui.search.trim();
@@ -930,12 +950,15 @@ function renderAir() {
   const rows = airRows();
   const focus = state.route.q.get("focus");
   const shown = focus ? rows.filter((row) => row.kind === focus) : rows;
+  const mins = nextUploadMinutes();
   return `<section class="stack">
-    <div class="spread"><h1>בשידור</h1><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
-    <p class="hero-time">${esc(uploadTimingText())}</p>
+    <div class="spread"><div><h1>בשידור</h1><p class="hero-line">ההעלאה הבאה בעוד <span class="num">${mins}</span> דק׳</p></div><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
     ${renderBulletinCard()}
     ${shown.length ? shown.map(renderAirRow).join("") : `<div class="notice"><h2>אין כרגע פריטים בתור או בפלייליסטים</h2><button class="btn" type="button" data-act="nav" data-path="/inbox">לבחירת פריטים</button></div>`}
   </section>`;
+}
+function nextUploadMinutes() {
+  return Math.max(1, Math.round((nextCron(new Date(), 5).getTime() - Date.now()) / 60000));
 }
 function uploadTimingText() {
   const next = nextCron(new Date(), 5);
@@ -957,7 +980,8 @@ function airRows() {
     const rec = state.uploads.items?.[id];
     const title = item?.title || rec?.title || id;
     if (state.ui.inflight?.ids?.includes(id) || rec?.state === "uploading") {
-      rows.push({ id, kind: "uploading", title, text: "ממיר ומעלה…", item, progress: state.ui.progress?.[id] });
+      const pct = state.ui.progress?.[id];
+      rows.push({ id, kind: "uploading", title, text: `ממיר ומעלה · ${pct != null ? Math.round(pct * 100) : 35}%`, item, progress: pct });
       continue;
     }
     if (rec?.state === "failed") {
@@ -978,7 +1002,7 @@ function airRows() {
         id,
         kind: soon ? "expiring" : "active",
         title,
-        text: soon ? `יוסר מהפלייליסט מחר ב־00:00` : `בפלייליסט ״${playlistShort(intent.playlistKey)}״ עד ${formatDayMonth(end)}`,
+        text: intent.window === "next" ? "בפלייליסט עד הפרק הבא" : soon ? `יוסר מהפלייליסט מחר ב־00:00` : `בפלייליסט ״${playlistShort(intent.playlistKey)}״ עד ${formatDayMonth(end)}`,
         item,
         intent,
       });
@@ -1015,7 +1039,7 @@ function renderBulletinCard() {
   const active = b.active;
   const hour = b.hour || {};
   const paused = isPaused();
-  let stateLine = "פעיל · עולה אוטומטית כל שעה לפלייליסט ״מבזק שעתי״";
+  let stateLine = "פעיל. עולה אוטומטית כל שעה לפלייליסט ״מבזק שעתי״.";
   if (paused) stateLine = "מושהה";
   else if (b.note === "failed") stateLine = `מהדורת ${b.failure?.label || hour.label || ""} נכשלה בהעלאה`;
   else if (b.sourcePending) stateLine = b.sourceMessage || "כיכר עדיין לא פרסמו את המהדורה. נמשיך לבדוק.";
@@ -1032,7 +1056,7 @@ function renderBulletinCard() {
     ${b.note === "failed" ? `<div class="err-inline" role="alert">${esc(ERROR_TEXT[b.failure?.code] || b.failure?.message || ERROR_TEXT.unknown)} <button class="btn" type="button" data-act="retry-bulletin">נסה שוב</button></div>` : ""}
     ${state.ui.pauseChooser ? renderPauseChooser() : ""}
     <p class="tiny">מבזקים היום</p>
-    <div class="hours" aria-label="מהדורות קודמות">${history.map((dot) => `<button class="hour ${esc(dot.cls)}" type="button" data-act="play-hour" data-url="${esc(dot.url || "")}" aria-label="${esc(dot.label)}"><span class="num">${esc(dot.mark)}</span></button>`).join("")}</div>
+    <div class="hours fade-row" id="hour-strip" aria-label="מהדורות קודמות">${history.map((dot) => `<button class="hour ${esc(dot.cls)}" type="button" data-act="play-hour" data-url="${esc(dot.url || "")}" aria-label="${esc(dot.label)}"><span class="num">${esc(dot.mark)}</span></button>`).join("")}</div>
   </article>`;
 }
 function nextHourLabel() {
@@ -1090,8 +1114,10 @@ function renderPlaylists() {
     ${rows.length ? rows.map((pl) => {
       const on = pl.is_enabled !== false;
       const songs = pl.num_songs ?? pl.count;
+      const scheduled = pl.type === "once_per_hour" || (pl.schedule_items || []).length > 0;
+      const weight = Math.max(1, Math.min(25, Number(pl.weight) || 3));
       return `<article class="plist"><div class="plist-main"><h3>${esc(pl.name)}</h3><p class="tiny">${esc(scheduleLine(pl))}${songs != null ? ` · ${songs} פריטים` : ""}</p></div>
-      <label class="tiny">משקל <input class="weight" type="number" min="1" max="25" value="${esc(pl.weight || 3)}" data-act="weight" data-id="${esc(pl.id || "")}" ${pl.id ? "" : "disabled"}></label>
+      ${scheduled ? "" : `<div class="weight-step" aria-label="משקל"><button class="btn" type="button" data-act="weight-step" data-dir="-1" data-id="${esc(pl.id || "")}" aria-label="הורד משקל">−</button><span class="num">${weight}</span><button class="btn" type="button" data-act="weight-step" data-dir="1" data-id="${esc(pl.id || "")}" aria-label="העלה משקל">+</button></div>`}
       <span class="tiny">${on ? "פעיל" : "כבוי"}</span>
       <button class="switch" type="button" role="switch" aria-pressed="${on ? "true" : "false"}" data-act="toggle-playlist" data-id="${esc(pl.id || "")}" aria-label="${on ? "כיבוי" : "הפעלה"} של ${esc(pl.name)}" ${pl.id ? "" : "disabled"}><i></i></button>
     </article>`;
@@ -1346,12 +1372,12 @@ function renderMapping() {
   }
   const rows = [...seen.values()];
   return `<section class="stack"><h1>מיפוי סדרות</h1>
-    <p class="muted">כל סדרה מקבלת פלייליסט וחלון ברירת מחדל. «יעלה ל» על הכרטיס פותח את אותו חלון. המבזק השעתי לא מופיע כאן.</p>
+    <p class="muted">כל סדרה מקבלת פלייליסט וחלון ברירת מחדל. ״יעלה ל״ על הכרטיס פותח את אותו חלון. חדשות יומיות מתחילות ב״עד הפרק הבא״. המבזק השעתי לא מופיע כאן.</p>
     ${rows.length ? rows.map((item) => {
       const defs = defaultsFor(item);
-      return `<article class="panel stack"><h3>${esc(seriesLabel(item))}</h3>
-        <label class="field">פלייליסט<select data-map-playlist="${esc(item.seriesSlug)}">${playlistChoices().map(([key, label]) => `<option value="${key}" ${defs.playlistKey === key ? "selected" : ""}>${esc(label)}</option>`).join("")}</select></label>
-        <label class="field">חלון<select data-map-window="${esc(item.seriesSlug)}">${WINDOWS.map(([key, label]) => `<option value="${key}" ${defs.window === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+      return `<article class="map-row"><h3>${esc(seriesLabel(item))}</h3>
+        <label>פלייליסט<select data-map-playlist="${esc(item.seriesSlug)}">${playlistChoices().map(([key, label]) => `<option value="${key}" ${defs.playlistKey === key ? "selected" : ""}>${esc(label)}</option>`).join("")}</select></label>
+        <label>חלון<select data-map-window="${esc(item.seriesSlug)}">${AIR_WINDOWS.map(([key, label]) => `<option value="${key}" ${defs.window === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
       </article>`;
     }).join("") : `<p class="muted">אין עדיין סדרות בקטלוג.</p>`}
     <button class="btn primary" type="button" data-act="save-mapping">שמור מיפוי</button>
@@ -1388,14 +1414,14 @@ function renderFilterSheet() {
   const selected = new Set((state.route.q.get("series") || "").split(",").filter(Boolean));
   const series = seriesList(tab, "month");
   return dialog(`<div class="grab"></div><h2>סינון</h2>
-    <p class="tiny">פורסם:</p>
-    <div class="chip-row">${WINDOWS.map(([key, label]) => `<button class="chip" type="button" data-act="q" data-key="range" data-value="${key}" aria-pressed="${range === key ? "true" : "false"}">${label}</button>`).join("")}</div>
-    <p class="tiny">סדרות</p>
-    <div class="chip-row">
+    <div class="filter-group"><p class="tiny">פורסם</p>
+    <div class="chip-row fade-row">${WINDOWS.map(([key, label]) => `<button class="chip" type="button" data-act="q" data-key="range" data-value="${key}" aria-pressed="${range === key ? "true" : "false"}">${label}</button>`).join("")}</div></div>
+    <div class="filter-group"><p class="tiny">סדרות</p>
+    <div class="chip-row fade-row">
       <button class="chip" type="button" data-act="series-all" aria-pressed="${selected.size ? "false" : "true"}">הכול</button>
       ${series.map(([slug, name]) => `<button class="chip" type="button" data-act="series" data-slug="${esc(slug)}" aria-pressed="${selected.has(slug) ? "true" : "false"}">${esc(name)}</button>`).join("")}
-    </div>
-    <button class="btn primary" type="button" data-act="close-sheet">הצג</button>`);
+    </div></div>
+    <div class="sheet-actions"><button class="btn ghost" type="button" data-act="clear-filter">נקה</button><button class="btn primary grow" type="button" data-act="close-sheet">הצג ${filteredItems().length}</button></div>`);
 }
 function renderSheet() {
   const root = $("#sheet-root");
@@ -1435,7 +1461,7 @@ function renderSheet() {
       </div></fieldset>
       <fieldset><legend>חלון שידור</legend><div class="chips">
         ${multi ? `<label class="chip"><input type="radio" name="window" value="" checked> ללא שינוי</label>` : ""}
-        ${WINDOWS.map(([key, label]) => `<label class="chip"><input type="radio" name="window" value="${key}" ${!multi && defs.window === key ? "checked" : ""}> ${label}</label>`).join("")}
+        ${AIR_WINDOWS.map(([key, label]) => `<label class="chip"><input type="radio" name="window" value="${key}" ${!multi && defs.window === key ? "checked" : ""}> ${label}</label>`).join("")}
         <label class="chip"><input type="radio" name="window" value="custom"> תאריך מותאם</label>
       </div><label class="field">תאריך סיום<input name="customEnd" type="date"></label>
       <p id="window-end" class="tiny"></p></fieldset>
@@ -1466,8 +1492,12 @@ function updateWindowHint() {
     node.textContent = "ללא שינוי";
     return;
   }
+  if (kind === "next") {
+    node.textContent = "בפלייליסט עד הפרק הבא בסדרה";
+    return;
+  }
   const end = windowEnd(String(kind), new Date(), new FormData(form).get("customEnd"));
-  node.textContent = `בפלייליסט עד ${formatDayMonth(end)}`;
+  node.textContent = end ? `בפלייליסט עד ${formatDayMonth(end)}` : "";
 }
 
 function onClick(event) {
@@ -1490,7 +1520,10 @@ function onClick(event) {
   else if (act === "approve" && item) approveItem(item);
   else if (act === "skip" && item) skipItem(item);
   else if (act === "more" && item) state.ui.sheet = { ids: [item.id] };
-  else if (act === "expand") button.querySelector(".teaser")?.classList.toggle("open");
+  else if (act === "expand") {
+    button.querySelector(".teaser")?.classList.toggle("open");
+    button.closest(".card")?.classList.toggle("expanded");
+  }
   else if (act === "play" && item) togglePlay(item.mediaUrl, item.id);
   else if (act === "play-url") togglePlay(button.dataset.url, button.dataset.id || "url");
   else if (act === "bulk-start") state.ui.bulk = true;
@@ -1595,6 +1628,7 @@ function onClick(event) {
     state.ui.confirm = null;
     if (target) togglePlaylist(target, true);
   } else if (act === "undo-toggle" && state.ui.undoToggle) togglePlaylist(state.ui.undoToggle, true);
+  else if (act === "weight-step") setWeight(button.dataset.id, (Number(state.playlists.find((row) => String(row.id) === String(button.dataset.id))?.weight) || 3) + Number(button.dataset.dir));
   else if (act === "save-mapping") saveMapping();
   else if (act === "play-hour" && button.dataset.url) togglePlay(button.dataset.url, "hour");
   else return;

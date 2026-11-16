@@ -1,9 +1,11 @@
 name: מבזק שעתי
 on:
   schedule:
-    # Every 5 minutes from HH:00 through HH:20 (GitHub's shortest reliable cadence), plus a light pass at :45 for the 60-minute cutoff.
-    - cron: "0,5,10,15,20 * * * *"
-    - cron: "45 * * * *"
+    # GitHub often starts :00 crons 10–30 min late. Arm at :50 so a modest delay
+    # still reaches HH:00, and again at :00 and :05 if the early arm was missed.
+    # The job then polls the feed every 60s until HH:20.
+    - cron: "50 * * * *"
+    - cron: "0,5 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -13,7 +15,7 @@ concurrency:
 jobs:
   bulletin:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +31,7 @@ jobs:
         id: bulletin
         env:
           RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
+          BULLETIN_WATCH: "1"
         run: node scripts/bulletin.js
         continue-on-error: true
       - name: שמירת סטטוס
