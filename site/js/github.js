@@ -1,3 +1,5 @@
+import { planGithubPermissions, planGithubResponse } from "./policy.js";
+
 const REPO = "shyberko/kikar-radio";
 const BRANCH = "main";
 
@@ -81,19 +83,24 @@ export function createGithub(getToken) {
           branch: BRANCH,
         }),
       });
-      if (res.status === 409) {
+      const plan = planGithubResponse(res.status, attempt);
+      if (plan.action === "retry") {
         last = await readError(res);
+        last.code = plan.code;
         continue;
       }
-      if (res.status === 403 || res.status === 429) {
+      if (!res.ok) {
         const err = await readError(res);
-        err.code = "github";
+        err.code = plan.code;
+        err.message = plan.message || err.message;
+        err.recovery = plan.recovery;
         throw err;
       }
-      if (!res.ok) throw await readError(res);
       return;
     }
-    throw last || new Error("השמירה נכשלה");
+    const err = last || new Error("השמירה נכשלה");
+    err.code = err.code || "conflict";
+    throw err;
   }
 
   async function dispatch(workflow, inputs) {
@@ -103,10 +110,11 @@ export function createGithub(getToken) {
       body: JSON.stringify({ ref: BRANCH, inputs: inputs || {} }),
     });
     if (res.status === 204) return;
+    const plan = planGithubResponse(res.status, 0);
     const err = await readError(res);
-    if (res.status === 401 || res.status === 403 || res.status === 404) {
-      err.code = "dispatch";
-    }
+    err.code = plan.code === "ok" ? "dispatch" : plan.code;
+    if (plan.message && plan.action === "fail") err.message = plan.message;
+    err.recovery = plan.recovery || "settings";
     throw err;
   }
 
@@ -114,16 +122,13 @@ export function createGithub(getToken) {
     const res = await fetch(`https://api.github.com/repos/${REPO}`, { headers: headers(false) });
     if (!res.ok) throw await readError(res);
     const data = await res.json();
-    const contents = data.permissions?.contents;
-    const actions = data.permissions?.actions;
     const workflows = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows`, { headers: headers(false) });
-    return {
-      name: data.full_name,
-      contents,
-      actions,
+    const verdict = planGithubPermissions({
+      contents: data.permissions?.contents,
+      actions: data.permissions?.actions,
       workflowsOk: workflows.ok,
-      ok: contents === "write" && actions !== "read" && workflows.ok && actions !== undefined ? actions === "write" || actions === "admin" : contents === "write" && workflows.ok,
-    };
+    });
+    return { name: data.full_name, ...verdict };
   }
 
   async function runs(workflow) {

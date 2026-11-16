@@ -4,6 +4,15 @@ import { log } from "./io.js";
 import { PipelineError } from "./errors.js";
 
 const CORE = {
+  shows: {
+    type: "default",
+    order: "shuffle",
+    weight: 3,
+    is_jingle: false,
+    play_per_songs: 0,
+    play_per_minutes: 0,
+    play_per_hour_minute: 0,
+  },
   briefs: {
     type: "default",
     order: "shuffle",
@@ -37,6 +46,7 @@ export function emptySystem() {
   return {
     schemaVersion: 1,
     playlists: {
+      shows: { id: null, name: PLAYLISTS.shows.name },
       briefs: { id: null, name: PLAYLISTS.briefs.name },
       music: { id: null, name: PLAYLISTS.music.name },
       bulletin: { id: null, name: PLAYLISTS.bulletin.name },

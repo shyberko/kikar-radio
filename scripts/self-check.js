@@ -12,7 +12,10 @@ import {
   isManagedPlaylist,
   inboxRangeStart,
   formatDayMonth,
+  defaultPlaylistKey,
+  cleanSeriesName,
 } from "../site/js/pure.js";
+import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt } from "../site/js/policy.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -84,5 +87,46 @@ assert.equal(media.poster, "https://i.kikar.co.il/p.png");
 
 const fallback = extractMedia(`<div>https://stream.kikar.co.il/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/play_480p.mp4</div>`);
 assert.ok(fallback.mediaUrl.endsWith("/play_480p.mp4"));
+
+const retry = planGithubResponse(409, 0);
+assert.equal(retry.action, "retry");
+assert.equal(retry.code, "conflict");
+assert.equal(planGithubResponse(409, 1).action, "retry");
+assert.equal(planGithubResponse(409, 2).action, "retry");
+assert.equal(planGithubResponse(409, 3).action, "fail");
+const token = planGithubResponse(401, 0);
+assert.equal(token.action, "fail");
+assert.equal(token.code, "token");
+assert.equal(token.recovery, "settings");
+assert.match(token.message, /GitHub/);
+const scope = planGithubResponse(403, 0);
+assert.equal(scope.code, "scope");
+assert.equal(planGithubPermissions({ contents: "read", actions: "write", workflowsOk: true }).ok, false);
+assert.equal(planGithubPermissions({ contents: "write", actions: "read", workflowsOk: true }).ok, false);
+assert.equal(planGithubPermissions({ contents: "write", actions: "write", workflowsOk: true }).ok, true);
+
+const azuraAuth = planAzuraError(401, { message: "Not logged in" });
+assert.equal(azuraAuth.code, "auth");
+assert.equal(azuraAuth.recovery, "settings");
+assert.match(azuraAuth.message, /API/);
+assert.equal(planAzuraError(403, "Invalid API key").code, "auth");
+assert.equal(planAzuraError(500, "This station is out of available storage space.").code, "storage");
+assert.equal(planAzuraError(404, "not found").code, "playlist");
+
+const editionStart = jerusalemToUtc(2026, 11, 16, 15, 0, 0).getTime();
+const uploadedAt = editionStart + 40 * 60 * 1000;
+assert.equal(bulletinOffAirAt(editionStart), editionStart + 60 * 60 * 1000);
+assert.notEqual(bulletinOffAirAt(editionStart), uploadedAt + 60 * 60 * 1000);
+const replacedAt = editionStart + 25 * 60 * 1000;
+assert.equal(bulletinOffAirAt(editionStart, replacedAt), replacedAt);
+const scoop = bulletinEdition("Mon, 16 Nov 2026 13:00:00 GMT", "מבזק חדשות כיכר FM | מהדורת השעה 15:00");
+assert.equal(bulletinOffAirAt(scoop.start.getTime()), scoop.expires.getTime());
+
+assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "davar-rishon" }, {}), "shows");
+assert.equal(defaultPlaylistKey({ feed: "music", seriesSlug: "music" }, {}), "music");
+assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "bulletin" } }), "shows");
+assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "briefs" } }), "briefs");
+assert.equal(cleanSeriesName("חדשות\u200dחרדי", "haredi"), "חדשות חרדי");
+assert.equal(cleanSeriesName("VOD", "vod"), "");
 
 console.log("self-check ok");

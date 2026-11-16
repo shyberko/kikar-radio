@@ -63,6 +63,17 @@ async function main() {
   const hour = currentHourEdition(now);
   const isPaused = pausedNow(control, now);
 
+  const fingerprint = () => JSON.stringify({
+    note: status.note,
+    activeKey: status.active?.key || null,
+    onAir: status.active?.onAir ?? null,
+    removed: (status.history || []).map((row) => [row.key, row.removedAt || null, row.failed || false]),
+    alert: status.alert || null,
+    failure: status.failure?.key || null,
+    paused: !!status.paused,
+    sourcePending: !!status.sourcePending,
+  });
+  const before = fingerprint();
   let pipelineFailed = false;
   status.lastCheck = now.toISOString();
   status.paused = isPaused;
@@ -158,8 +169,13 @@ async function main() {
     status.alert = null;
   }
   status.hour = { label: hour.label, start: hour.start.toISOString(), expires: hour.expires.toISOString() };
-  status.updatedAt = new Date().toISOString();
   status.history = (status.history || []).slice(0, 80);
+  if (fingerprint() === before) {
+    log("bulletin unchanged; skipping commit");
+    if (pipelineFailed) process.exitCode = 1;
+    return;
+  }
+  status.updatedAt = new Date().toISOString();
   writeJson(path.join(DATA, "status/bulletin.json"), status);
   writeJson(path.join(DATA, "system.json"), system);
   if (pipelineFailed) process.exitCode = 1;

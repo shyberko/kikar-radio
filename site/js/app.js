@@ -1,8 +1,10 @@
 import { createGithub } from "./github.js";
 import { createRadio } from "./radio.js";
+import { demoBundle } from "./demo.js";
 import {
   ERROR_TEXT,
   PLAYLISTS,
+  ASSIGNABLE_PLAYLISTS,
   MANAGED_MARKER,
   MANAGED_PREFIX,
   bulletinEdition,
@@ -13,8 +15,11 @@ import {
   formatDayMonth,
   formatDuration,
   formatFullDate,
+  formatRelative,
   formatShortDate,
   formatTime,
+  cleanSeriesName,
+  defaultPlaylistKey,
   hebrewWeekday,
   inboxRangeStart,
   jerusalemParts,
@@ -206,10 +211,16 @@ function itemById(id) {
 function defaultsFor(item) {
   const map = state.rules.seriesMap?.[item.seriesSlug] || {};
   return {
-    playlistKey: map.playlistKey || (item.feed === "music" ? "music" : "briefs"),
+    playlistKey: defaultPlaylistKey(item, state.rules.seriesMap),
     window: map.window || "week",
     replacePrevious: Boolean(map.replacePrevious),
   };
+}
+function playlistChoices() {
+  return ASSIGNABLE_PLAYLISTS.map((key) => [key, PLAYLISTS[key].short]);
+}
+function seriesLabel(item) {
+  return cleanSeriesName(item?.seriesName, item?.seriesSlug);
 }
 function intentOf(id) {
   const sel = state.selections.items?.[id];
@@ -230,7 +241,9 @@ function seriesList(feed, range) {
   for (const item of state.catalog.items || []) {
     if (item.feed !== feed) continue;
     if (new Date(item.pubDate) < start) continue;
-    map.set(item.seriesSlug, item.seriesName || item.seriesSlug);
+    const name = seriesLabel(item);
+    if (!name) continue;
+    map.set(item.seriesSlug, name);
   }
   return [...map.entries()];
 }
@@ -248,7 +261,8 @@ function filteredItems() {
     .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 }
 function newCount() {
-  return (state.catalog.items || []).filter((item) => statusOf(item) === "new").length;
+  const tab = state.route.path === "/inbox" ? (state.route.q.get("tab") || "vod") : "vod";
+  return (state.catalog.items || []).filter((item) => item.feed === tab && statusOf(item) === "new").length;
 }
 function queuedIds() {
   const now = new Date();
@@ -352,35 +366,61 @@ function rememberSelection(id, next) {
   };
 }
 function approveItem(item, overrides = {}, label) {
-  const revert = rememberSelection(item.id, selectionRecord(item, overrides));
-  pushUndo({
-    kind: "approve",
-    batchNoun: "אושרו",
-    label: label || `אושר: ${collapseWs(item.title).slice(0, 42)} · ${formatShortDate(item.pubDate)}`,
-    changeId: item.id,
-    revert,
-  });
-  persistSelections();
-  if (overrides.uploadNow) dispatchUpload(item.id);
-  state.ui.focusId = nextItemId(item.id);
-  state.ui.sheet = null;
+  const finish = () => {
+    const revert = rememberSelection(item.id, selectionRecord(item, overrides));
+    pushUndo({
+      kind: "approve",
+      batchNoun: "אושרו",
+      label: label || `אושר: ${collapseWs(item.title).slice(0, 42)} · ${formatShortDate(item.pubDate)}`,
+      changeId: item.id,
+      revert,
+    });
+    persistSelections();
+    if (overrides.uploadNow) dispatchUpload(item.id);
+    state.ui.focusId = nextItemId(item.id);
+    state.ui.sheet = null;
+    noteSeriesApprovals(item);
+    render();
+  };
+  flyCard(item.id, "approve", finish);
+}
+function noteSeriesApprovals(item) {
+  const count = Object.entries(state.selections.items).filter(([id, row]) => row.status === "approved" && itemById(id)?.seriesSlug === item.seriesSlug).length;
+  if (count >= 3 && !(state.rules.rules || []).some((rule) => rule.seriesSlug === item.seriesSlug)) {
+    toast(`ליצור כלל לסדרה ${seriesLabel(item) || "הזו"}?`, [{ act: "offer-rule", label: "צור כלל" }]);
+    state.ui.offerSeries = item.seriesSlug;
+  }
+}
+function flyCard(id, kind, done) {
+  const node = document.querySelector(`.swipe[data-id="${CSS.escape(id)}"]`);
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!node || reduce) {
+    done();
+    return;
+  }
+  node.classList.add(kind === "approve" ? "leaving-approve" : "leaving-skip");
+  setTimeout(done, 180);
 }
 function skipItem(item) {
-  const prevDefaults = defaultsFor(item);
-  const revert = rememberSelection(item.id, {
-    status: "skipped",
-    playlistKey: prevDefaults.playlistKey,
-    window: prevDefaults.window,
-    windowStart: null,
-    windowEnd: null,
-    replacePrevious: false,
-    uploadNow: false,
-    source: "manual",
-    updatedAt: new Date().toISOString(),
-  });
-  pushUndo({ kind: "skip", batchNoun: "דולגו", label: `דולג: ${collapseWs(item.title).slice(0, 42)}`, revert });
-  persistSelections();
-  state.ui.focusId = nextItemId(item.id);
+  const finish = () => {
+    const prevDefaults = defaultsFor(item);
+    const revert = rememberSelection(item.id, {
+      status: "skipped",
+      playlistKey: prevDefaults.playlistKey,
+      window: prevDefaults.window,
+      windowStart: null,
+      windowEnd: null,
+      replacePrevious: false,
+      uploadNow: false,
+      source: "manual",
+      updatedAt: new Date().toISOString(),
+    });
+    pushUndo({ kind: "skip", batchNoun: "דולגו", label: `דולג: ${collapseWs(item.title).slice(0, 42)}`, revert });
+    persistSelections();
+    state.ui.focusId = nextItemId(item.id);
+    render();
+  };
+  flyCard(item.id, "skip", finish);
 }
 function nextItemId(id) {
   const items = filteredItems();
@@ -414,6 +454,7 @@ function upsertQueue(job) {
 }
 function queueWrite(path, body, message) {
   const job = { dedupeKey: `put:${path}`, type: "put", path, body: structuredClone(body), message };
+  if (state.ui.demo) return;
   if (!navigator.onLine || !state.settings.githubToken) {
     if (!state.settings.githubToken) {
       toast("כדי לשמור צריך טוקן GitHub בהגדרות");
@@ -431,11 +472,12 @@ function queueWrite(path, body, message) {
       renderBanner();
       return;
     }
-    toast(err.code === "github" ? ERROR_TEXT.github : err.message || "השמירה נכשלה");
+    const recovery = err.recovery === "settings" ? [{ act: "nav-settings", label: "להגדרות" }] : [{ act: "reload", label: "נסה שוב" }];
+    toast(err.message || ERROR_TEXT.unknown, recovery);
   });
 }
 async function flushQueue() {
-  if (!navigator.onLine || state.ui.flushing || !state.pending.length) return;
+  if (state.ui.demo || !navigator.onLine || state.ui.flushing || !state.pending.length) return;
   state.ui.flushing = true;
   const jobs = [...state.pending];
   for (const job of jobs) {
@@ -455,6 +497,10 @@ async function flushQueue() {
   renderBanner();
 }
 async function dispatchUpload(itemId) {
+  if (state.ui.demo) {
+    toast("מצב הדגמה: ההעלאה לא נשלחת לשרת");
+    return;
+  }
   const inputs = { item_id: itemId || "" };
   const job = { dedupeKey: `dispatch:upload:${itemId || "all"}`, type: "dispatch", workflow: "upload.yml", inputs };
   if (!navigator.onLine) {
@@ -516,6 +562,11 @@ async function pollRun(workflow) {
 }
 
 async function loadAll() {
+  if (state.ui.demo) {
+    state.ui.loading = false;
+    render();
+    return;
+  }
   state.ui.refreshing = state.catalog.items?.length > 0;
   renderTop();
   const files = [
@@ -556,6 +607,7 @@ async function reloadStatus() {
   }
 }
 async function refreshNowPlaying() {
+  if (state.ui.demo) return;
   try {
     state.np = await radio.nowPlaying();
     state.npError = false;
@@ -565,6 +617,17 @@ async function refreshNowPlaying() {
   renderTop();
 }
 async function refreshPlaylists() {
+  if (state.ui.demo) {
+    state.playlists = Object.values(state.system.playlists || {}).filter((row) => row?.id).map((row) => ({
+      ...row,
+      is_enabled: true,
+      weight: row.name?.includes("מבזק") ? 6 : 3,
+      num_songs: 4,
+      type: row.name?.includes("שעתי") ? "once_per_hour" : "default",
+      play_per_hour_minute: 8,
+    }));
+    return;
+  }
   if (!state.settings.azuraKey) return;
   try {
     state.playlists = await radio.playlists();
@@ -576,6 +639,7 @@ async function refreshPlaylists() {
 function render() {
   const route = state.settings.setupDone ? state.route.path : "/setup";
   document.body.dataset.route = route;
+  document.body.classList.toggle("compact", !!state.ui.compact);
   renderBanner();
   renderTop();
   renderNav();
@@ -587,6 +651,7 @@ function render() {
   else if (route === "/playlists") view.innerHTML = renderPlaylists();
   else if (route === "/rules") view.innerHTML = renderRules();
   else if (route === "/ads") view.innerHTML = renderAds();
+  else if (route === "/mapping") view.innerHTML = renderMapping();
   else if (route === "/settings") view.innerHTML = renderSettings();
   else if (route === "/log") view.innerHTML = renderLog();
   else view.innerHTML = renderInbox();
@@ -620,20 +685,47 @@ function renderTop() {
   const rawTitle = song?.text || [song?.artist, song?.title].filter(Boolean).join(" — ");
   const title = state.npError ? "הרדיו לא זמין כרגע" : !song ? "טוען…" : /^[0-9a-f-]{8,}/i.test(String(rawTitle).trim()) ? "מתנגן עכשיו" : (rawTitle || "מתנגן עכשיו");
   const listeners = state.np?.listeners?.current;
-  const summary = pipelineBadge();
-  const bulletinPill = bulletinPillModel();
+  const elapsed = state.np?.now_playing?.elapsed;
+  const duration = state.np?.now_playing?.duration;
+  const ratio = duration ? Math.min(1, Math.max(0, elapsed / duration)) : 0;
+  const live = !state.npError && state.np?.is_online && Number(listeners) > 0;
+  const summary = statusChip();
   $("#top").innerHTML = `
     <div class="np">
+      <span class="station">רדיו כיכר</span>
       <b><bdi>${esc(title)}</bdi></b>
-      <span class="dotline"><i class="dot ${state.npError ? "off" : state.np ? "on" : ""}"></i>${listeners == null ? "" : `${esc(listeners)} מאזינים`}</span>
+      <span class="dotline"><i class="dot ${live ? "live" : "idle"}"></i><span class="meter ${live ? "play" : ""}" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="num">${listeners == null ? "" : `${esc(listeners)} מאזינים`}</span></span>
     </div>
-    <button class="pill ${esc(bulletinPill.kind)}" type="button" data-act="goto-bulletin">${esc(bulletinPill.text)}</button>
     <button class="pill ${esc(summary.kind)}" type="button" data-act="pipeline" data-filter="${esc(summary.filter)}">${esc(summary.text)}</button>
-    <button class="icon-btn" type="button" data-act="menu" aria-label="תפריט">${icon("menu")}</button>`;
+    <button class="icon-btn" type="button" data-act="menu" aria-label="תפריט">${icon("menu")}</button>
+    <span class="elapsed" aria-hidden="true"><span style="width:${Math.round(ratio * 100)}%"></span></span>`;
   if (summary.text !== state.ui.lastPipe) {
     state.ui.lastPipe = summary.text;
     say(summary.text);
   }
+}
+function statusChip() {
+  const failed = failedCount();
+  const uploading = uploadingCount();
+  const bulletin = bulletinPillModel();
+  if (bulletin.kind === "bad") return { text: bulletin.text, kind: "bad", filter: "failed" };
+  if (uploading || failed) {
+    const parts = [];
+    if (uploading) parts.push(`${uploading} בהעלאה`);
+    if (failed) parts.push(`${failed} נכשל`);
+    return { text: parts.join(" · "), kind: failed ? "bad" : "warn", filter: failed ? "failed" : "uploading" };
+  }
+  const stamp = state.uploads.lastRun?.finishedAt || state.bulletin.updatedAt;
+  const when = stamp ? formatTime(stamp) : "";
+  const mins = Math.max(1, Math.round((nextCron(new Date(), 5).getTime() - Date.now()) / 60000));
+  const pace = when ? `עודכן ${when} · הבא בעוד ~${mins} דק׳` : `הבא בעוד ~${mins} דק׳`;
+  const text = bulletin.text ? `${bulletin.text} · ${pace}` : pace;
+  return { text, kind: bulletin.kind || "ok", filter: "" };
+}
+function uploadingCount() {
+  const ids = new Set(state.ui.inflight?.ids || []);
+  for (const [id, rec] of Object.entries(state.uploads.items || {})) if (rec.state === "uploading") ids.add(id);
+  return ids.size;
 }
 function pipelineBadge() {
   const failed = failedCount();
@@ -667,23 +759,25 @@ function renderNav() {
 function renderSetup() {
   const step = state.ui.setupStep;
   const msg = state.ui.setupMsg[step] || "";
-  return `<section class="wizard stack">
+  const msgClass = /✓/.test(msg) ? "secret-ok" : msg ? "secret-bad" : "";
+  return `<div class="setup-wrap"><section class="wizard stack">
+    <div class="logo-mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32"><path d="M8 20.5c2.2-1.2 4.2-4.6 8-4.6s5.8 3.4 8 4.6" fill="none" stroke="#f4efe6" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="12" r="2.2" fill="#e7c27a"/></svg></div>
     <p class="tiny">שלב ${step} מתוך 3</p>
     <div class="wizard-steps">${[1, 2, 3].map((n) => `<span class="${n <= step ? "on" : ""}"></span>`).join("")}</div>
-    ${step === 1 ? `<h1>חיבור לרדיו</h1><p class="muted">המפתח נוצר ב־AzuraCast תחת My API Keys. הוא נשמר רק בדפדפן הזה.</p>
+    ${step === 1 ? `<h1>חיבור לרדיו</h1><p class="muted">המפתח נוצר ב־AzuraCast תחת <bdi dir="ltr">My API Keys</bdi>, עם הרשאת עריכת רדיו (קבצים ופלייליסטים). הוא נשמר רק בדפדפן הזה.</p>
       <label class="field">כתובת התחנה<input id="station-url" dir="ltr" value="${esc(state.settings.stationUrl)}" autocomplete="off"></label>
-      <label class="field">מפתח API<input id="azura-key" type="password" dir="ltr" autocomplete="off"></label>
-      <p>${esc(msg)}</p>
-      <div class="row"><button class="btn" type="button" data-act="toggle-secret" data-target="azura-key">הצג / הסתר</button><button class="btn primary" type="button" data-act="check-radio">בדוק חיבור</button></div>` : ""}
-    ${step === 2 ? `<h1>חיבור ל־GitHub</h1><p class="muted">טוקן fine-grained למאגר shyberko/kikar-radio בלבד, עם הרשאת Actions ו־Contents לכתיבה.</p>
-      <label class="field">טוקן<input id="github-token" type="password" dir="ltr" autocomplete="off"></label>
-      <p>${esc(msg)}</p>
+      <label class="field">מפתח <bdi dir="ltr">API</bdi><input id="azura-key" type="password" dir="ltr" autocomplete="off"><button class="icon-btn eye" type="button" data-act="toggle-secret" data-target="azura-key" aria-label="הצג או הסתר מפתח">👁</button></label>
+      <p class="${msgClass}" role="status">${esc(msg)}</p>
+      <button class="btn primary" type="button" data-act="check-radio">בדוק חיבור</button>` : ""}
+    ${step === 2 ? `<h1>חיבור ל־GitHub</h1><p class="muted">טוקן <bdi dir="ltr">fine-grained</bdi> למאגר <bdi dir="ltr">shyberko/kikar-radio</bdi> בלבד, עם <bdi dir="ltr">Contents</bdi> ו־<bdi dir="ltr">Actions</bdi> לכתיבה.</p>
+      <label class="field">טוקן<input id="github-token" type="password" dir="ltr" autocomplete="off"><button class="icon-btn eye" type="button" data-act="toggle-secret" data-target="github-token" aria-label="הצג או הסתר טוקן">👁</button></label>
+      <p class="${msgClass}" role="status">${esc(msg)}</p>
       <div class="row"><button class="btn" type="button" data-act="setup-back">חזרה</button><button class="btn primary" type="button" data-act="check-github">בדוק</button></div>` : ""}
-    ${step === 3 ? `<h1>שיוך סדרות לפלייליסטים</h1><p class="muted">אפשר לדלג ולחזור לזה בכללים. ברירת המחדל: VOD למבזקים, מוזיקה למוזיקה, למשך השבוע.</p>
+    ${step === 3 ? `<h1>שיוך סדרות לפלייליסטים</h1><p class="muted">ברירת המחדל: תוכניות ל־VOD, מוזיקה למוזיקה, למשך השבוע. פלייליסט המבזק השעתי לא נבחר כאן.</p>
       ${renderSeriesMap()}
       <div class="row"><button class="btn" type="button" data-act="setup-skip">דלג, אעשה אחר כך</button><button class="btn primary" type="button" data-act="setup-finish">סיום</button></div>` : ""}
-    <p class="tiny">המפתחות נשמרים רק בדפדפן הזה, במכשיר הזה.</p>
-  </section>`;
+    <p class="tiny">המפתחות נשמרים רק בדפדפן הזה, במכשיר הזה. ניקוי הדפדפן ידרוש להזין אותם שוב.</p>
+  </section></div>`;
 }
 function renderSeriesMap() {
   const series = [];
@@ -694,11 +788,8 @@ function renderSeriesMap() {
     series.push(item);
   }
   if (!series.length) return `<p class="muted">עדיין אין סדרות בקטלוג. הן יופיעו אחרי הסריקה.</p>`;
-  return series.slice(0, 12).map((item) => `<label class="field">${esc(item.seriesName)}
-    <select data-series="${esc(item.seriesSlug)}">
-      <option value="briefs">מבזקים</option>
-      <option value="music" ${item.feed === "music" ? "selected" : ""}>מוזיקה</option>
-    </select></label>`).join("");
+  return series.slice(0, 12).map((item) => `<label class="field">${esc(seriesLabel(item) || item.seriesSlug)}
+    <select data-series="${esc(item.seriesSlug)}">${playlistChoices().map(([key, label]) => `<option value="${key}" ${defaultsFor(item).playlistKey === key ? "selected" : ""}>${esc(label)}</option>`).join("")}</select></label>`).join("");
 }
 
 function renderInbox() {
@@ -722,6 +813,10 @@ function renderInbox() {
       <button class="btn" type="button" data-act="select-all">בחר הכול (${items.length})</button>
       <button class="icon-btn" type="button" data-act="bulk-exit" aria-label="יציאה מבחירה">✕</button>
     </div></div>` : "";
+  const filterBits = [];
+  if (range !== "week") filterBits.push(`פורסם: ${windowName(range)}`);
+  if (selectedSeries.size) filterBits.push(`${selectedSeries.size} סדרות`);
+  const oldCount = countOlder(3);
   return `<section class="${state.ui.sheet ? "inbox-open" : ""}">
     ${state.ui.refreshing ? `<div class="progress-top"></div>` : ""}
     ${state.ui.loadError && tab === "vod" ? `<div class="err-inline">${esc(state.ui.loadError)} <button class="btn" type="button" data-act="reload">נסה שוב</button></div>` : ""}
@@ -729,23 +824,33 @@ function renderInbox() {
       <div class="spread">
         <div class="seg" role="tablist">${seg("tab", [["vod", "VOD"], ["music", "מוזיקה"]], tab)}</div>
         <div class="row">
-          <button class="btn" type="button" data-act="bulk-start">בחר</button>
-          <label class="sr" for="q">חיפוש</label>
-          <input id="q" placeholder="חיפוש" value="${esc(state.ui.search)}" style="min-height:44px;border-radius:12px;border:1px solid var(--line);padding:0 12px;width:min(220px,46vw)">
+          <button class="icon-btn" type="button" data-act="search-toggle" aria-label="חיפוש">${icon("search")}</button>
+          <button class="icon-btn" type="button" data-act="inbox-menu" aria-label="עוד פעולות">${icon("more")}</button>
         </div>
       </div>
-      <div class="chips">${chipRow("range", WINDOWS, range)}${chipRow("status", [["new", `חדשים (${counts.new})`], ["approved", `אושרו (${counts.approved})`], ["skipped", `דולגו (${counts.skipped})`]], status)}</div>
-      <div class="chips scroller">
-        <button class="chip" type="button" data-act="series-all" aria-pressed="${selectedSeries.size ? "false" : "true"}">הכול</button>
-        ${series.map(([slug, name]) => `<button class="chip" type="button" data-act="series" data-slug="${esc(slug)}" aria-pressed="${selectedSeries.has(slug) ? "true" : "false"}">${esc(name)}</button><button class="icon-btn" type="button" data-act="series-menu" data-slug="${esc(slug)}" aria-label="פעולות לסדרה ${esc(name)}">${icon("more")}</button>`).join("")}
+      ${state.ui.searchOpen ? `<input class="search-pop" id="q" placeholder="חיפוש" value="${esc(state.ui.search)}">` : ""}
+      <div class="status-tabs" role="tablist">
+        ${[["new", "חדשים"], ["approved", "אושרו"], ["skipped", "דולגו"]].map(([value, label]) => `<button type="button" data-act="q" data-key="status" data-value="${value}" aria-pressed="${status === value ? "true" : "false"}">${label} <span class="num">${counts[value]}</span></button>`).join("")}
       </div>
-      <div class="row"><button class="btn" type="button" data-act="skip-old" data-days="3">דלג על פריטים ישנים מ־3 ימים</button>
-        <button class="btn" type="button" data-act="skip-old" data-days="7">משבוע</button>
-        <button class="btn" type="button" data-act="skip-old" data-days="30">מחודש</button></div>
+      <div class="row">
+        <button class="btn" type="button" data-act="open-filters">סינון</button>
+        ${filterBits.length ? `<button class="chip on filter-chip" type="button" data-act="clear-filter">${esc(filterBits.join(" · "))} · נקה</button>` : ""}
+      </div>
     </div>
+    ${state.ui.inboxMenu ? `<div class="menu" role="menu">
+      <button type="button" data-act="bulk-start">בחר</button>
+      <button type="button" data-act="skip-old" data-days="3">דלג על ${oldCount} ישנים (3 ימים)</button>
+      <button type="button" data-act="skip-old" data-days="7">דלג על ישנים משבוע</button>
+      <button type="button" data-act="compact-toggle">${state.ui.compact ? "תצוגת כרטיס" : "תצוגה קומפקטית"}</button>
+      <button type="button" data-act="nav" data-path="/mapping">מיפוי סדרות</button>
+    </div>` : ""}
     ${bulkBar}
     <div class="cards" id="cards">${items.length ? items.map(renderCard).join("") : emptyInbox(status, counts)}</div>
   </section>`;
+}
+function countOlder(days) {
+  const cutoff = Date.now() - days * 86400000;
+  return filteredItems().filter((item) => statusOf(item) === "new" && new Date(item.pubDate).getTime() < cutoff).length;
 }
 function seg(name, options, current) {
   return options.map(([value, label]) => `<button type="button" data-act="q" data-key="${name}" data-value="${value}" aria-pressed="${current === value ? "true" : "false"}">${label}</button>`).join("");
@@ -760,29 +865,48 @@ function emptyInbox(status, counts) {
   if (status === "new" && counts.new === 0 && counts.approved + counts.skipped > 0) return `<div class="notice"><h2>סיימת!</h2><p>כל הפריטים טופלו.</p></div>`;
   return `<div class="notice"><h2>אין פריטים שמתאימים לסינון</h2><button class="btn" type="button" data-act="clear-filter">נקה סינון</button></div>`;
 }
+function pipelineChip(item) {
+  const rec = state.uploads.items?.[item.id];
+  if (state.ui.inflight?.ids?.includes(item.id) || rec?.state === "uploading") return { label: "בהעלאה", cls: "st-up" };
+  if (rec?.state === "failed") return { label: "נכשל", cls: "st-bad" };
+  if (rec?.state === "active") return { label: "בפלייליסט", cls: "st-live" };
+  if (rec?.state === "expired" || rec?.state === "removed" || rec?.state === "replaced") return { label: "פג", cls: "st-old" };
+  if (statusOf(item) === "approved") return { label: "אושר", cls: "st-ok" };
+  if (statusOf(item) === "skipped") return { label: "דולג", cls: "st-skip" };
+  return { label: "חדש", cls: "st-new" };
+}
 function renderCard(item) {
   const defs = defaultsFor(item);
   const playing = state.ui.playingId === item.id;
   const byRule = statusOf(item) === "approved" && !state.selections.items[item.id];
-  const date = formatShortDate(item.pubDate);
+  const chip = pipelineChip(item);
+  const rec = state.uploads.items?.[item.id];
+  const progress = state.ui.progress?.[item.id];
+  const label = seriesLabel(item);
   const search = `${item.title} ${item.seriesName} ${item.description}`;
+  const queued = statusOf(item) === "approved" && chip.cls !== "st-live" && chip.cls !== "st-bad" && chip.cls !== "st-old";
   return `<div class="swipe" data-id="${esc(item.id)}">
     <div class="under under-approve">אשר ${icon("check")}</div>
     <div class="under under-skip">דלג</div>
     <article class="card ${state.ui.selected.has(item.id) ? "selected" : ""}" data-card="${esc(item.id)}" data-search="${esc(search)}">
       <div class="poster">
         ${item.poster ? `<img src="${esc(item.poster)}" alt="">` : ""}
+        <span class="dur">${esc(formatDuration(item.durationSec))}</span>
         <button class="play" type="button" data-act="play" data-id="${esc(item.id)}" aria-label="${playing ? "השהה" : "נגן"}: ${esc(item.title)}">${playing ? icon("pause") : icon("play")}</button>
-        <input class="scrub" type="range" min="0" max="100" value="0" data-act="scrub" data-id="${esc(item.id)}" aria-label="מיקום בניגון" aria-valuetext="" ${playing ? "" : "hidden"}>
+        <input class="scrub" type="range" min="0" max="100" value="0" data-act="scrub" data-id="${esc(item.id)}" aria-label="מיקום בניגון" ${playing ? "" : "hidden"}>
       </div>
       <div class="card-body" data-act="expand" data-id="${esc(item.id)}">
-        <div class="meta"><span class="series">${esc(item.seriesName)}</span><time datetime="${esc(item.pubDate)}">${esc(date)}</time><span>${esc(formatDuration(item.durationSec))}</span>${byRule ? `<span class="series">אושר ע״י כלל</span>` : ""}${state.ui.bulk ? `<span class="check" data-act="toggle-select" data-id="${esc(item.id)}" role="checkbox" aria-checked="${state.ui.selected.has(item.id) ? "true" : "false"}" aria-label="בחר"></span>` : ""}</div>
+        <div class="meta">${label ? `<span class="series">${esc(label)}</span>` : ""}<time datetime="${esc(item.pubDate)}">${esc(formatRelative(item.pubDate))}</time><span class="state-chip ${chip.cls}">${chip.label}</span>${byRule ? `<span class="series">אושר ע״י כלל</span>` : ""}${state.ui.bulk ? `<span class="check" data-act="toggle-select" data-id="${esc(item.id)}" role="checkbox" aria-checked="${state.ui.selected.has(item.id) ? "true" : "false"}" aria-label="בחר"></span>` : ""}</div>
         <h3>${esc(item.title)}</h3>
         <p class="teaser">${esc(item.description || "")}</p>
-        <p class="defaults">יעלה ל: ${esc(playlistShort(defs.playlistKey))} · ${esc(windowName(defs.window))}</p>
+        ${chip.cls === "st-bad" ? `<p class="err-inline">${esc(ERROR_TEXT[rec?.errorCode] || rec?.errorMessage || ERROR_TEXT.unknown)}</p>` : ""}
+        ${chip.cls === "st-up" ? `<div class="bar" aria-label="התקדמות העלאה"><span style="width:${Math.round((progress || 0.35) * 100)}%"></span></div><p class="tiny">ממיר ומעלה… ${progress != null ? `${Math.round(progress * 100)}%` : ""}</p>` : ""}
+        <button class="dest" type="button" data-act="more" data-id="${esc(item.id)}">יעלה ל: ${esc(playlistShort(defs.playlistKey))} · ${esc(windowName(defs.window))}</button>
         <div class="actions">
-          <button class="btn primary grow" type="button" data-act="approve" data-id="${esc(item.id)}" aria-label="אשר: ${esc(item.title)}, ${esc(date)}">אשר</button>
-          <button class="btn grow" type="button" data-act="skip" data-id="${esc(item.id)}" aria-label="דלג: ${esc(item.title)}, ${esc(date)}">דלג</button>
+          <button class="btn primary grow" type="button" data-act="approve" data-id="${esc(item.id)}" aria-label="אשר: ${esc(item.title)}">אשר</button>
+          <button class="btn grow" type="button" data-act="skip" data-id="${esc(item.id)}" aria-label="דלג: ${esc(item.title)}">דלג</button>
+          ${queued ? `<button class="btn" type="button" data-act="upload-one" data-id="${esc(item.id)}">העלה עכשיו</button>` : ""}
+          ${chip.cls === "st-bad" ? `<button class="btn" type="button" data-act="retry" data-id="${esc(item.id)}">נסה שוב</button>` : ""}
           <button class="icon-btn" type="button" data-act="more" data-id="${esc(item.id)}" aria-label="אפשרויות נוספות: ${esc(item.title)}">${icon("more")}</button>
         </div>
       </div>
@@ -805,9 +929,9 @@ function renderAir() {
   const focus = state.route.q.get("focus");
   const shown = focus ? rows.filter((row) => row.kind === focus) : rows;
   return `<section class="stack">
-    <div class="spread"><h1>בשידור</h1><p class="tiny">${esc(uploadTimingText())}</p></div>
+    <div class="spread"><h1>בשידור</h1><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
+    <p class="hero-time">${esc(uploadTimingText())}</p>
     ${renderBulletinCard()}
-    <div class="row"><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>${queuedIds().length ? "העלה עכשיו" : "אין פריטים בתור"}</button></div>
     ${shown.length ? shown.map(renderAirRow).join("") : `<div class="notice"><h2>אין כרגע פריטים בתור או בפלייליסטים</h2><button class="btn" type="button" data-act="nav" data-path="/inbox">לבחירת פריטים</button></div>`}
   </section>`;
 }
@@ -830,8 +954,8 @@ function airRows() {
     const intent = intentOf(id);
     const rec = state.uploads.items?.[id];
     const title = item?.title || rec?.title || id;
-    if (state.ui.inflight?.ids?.includes(id)) {
-      rows.push({ id, kind: "uploading", title, text: "ממיר ומעלה…", item });
+    if (state.ui.inflight?.ids?.includes(id) || rec?.state === "uploading") {
+      rows.push({ id, kind: "uploading", title, text: "ממיר ומעלה…", item, progress: state.ui.progress?.[id] });
       continue;
     }
     if (rec?.state === "failed") {
@@ -878,7 +1002,8 @@ function renderAirRow(row) {
     if (row.rec?.errorCode === "auth") actions.push(`<button class="btn" type="button" data-act="nav" data-path="/settings">עדכן מפתח</button>`);
     if (row.rec?.errorCode === "storage") actions.push(`<button class="btn" type="button" data-act="nav" data-path="/air">פתח פריטים שפגו</button>`);
   }
-  return `<article class="air-card"><div class="spread"><h3>${esc(row.title)}</h3><span class="tiny">${esc(kindLabel(row.kind))}</span></div><p>${esc(row.text)}</p><div class="row">${actions.join("")}</div></article>`;
+  const progress = row.kind === "uploading" ? `<div class="bar"><span style="width:${Math.round((row.progress || 0.4) * 100)}%"></span></div>` : "";
+  return `<article class="air-card"><div class="spread"><h3>${esc(row.title)}</h3><span class="state-chip ${row.kind === "failed" ? "st-bad" : row.kind === "uploading" ? "st-up" : row.kind === "active" ? "st-live" : "st-ok"}">${esc(kindLabel(row.kind))}</span></div><p>${esc(row.text)}</p>${progress}<div class="row">${actions.join("")}</div></article>`;
 }
 function kindLabel(kind) {
   return { queued: "בתור להעלאה", uploading: "בהעלאה", active: "בפלייליסט פעיל", expiring: "יפוג בקרוב", expired: "פג", failed: "נכשל" }[kind] || kind;
@@ -904,7 +1029,8 @@ function renderBulletinCard() {
     ${b.alert ? `<div class="err-inline" role="alert">${esc(b.alert)}</div>` : ""}
     ${b.note === "failed" ? `<div class="err-inline" role="alert">${esc(ERROR_TEXT[b.failure?.code] || b.failure?.message || ERROR_TEXT.unknown)} <button class="btn" type="button" data-act="retry-bulletin">נסה שוב</button></div>` : ""}
     ${state.ui.pauseChooser ? renderPauseChooser() : ""}
-    <div class="hours" aria-label="12 השעות האחרונות">${history.map((dot) => `<button class="hour ${esc(dot.cls)}" type="button" aria-label="${esc(dot.label)}">${esc(dot.mark)}</button>`).join("")}</div>
+    <p class="tiny">מבזקים היום</p>
+    <div class="hours" aria-label="מהדורות קודמות">${history.map((dot) => `<button class="hour ${esc(dot.cls)}" type="button" data-act="play-hour" data-url="${esc(dot.url || "")}" aria-label="${esc(dot.label)}"><span class="num">${esc(dot.mark)}</span></button>`).join("")}</div>
   </article>`;
 }
 function nextHourLabel() {
@@ -919,23 +1045,20 @@ function hourDots() {
     const t = new Date(now.getTime() - i * 3600000);
     const edition = currentHourEdition(t);
     const row = (state.bulletin.history || []).find((item) => item.label === edition.label && item.editionStart && Math.abs(new Date(item.editionStart) - edition.start) < 120000);
-    let cls = "";
-    let mark = edition.label.slice(0, 2);
+    const current = currentHourEdition(now);
+    let cls = edition.start > current.start ? "future" : "future";
     let label = `${edition.label} אין דיווח`;
     if (row?.uploadedAt && !row.failed) {
-      cls = "ok";
-      mark = "✓";
-      label = `${edition.label} עלתה ב־${formatTime(row.uploadedAt)}`;
+      cls = edition.label === current.label ? "done now" : "done";
+      label = `${edition.label} עלתה ב־${formatTime(row.uploadedAt)}. נגינה`;
     } else if (row?.failed) {
-      cls = "bad";
-      mark = "✕";
+      cls = "future";
       label = `${edition.label} נכשלה`;
-    } else if (isPaused()) {
-      cls = "pause";
-      mark = "⏸";
-      label = `${edition.label} מושהה`;
+    } else if (edition.label === current.label) {
+      cls = "now";
+      label = `${edition.label} השעה הנוכחית`;
     }
-    dots.push({ cls, mark, label });
+    dots.push({ cls, mark: edition.label.slice(0, 2), label, url: row?.mediaUrl || "" });
   }
   return dots;
 }
@@ -958,24 +1081,28 @@ function renderPlaylists() {
   const managed = (state.playlists || []).filter((pl) => radio.canTouch(pl, ids));
   const fallback = Object.values(state.system.playlists || {}).filter((row) => row?.name);
   const rows = managed.length ? managed : fallback.map((row) => ({ ...row, is_enabled: true, schedule_items: [], offline: true }));
+  const offline = rows.some((pl) => pl.offline);
   return `<section class="stack"><div class="spread"><h1>פלייליסטים</h1></div>
-    <p class="tiny">מוצגים רק פלייליסטים שנוצרו על ידי המערכת. הפלייליסט <bdi>election</bdi> לא מופיע כאן ולא משתנה.</p>
-    ${rows.length ? rows.map((pl, index) => `<article class="plist" data-pid="${esc(pl.id || "")}">
-      <div class="plist-main"><h3>${esc(pl.name)}</h3><p class="tiny">${esc(scheduleLine(pl))}</p>${pl.offline ? `<p class="tiny">הפרטים המלאים יופיעו אחרי חיבור לרדיו</p>` : ""}</div>
-      <button class="btn" type="button" data-act="move" data-id="${esc(pl.id || "")}" data-dir="-1" aria-label="הזז למעלה" ${index === 0 ? "disabled" : ""}>למעלה</button>
-      <button class="btn" type="button" data-act="move" data-id="${esc(pl.id || "")}" data-dir="1" aria-label="הזז למטה" ${index === rows.length - 1 ? "disabled" : ""}>למטה</button>
-      <button class="switch" type="button" role="switch" aria-pressed="${pl.is_enabled !== false ? "true" : "false"}" data-act="toggle-playlist" data-id="${esc(pl.id || "")}" aria-label="הפעלה של ${esc(pl.name)}" ${pl.id ? "" : "disabled"}><i></i></button>
-      <button class="handle" type="button" data-act="drag" data-id="${esc(pl.id || "")}" aria-label="גרירה לשינוי סדר">↕</button>
-    </article>`).join("") : `<div class="notice"><h2>עדיין אין פלייליסטים של המערכת</h2><p>הם נוצרים בהעלאה הראשונה.</p></div>`}
+    <p class="tiny">רק פלייליסטים שהמערכת יצרה. משקל 1–25 קובע כמה הפלייליסט נבחר ביחס לאחרים, לא את סדר השירים.</p>
+    ${offline ? `<p class="warn-inline">הפרטים המלאים יופיעו אחרי חיבור לרדיו.</p>` : ""}
+    ${rows.length ? rows.map((pl) => {
+      const on = pl.is_enabled !== false;
+      const songs = pl.num_songs ?? pl.count;
+      return `<article class="plist"><div class="plist-main"><h3>${esc(pl.name)}</h3><p class="tiny">${esc(scheduleLine(pl))}${songs != null ? ` · ${songs} פריטים` : ""}</p></div>
+      <label class="tiny">משקל <input class="weight" type="number" min="1" max="25" value="${esc(pl.weight || 3)}" data-act="weight" data-id="${esc(pl.id || "")}" ${pl.id ? "" : "disabled"}></label>
+      <span class="tiny">${on ? "פעיל" : "כבוי"}</span>
+      <button class="switch" type="button" role="switch" aria-pressed="${on ? "true" : "false"}" data-act="toggle-playlist" data-id="${esc(pl.id || "")}" aria-label="${on ? "כיבוי" : "הפעלה"} של ${esc(pl.name)}" ${pl.id ? "" : "disabled"}><i></i></button>
+    </article>`;
+    }).join("") : `<div class="notice"><h2>עדיין אין פלייליסטים של המערכת</h2><p>הם נוצרים בהעלאה הראשונה.</p></div>`}
   </section>`;
 }
 function scheduleLine(pl) {
   const items = pl.schedule_items || [];
-  if (!items.length) {
-    if (pl.type === "once_per_hour") return `מתנגן: פעם בשעה, בדקה ${pl.play_per_hour_minute ?? 0}`;
-    if (pl.type === "once_per_x_songs") return `מתנגן: כל ${pl.play_per_songs || 0} שירים`;
-    if (pl.type === "once_per_x_minutes") return `מתנגן: כל ${pl.play_per_minutes || 0} דקות`;
-    return "מתנגן: בכל שעות היממה";
+    if (!items.length) {
+    if (pl.type === "once_per_hour") return `מתנגן פעם בשעה, בדקה ${pl.play_per_hour_minute ?? 0}`;
+    if (pl.type === "once_per_x_songs") return `מתנגן כל ${pl.play_per_songs || 0} שירים`;
+    if (pl.type === "once_per_x_minutes") return `מתנגן כל ${pl.play_per_minutes || 0} דקות`;
+    return "מתנגן בכל שעות היממה";
   }
   return `מתנגן: ${items.map((item) => `${daySpan(item.days || [])}, ${codeClock(item.start_time)}–${codeClock(item.end_time)}`).join(" · ")}`;
 }
@@ -991,7 +1118,8 @@ function daySpan(days) {
 
 function renderRules() {
   const editing = state.ui.ruleEdit;
-  return `<section class="stack"><div class="spread"><h1>כללים</h1><button class="btn primary" type="button" data-act="rule-new">כלל חדש</button></div>
+  const hasRules = (state.rules.rules || []).length > 0;
+  return `<section class="stack"><div class="spread"><h1>כללים</h1>${hasRules ? `<button class="btn primary" type="button" data-act="rule-new">כלל חדש</button>` : ""}</div>
     <article class="rule locked"><h2>כלל מערכת</h2><p>כשמתפרסם מבזק חדשות שעתי → העלה אוטומטית → הוסף לפלייליסט ״מבזק שעתי״ → למשך 60 דקות מהשעה העגולה. אי אפשר למחוק או לערוך את הכלל. הפלייליסט נקבע אוטומטית.</p>
       <label class="toggle"><span>העלאה אוטומטית</span><button class="switch" type="button" role="switch" aria-pressed="${isPaused() ? "false" : "true"}" data-act="bulletin-switch"><i></i></button></label>
     </article>
@@ -1015,9 +1143,11 @@ function renderRuleForm(rule) {
   const monthAgo = Date.now() - 30 * 86400000;
   const matches = (state.catalog.items || []).filter((item) => item.seriesSlug === rule.seriesSlug && new Date(item.pubDate).getTime() >= monthAgo);
   const conflict = (state.rules.rules || []).find((other) => other.id !== rule.id && other.seriesSlug === rule.seriesSlug && other.enabled);
-  return `<form class="panel stack" data-act="rule-form">
+  return `<form class="panel stepper" data-act="rule-form">
     <h2>${rule.id ? "עריכת כלל" : "כלל חדש"}</h2>
-    <p>כשיוצא פרק חדש ב־${selectHtml("seriesSlug", series.map(([slug, name]) => [slug, name]), rule.seriesSlug)} → ${selectHtml("action", [["auto", "אשר אוטומטית"], ["suggest", "הצע לי לאישור"]], rule.action || "auto")} → הוסף ל־${selectHtml("playlistKey", [["briefs", "מבזקים"], ["music", "מוזיקה"]], rule.playlistKey || "briefs")} → למשך ${selectHtml("window", WINDOWS, rule.window || "week")}</p>
+    <div class="step"><b>1</b><label class="field">כשיוצא פרק חדש ב־${selectHtml("seriesSlug", series.map(([slug, name]) => [slug, cleanSeriesName(name, slug) || name]), rule.seriesSlug)}</label></div>
+    <div class="step"><b>2</b><div>${selectHtml("action", [["auto", "אשר אוטומטית"], ["suggest", "הצע לי לאישור"]], rule.action || "auto")} ${selectHtml("playlistKey", playlistChoices(), rule.playlistKey || "shows")}</div></div>
+    <div class="step"><b>3</b><div>למשך ${selectHtml("window", WINDOWS, rule.window || "week")}</div></div>
     <label class="toggle"><input name="replacePrevious" type="checkbox" ${rule.replacePrevious ? "checked" : ""}> החלף את הפרק הקודם</label>
     <p class="tiny">הפרק הקודם מהסדרה יוסר מהפלייליסט כשהחדש יעלה. הקובץ נשמר.</p>
     <p>${matches.length ? `בחודש האחרון הכלל היה תופס ${matches.length} פרקים` : "הכלל לא היה תופס אף פרק בחודש האחרון. כדאי לבדוק את הסדרה."}</p>
@@ -1041,7 +1171,7 @@ function renderAds() {
     <h1>פרסומות, ג׳ינגלים ומעברונים</h1>
     <div class="seg">${seg("tab", [["campaigns", "קמפיינים"], ["jingles", "ג׳ינגלים"], ["sweepers", "סוויפרים"]], tab)}</div>
     ${tab === "campaigns" ? renderCampaigns() : renderGroup(tab === "jingles" ? "jingles" : "sweepers")}
-    ${tab === "campaigns" && state.route.q.get("new") !== "1" ? `<button class="fab" type="button" data-act="campaign-new">+ קמפיין חדש</button>` : ""}
+    ${tab === "campaigns" && state.route.q.get("new") !== "1" && (state.ads.campaigns || []).length ? `<button class="fab" type="button" data-act="campaign-new">+ קמפיין חדש</button>` : ""}
     ${state.route.q.get("new") === "1" ? renderCampaignWizard() : ""}
   </section>`;
 }
@@ -1205,17 +1335,40 @@ function renderGroup(key) {
   </section>`;
 }
 
+function renderMapping() {
+  const seen = new Map();
+  for (const item of state.catalog.items || []) {
+    const name = seriesLabel(item);
+    if (!name || seen.has(item.seriesSlug)) continue;
+    seen.set(item.seriesSlug, item);
+  }
+  const rows = [...seen.values()];
+  return `<section class="stack"><h1>מיפוי סדרות</h1>
+    <p class="muted">כל סדרה מקבלת פלייליסט וחלון ברירת מחדל. «יעלה ל» על הכרטיס פותח את אותו חלון. המבזק השעתי לא מופיע כאן.</p>
+    ${rows.length ? rows.map((item) => {
+      const defs = defaultsFor(item);
+      return `<article class="panel stack"><h3>${esc(seriesLabel(item))}</h3>
+        <label class="field">פלייליסט<select data-map-playlist="${esc(item.seriesSlug)}">${playlistChoices().map(([key, label]) => `<option value="${key}" ${defs.playlistKey === key ? "selected" : ""}>${esc(label)}</option>`).join("")}</select></label>
+        <label class="field">חלון<select data-map-window="${esc(item.seriesSlug)}">${WINDOWS.map(([key, label]) => `<option value="${key}" ${defs.window === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+      </article>`;
+    }).join("") : `<p class="muted">אין עדיין סדרות בקטלוג.</p>`}
+    <button class="btn primary" type="button" data-act="save-mapping">שמור מיפוי</button>
+  </section>`;
+}
 function renderSettings() {
+  const theme = localStorage.getItem("kikar-theme") || "auto";
   return `<section class="wizard stack"><h1>הגדרות</h1>
     <p>מחובר לרדיו: ${state.settings.azuraKey ? "מפתח שמור במכשיר" : "אין מפתח"}</p>
     <label class="field">כתובת<input id="station-url" dir="ltr" value="${esc(state.settings.stationUrl)}"></label>
-    <label class="field">מפתח API חדש (השאר ריק כדי לא להחליף)<input id="azura-key" type="password" dir="ltr" autocomplete="off"></label>
-    <label class="field">טוקן GitHub חדש<input id="github-token" type="password" dir="ltr" autocomplete="off"></label>
-    <p class="tiny">המפתחות נשמרים רק בדפדפן הזה, במכשיר הזה.</p>
-    <p class="tiny">פלייליסט המבזק: ${esc(PLAYLISTS.bulletin.name)}. אי אפשר להפנות אותו לפלייליסט election.</p>
+    <label class="field">מפתח <bdi dir="ltr">API</bdi> חדש<input id="azura-key" type="password" dir="ltr" autocomplete="off"></label>
+    <label class="field">טוקן <bdi dir="ltr">GitHub</bdi> חדש<input id="github-token" type="password" dir="ltr" autocomplete="off"></label>
+    <p class="tiny">המפתחות נשמרים רק בדפדפן הזה. ניקוי הדפדפן ידרוש להזין אותם שוב.</p>
+    <label class="field">מראה<select id="theme-mode"><option value="auto" ${theme === "auto" ? "selected" : ""}>לפי המערכת</option><option value="light" ${theme === "light" ? "selected" : ""}>בהיר</option><option value="dark" ${theme === "dark" ? "selected" : ""}>כהה</option></select></label>
     <div class="row"><button class="btn" type="button" data-act="check-radio">בדוק רדיו</button><button class="btn" type="button" data-act="check-github">בדוק GitHub</button><button class="btn" type="button" data-act="save-settings">שמור</button></div>
-    <p>${esc(state.ui.setupMsg[1] || "")} ${esc(state.ui.setupMsg[2] || "")}</p>
-    <button class="btn danger" type="button" data-act="disconnect">נתק ומחק מפתחות</button>
+    <p class="${/✓/.test(state.ui.setupMsg[1] || "") ? "secret-ok" : ""}">${esc(state.ui.setupMsg[1] || "")}</p>
+    <p class="${/✓/.test(state.ui.setupMsg[2] || "") ? "secret-ok" : ""}">${esc(state.ui.setupMsg[2] || "")}</p>
+    <button class="btn" type="button" data-act="nav" data-path="/mapping">מיפוי סדרות</button>
+    <button class="btn danger" type="button" data-act="disconnect">שכח מפתחות במכשיר הזה</button>
     <button class="btn" type="button" data-act="nav" data-path="/log">יומן ריצות</button>
   </section>`;
 }
@@ -1227,8 +1380,34 @@ function renderLog() {
   </section>`;
 }
 
+function renderFilterSheet() {
+  const range = state.route.q.get("range") || "week";
+  const tab = state.route.q.get("tab") || "vod";
+  const selected = new Set((state.route.q.get("series") || "").split(",").filter(Boolean));
+  const series = seriesList(tab, "month");
+  return dialog(`<div class="grab"></div><h2>סינון</h2>
+    <p class="tiny">פורסם:</p>
+    <div class="chip-row">${WINDOWS.map(([key, label]) => `<button class="chip" type="button" data-act="q" data-key="range" data-value="${key}" aria-pressed="${range === key ? "true" : "false"}">${label}</button>`).join("")}</div>
+    <p class="tiny">סדרות</p>
+    <div class="chip-row">
+      <button class="chip" type="button" data-act="series-all" aria-pressed="${selected.size ? "false" : "true"}">הכול</button>
+      ${series.map(([slug, name]) => `<button class="chip" type="button" data-act="series" data-slug="${esc(slug)}" aria-pressed="${selected.has(slug) ? "true" : "false"}">${esc(name)}</button>`).join("")}
+    </div>
+    <button class="btn primary" type="button" data-act="close-sheet">הצג</button>`);
+}
 function renderSheet() {
   const root = $("#sheet-root");
+  if (state.ui.confirm) {
+    root.innerHTML = dialog(`<h2>פלייליסט אחרון</h2><p>זה הפלייליסט הפעיל האחרון של המערכת. כיבוי ישאיר את הרדיו בלי התוכן שהמערכת מנהלת.</p><div class="row"><button class="btn danger" type="button" data-act="confirm-off">כבה בכל זאת</button><button class="btn" type="button" data-act="close-sheet">ביטול</button></div>`);
+    focusDialog();
+    return;
+  }
+  if (state.ui.filters || state.route.q.get("filters") === "1") {
+    state.ui.filters = true;
+    root.innerHTML = renderFilterSheet();
+    focusDialog();
+    return;
+  }
   if (state.ui.help) {
     root.innerHTML = dialog(`<h2>קיצורי מקלדת</h2><ul>
       <li>↓ או J / ↑ או K — פריט הבא / הקודם</li><li>A אשר · S דלג · E חלון · רווח נגן</li>
@@ -1250,7 +1429,7 @@ function renderSheet() {
     <form id="sheet-form" class="stack">
       <fieldset><legend>פלייליסט</legend><div class="choices">
         ${multi ? `<label class="choice"><input type="radio" name="playlistKey" value="" checked> ללא שינוי</label>` : ""}
-        ${[["briefs", "מבזקים"], ["music", "מוזיקה"]].map(([key, label]) => `<label class="choice"><input type="radio" name="playlistKey" value="${key}" ${!multi && defs.playlistKey === key ? "checked" : ""}> ${label}</label>`).join("")}
+        ${playlistChoices().map(([key, label]) => `<label class="choice"><input type="radio" name="playlistKey" value="${key}" ${!multi && defs.playlistKey === key ? "checked" : ""}> ${esc(label)}</label>`).join("")}
       </div></fieldset>
       <fieldset><legend>חלון שידור</legend><div class="chips">
         ${multi ? `<label class="chip"><input type="radio" name="window" value="" checked> ללא שינוי</label>` : ""}
@@ -1329,6 +1508,10 @@ function onClick(event) {
   } else if (act === "close-sheet" || act === "sheet-scrim") {
     state.ui.sheet = null;
     state.ui.help = false;
+    state.ui.filters = false;
+    state.ui.confirm = null;
+    state.ui.inboxMenu = false;
+    if (state.route.q.get("filters") === "1") mergeQuery({ filters: "" });
   } else if (act === "sheet-save") saveSheet();
   else if (act === "upload-all") dispatchUpload("");
   else if (act === "upload-one") uploadOne(id);
@@ -1358,7 +1541,7 @@ function onClick(event) {
   else if (act === "disconnect") disconnect();
   else if (act === "toggle-playlist") togglePlaylist(button.dataset.id);
   else if (act === "move") movePlaylist(button.dataset.id, Number(button.dataset.dir));
-  else if (act === "rule-new") state.ui.ruleEdit = { id: "", seriesSlug: state.catalog.items[0]?.seriesSlug || "", action: "auto", playlistKey: "briefs", window: "week", replacePrevious: false, enabled: true };
+  else if (act === "rule-new") state.ui.ruleEdit = { id: "", seriesSlug: state.catalog.items.find((item) => seriesLabel(item))?.seriesSlug || "", action: "auto", playlistKey: "shows", window: "week", replacePrevious: false, enabled: true };
   else if (act === "rule-edit") state.ui.ruleEdit = { ...(state.rules.rules || []).find((rule) => rule.id === button.dataset.id) };
   else if (act === "rule-toggle") toggleRule(button.dataset.id);
   else if (act === "rule-delete") deleteRule(button.dataset.id);
@@ -1396,8 +1579,37 @@ function onClick(event) {
   else if (act === "group-every") changeGroupEvery(button.dataset.group, Number(button.dataset.dir));
   else if (act === "group-master") toggleGroup(button.dataset.group);
   else if (act === "group-file") toggleGroupFile(button.dataset.group, Number(button.dataset.mid));
+  else if (act === "open-filters") state.ui.filters = true;
+  else if (act === "inbox-menu") state.ui.inboxMenu = !state.ui.inboxMenu;
+  else if (act === "search-toggle") state.ui.searchOpen = !state.ui.searchOpen;
+  else if (act === "compact-toggle") state.ui.compact = !state.ui.compact;
+  else if (act === "nav-settings") go("/settings");
+  else if (act === "offer-rule") {
+    state.ui.ruleEdit = { id: "", seriesSlug: state.ui.offerSeries, action: "auto", playlistKey: "shows", window: "week", replacePrevious: true, enabled: true };
+    go("/rules");
+  } else if (act === "confirm-off") {
+    const target = state.ui.confirm?.id;
+    state.ui.confirm = null;
+    if (target) togglePlaylist(target, true);
+  } else if (act === "undo-toggle" && state.ui.undoToggle) togglePlaylist(state.ui.undoToggle, true);
+  else if (act === "save-mapping") saveMapping();
+  else if (act === "play-hour" && button.dataset.url) togglePlay(button.dataset.url, "hour");
   else return;
-  if (!["play", "play-url", "toggle-secret", "expand", "scrub"].includes(act)) render();
+  if (!["play", "play-url", "toggle-secret", "expand", "scrub", "approve", "skip", "play-hour"].includes(act)) render();
+}
+function saveMapping() {
+  const map = { ...(state.rules.seriesMap || {}) };
+  document.querySelectorAll("[data-map-playlist]").forEach((select) => {
+    const slug = select.dataset.mapPlaylist;
+    map[slug] = { ...(map[slug] || {}), playlistKey: select.value, window: map[slug]?.window || "week", replacePrevious: Boolean(map[slug]?.replacePrevious) };
+  });
+  document.querySelectorAll("[data-map-window]").forEach((select) => {
+    const slug = select.dataset.mapWindow;
+    map[slug] = { ...(map[slug] || {}), playlistKey: map[slug]?.playlistKey || "shows", window: select.value };
+  });
+  state.rules.seriesMap = map;
+  persistRules();
+  toast("המיפוי נשמר");
 }
 function toggleSeries(slug) {
   const current = new Set((state.route.q.get("series") || "").split(",").filter(Boolean));
@@ -1533,10 +1745,8 @@ async function checkGithub() {
   if (input?.value) state.settings.githubToken = input.value.trim();
   try {
     const result = await gh.verify();
-    if (!result.ok) {
-      state.ui.setupMsg[2] = "לטוקן אין הרשאה להפעיל העלאות";
-    } else {
-      state.ui.setupMsg[2] = "מחובר למאגר ✓";
+    state.ui.setupMsg[2] = result.message || (result.ok ? "מחובר למאגר ✓" : "לטוקן אין הרשאה להפעיל העלאות");
+    if (result.ok) {
       state.ui.setupStep = 3;
       saveSettings();
     }
@@ -1587,10 +1797,17 @@ function disconnect() {
   go("/setup");
 }
 
-async function togglePlaylist(id) {
+async function togglePlaylist(id, force) {
   const pl = state.playlists.find((row) => String(row.id) === String(id));
   if (!pl || !radio.canTouch(pl, knownIds())) {
     toast("הפלייליסט לא מנוהל על ידי המערכת");
+    return;
+  }
+  const turningOff = pl.is_enabled !== false;
+  const enabled = state.playlists.filter((row) => radio.canTouch(row, knownIds()) && row.is_enabled !== false);
+  if (turningOff && !force && enabled.length <= 1) {
+    state.ui.confirm = { id };
+    render();
     return;
   }
   const next = pl.is_enabled === false;
@@ -1598,7 +1815,8 @@ async function togglePlaylist(id) {
   render();
   try {
     await radio.updatePlaylist(pl.id, { ...pl, is_enabled: next });
-    toast(next ? `״${pl.name}״ הופעל` : `״${pl.name}״ כובה`, [{ act: "toggle-playlist", label: "ביטול" }]);
+    toast(`${pl.name} ${next ? "פעיל" : "כבוי"}`, [{ act: "undo-toggle", label: "ביטול" }]);
+    state.ui.undoToggle = id;
   } catch {
     pl.is_enabled = !next;
     toast(`לא הצלחנו לשנות את ״${pl.name}״. נסה שוב.`);
@@ -2180,6 +2398,8 @@ function bindForms() {
       const node = player();
       if (node.duration) node.currentTime = (Number(event.target.value) / 100) * node.duration;
     }
+    if (event.target.id === "theme-mode") applyTheme(event.target.value);
+    if (event.target.dataset.act === "weight") setWeight(event.target.dataset.id, event.target.value);
   });
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Tab" || !document.querySelector(".sheet")) return;
@@ -2198,8 +2418,48 @@ function bindForms() {
   });
 }
 
+function applyTheme(mode) {
+  const next = mode || localStorage.getItem("kikar-theme") || "auto";
+  localStorage.setItem("kikar-theme", next);
+  if (next === "auto") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = next;
+}
+async function setWeight(id, value) {
+  const weight = Math.max(1, Math.min(25, Number(value) || 1));
+  const pl = state.playlists.find((row) => String(row.id) === String(id));
+  if (!pl) return;
+  pl.weight = weight;
+  if (state.ui.demo || !radio.canTouch(pl, knownIds())) return;
+  try {
+    await radio.updatePlaylist(pl.id, { ...pl, weight });
+  } catch (err) {
+    toast(err.code === "auth" ? ERROR_TEXT.auth : "לא הצלחנו לעדכן את המשקל");
+  }
+}
+function installDemo() {
+  const demo = demoBundle();
+  state.catalog = demo.catalog;
+  state.selections = demo.selections;
+  state.uploads = demo.uploads;
+  state.bulletin = demo.bulletin;
+  state.system = demo.system;
+  state.rules = demo.rules;
+  state.ads = demo.ads;
+  state.np = demo.np;
+  state.pending = demo.pending;
+  state.ui.inflight = demo.inflight;
+  state.ui.progress = demo.progress;
+  state.ui.demo = true;
+  state.ui.loading = false;
+  state.settings.setupDone = true;
+  state.npError = false;
+}
 async function boot() {
+  applyTheme();
+  state.ui.demo = new URLSearchParams(location.search).get("demo") === "1";
+  if (state.ui.demo) installDemo();
   state.route = parseRoute();
+  if (state.route.q.get("filters") === "1") state.ui.filters = true;
   bindAudio();
   bindPointers();
   bindKeys();
@@ -2208,6 +2468,8 @@ async function boot() {
   window.addEventListener("hashchange", () => {
     state.route = parseRoute();
     state.ui.sheet = null;
+    if (state.route.path !== "/inbox") state.ui.filters = false;
+    if (state.route.q.get("filters") === "1") state.ui.filters = true;
     if (state.route.path === "/playlists" || state.route.path === "/ads") refreshPlaylists();
     render();
   });

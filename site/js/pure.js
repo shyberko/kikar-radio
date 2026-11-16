@@ -3,10 +3,31 @@
 export const JERUSALEM = "Asia/Jerusalem";
 
 export const PLAYLISTS = {
+  shows: { key: "shows", name: "כיכר אוטו – תוכניות", short: "תוכניות" },
   briefs: { key: "briefs", name: "כיכר אוטו – מבזקים", short: "מבזקים" },
   music: { key: "music", name: "כיכר אוטו – מוזיקה", short: "מוזיקה" },
   bulletin: { key: "bulletin", name: "כיכר אוטו – מבזק שעתי", short: "מבזק שעתי" },
 };
+
+/** Assignable targets. The hourly bulletin playlist is never a manual default. */
+export const ASSIGNABLE_PLAYLISTS = ["shows", "briefs", "music"];
+
+export function cleanSeriesName(name, slug) {
+  const text = String(name || "")
+    .replace(/\u200d/g, " ")
+    .replace(/#/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text || /^vod$/i.test(text) || String(slug || "") === "vod") return "";
+  return text;
+}
+
+export function defaultPlaylistKey(item, seriesMap) {
+  const mapped = seriesMap?.[item?.seriesSlug]?.playlistKey;
+  if (mapped && mapped !== "bulletin" && PLAYLISTS[mapped]) return mapped;
+  if (item?.feed === "music") return "music";
+  return "shows";
+}
 
 export const MANAGED_PREFIX = "כיכר אוטו";
 export const MANAGED_MARKER = "managed-by:kikar-radio";
@@ -112,6 +133,16 @@ export function formatShortDate(date) {
 export function formatFullDate(date) {
   const p = jerusalemParts(date);
   return `${p.day}.${String(p.month).padStart(2, "0")}.${String(p.year).slice(2)}`;
+}
+
+export function formatRelative(date, now = new Date()) {
+  const p = jerusalemParts(date);
+  const n = jerusalemParts(now);
+  const time = `${String(p.hour).padStart(2, "0")}:${String(p.minute).padStart(2, "0")}`;
+  if (p.year === n.year && p.month === n.month && p.day === n.day) return `היום ${time}`;
+  const yest = addCalendarDays(n.year, n.month, n.day, -1);
+  if (p.year === yest.year && p.month === yest.month && p.day === yest.day) return `אתמול ${time}`;
+  return `${p.day}.${String(p.month).padStart(2, "0")}`;
 }
 
 export function formatTime(date) {

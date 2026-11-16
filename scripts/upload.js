@@ -71,7 +71,7 @@ async function main() {
   const runsDoc = readJson(path.join(DATA, "status/runs.json"), { schemaVersion: 1, runs: [] });
   const byId = new Map((catalog.items || []).map((item) => [item.id, item]));
 
-  await ensureCorePlaylists(key, system, ["briefs", "music"]);
+  await ensureCorePlaylists(key, system, ["shows", "briefs", "music"]);
   const managedIds = knownIdSet(system, ads);
   const playlistIdFor = (playlistKey) => {
     const id = system.playlists?.[playlistKey]?.id;

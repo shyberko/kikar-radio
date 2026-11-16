@@ -1,4 +1,5 @@
 import { isProtectedName, MANAGED_MARKER, MANAGED_PREFIX } from "./pure.js";
+import { planAzuraError } from "./policy.js";
 
 export function createRadio(getKey, getOrigin) {
   function origin() {
@@ -40,10 +41,11 @@ export function createRadio(getKey, getOrigin) {
       }
     }
     if (!res.ok) {
-      const err = new Error(String(data?.message || res.statusText || "שגיאה").replace(/<[^>]+>/g, "").slice(0, 240));
+      const plan = planAzuraError(res.status, data || text);
+      const err = new Error(plan.message);
       err.status = res.status;
-      err.code = res.status === 401 || res.status === 403 ? "auth" : res.status === 404 ? "playlist" : "unknown";
-      if (/storage|quota|disk|space/i.test(err.message)) err.code = "storage";
+      err.code = plan.code;
+      err.recovery = plan.recovery;
       throw err;
     }
     return data;
@@ -77,8 +79,10 @@ export function createRadio(getKey, getOrigin) {
         }
         if (xhr.status >= 200 && xhr.status < 300) resolve(data);
         else {
-          const err = new Error(String(data?.message || "הקובץ לא עלה לשרת").replace(/<[^>]+>/g, "").slice(0, 200));
-          err.code = xhr.status === 401 || xhr.status === 403 ? "auth" : "unknown";
+          const plan = planAzuraError(xhr.status, data || xhr.responseText);
+          const err = new Error(plan.code === "unknown" ? "הקובץ לא עלה לשרת. הקמפיין לא משודר." : plan.message);
+          err.code = plan.code;
+          err.recovery = plan.recovery;
           reject(err);
         }
       };

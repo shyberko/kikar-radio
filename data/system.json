@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "playlists": {
+    "shows": {
+      "id": null,
+      "name": "כיכר אוטו – תוכניות"
+    },
     "briefs": {
       "id": 7,
       "name": "כיכר אוטו – מבזקים"
