@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T19:06:09.600Z",
+  "updatedAt": "2026-11-16T20:06:08.577Z",
   "lastRun": {
-    "startedAt": "2026-11-16T19:05:38.065Z",
-    "finishedAt": "2026-11-16T19:06:09.600Z",
+    "startedAt": "2026-11-16T20:05:40.663Z",
+    "finishedAt": "2026-11-16T20:06:08.577Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
@@ -11,8 +11,8 @@
     "held": 0,
     "reassigned": 60,
     "itemId": null,
-    "runId": "43935612603",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43935612603"
+    "runId": "43946093103",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43946093103"
   },
   "items": {
     "bd340631d488": {
@@ -30,7 +30,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:57.092Z"
+      "removedAt": "2026-11-16T20:05:57.417Z"
     },
     "3d823f5d4bec": {
       "state": "active",
@@ -625,7 +625,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:55.256Z"
+      "removedAt": "2026-11-16T20:05:55.840Z"
     },
     "2150856a20c4": {
       "state": "replaced",
@@ -642,7 +642,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:54.890Z"
+      "removedAt": "2026-11-16T20:05:55.541Z"
     },
     "e8c136b25f2a": {
       "state": "replaced",
@@ -659,7 +659,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:54.542Z"
+      "removedAt": "2026-11-16T20:05:55.237Z"
     },
     "44b36f7fea5d": {
       "state": "active",
@@ -693,7 +693,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:56.745Z"
+      "removedAt": "2026-11-16T20:05:57.098Z"
     },
     "06b595bda7cf": {
       "state": "active",
@@ -727,7 +727,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:56.387Z"
+      "removedAt": "2026-11-16T20:05:56.782Z"
     },
     "216d0b0893e3": {
       "state": "replaced",
@@ -744,7 +744,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:54.188Z"
+      "removedAt": "2026-11-16T20:05:54.894Z"
     },
     "55353d5e6183": {
       "state": "replaced",
@@ -761,7 +761,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:57.819Z"
+      "removedAt": "2026-11-16T20:05:58.040Z"
     },
     "f4df5c794e5c": {
       "state": "replaced",
@@ -778,7 +778,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:58.499Z"
+      "removedAt": "2026-11-16T20:05:58.648Z"
     },
     "3b38538fd6e3": {
       "state": "replaced",
@@ -795,7 +795,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:59.217Z"
+      "removedAt": "2026-11-16T20:05:59.258Z"
     },
     "61a92d66852c": {
       "state": "replaced",
@@ -812,7 +812,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:00.867Z"
+      "removedAt": "2026-11-16T20:06:00.591Z"
     },
     "fff856c53f1b": {
       "state": "replaced",
@@ -829,7 +829,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:05:59.929Z"
+      "removedAt": "2026-11-16T20:05:59.918Z"
     },
     "9002b7e7271a": {
       "state": "replaced",
@@ -846,7 +846,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:02.174Z"
+      "removedAt": "2026-11-16T20:06:01.883Z"
     },
     "2084ed2ebb59": {
       "state": "replaced",
@@ -863,7 +863,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:04.051Z"
+      "removedAt": "2026-11-16T20:06:03.699Z"
     },
     "9d9c426358dd": {
       "state": "replaced",
@@ -880,7 +880,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:03.259Z"
+      "removedAt": "2026-11-16T20:06:02.922Z"
     },
     "7f73615907a7": {
       "state": "replaced",
@@ -897,7 +897,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:05.595Z"
+      "removedAt": "2026-11-16T20:06:05.044Z"
     },
     "4e530b9c493a": {
       "state": "replaced",
@@ -914,7 +914,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:04.835Z"
+      "removedAt": "2026-11-16T20:06:04.377Z"
     },
     "0f56be2a5e97": {
       "state": "replaced",
@@ -931,7 +931,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:06.356Z"
+      "removedAt": "2026-11-16T20:06:05.712Z"
     },
     "dbfc7d1df079": {
       "state": "replaced",
@@ -948,7 +948,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:07.110Z"
+      "removedAt": "2026-11-16T20:06:06.370Z"
     },
     "b6599a493a01": {
       "state": "replaced",
@@ -965,7 +965,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:07.898Z"
+      "removedAt": "2026-11-16T20:06:07.063Z"
     },
     "3ca0133794a7": {
       "state": "replaced",
@@ -982,7 +982,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:08.600Z"
+      "removedAt": "2026-11-16T20:06:07.725Z"
     },
     "05045b2553e6": {
       "state": "replaced",
@@ -999,7 +999,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T19:06:09.381Z"
+      "removedAt": "2026-11-16T20:06:08.417Z"
     },
     "296b7b1f31ba": {
       "state": "active",
