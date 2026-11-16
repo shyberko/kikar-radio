@@ -3,6 +3,19 @@
   "runs": [
     {
       "kind": "upload",
+      "startedAt": "2026-11-16T14:42:24.873Z",
+      "finishedAt": "2026-11-16T14:42:25.093Z",
+      "ok": true,
+      "uploaded": 0,
+      "failed": 0,
+      "removed": 0,
+      "reassigned": 0,
+      "itemId": "ec0b52c816de",
+      "runId": "43888382012",
+      "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43888382012"
+    },
+    {
+      "kind": "upload",
       "startedAt": "2026-11-16T14:35:32.319Z",
       "finishedAt": "2026-11-16T14:35:57.235Z",
       "ok": true,
