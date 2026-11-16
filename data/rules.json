@@ -62,5 +62,24 @@
       "replacePrevious": false
     }
   },
-  "rules": []
+  "rules": [
+    {
+      "id": "auto-music",
+      "seriesSlug": "music",
+      "action": "auto",
+      "enabled": true,
+      "playlistKey": "music",
+      "window": "week",
+      "replacePrevious": false
+    },
+    {
+      "id": "auto-music-critic",
+      "seriesSlug": "the-music-critic",
+      "action": "auto",
+      "enabled": true,
+      "playlistKey": "music",
+      "window": "week",
+      "replacePrevious": false
+    }
+  ]
 }
