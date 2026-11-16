@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T16:12:33.702Z",
+  "updatedAt": "2026-11-16T16:23:18.343Z",
   "active": {
     "key": "2026-11-16-18:00",
     "label": "18:00",
@@ -54,7 +54,8 @@
       "onAir": false,
       "removedAt": "2026-11-16T16:12:22.893Z",
       "failed": false,
-      "dateLabel": "16.11"
+      "dateLabel": "16.11",
+      "deletedAt": "2026-11-16T16:23:16.943Z"
     },
     {
       "key": "2026-11-16-16:00",
@@ -72,7 +73,8 @@
       "onAir": false,
       "removedAt": "2026-11-16T15:10:32.976Z",
       "failed": false,
-      "dateLabel": "16.11"
+      "dateLabel": "16.11",
+      "deletedAt": "2026-11-16T16:23:17.146Z"
     },
     {
       "key": "2026-11-16-15:00",
@@ -90,11 +92,12 @@
       "onAir": false,
       "removedAt": "2026-11-16T14:12:04.037Z",
       "failed": false,
-      "dateLabel": "16.11"
+      "dateLabel": "16.11",
+      "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-16T16:12:22.893Z",
+  "lastCheck": "2026-11-16T16:23:15.851Z",
   "note": "on-air",
   "paused": false,
   "sourcePending": false,
