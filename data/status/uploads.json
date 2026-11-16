@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T14:42:25.093Z",
+  "updatedAt": "2026-11-16T14:46:07.843Z",
   "lastRun": {
-    "startedAt": "2026-11-16T14:42:24.873Z",
-    "finishedAt": "2026-11-16T14:42:25.093Z",
+    "startedAt": "2026-11-16T14:43:27.639Z",
+    "finishedAt": "2026-11-16T14:46:07.843Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "reassigned": 0,
     "itemId": "ec0b52c816de",
-    "runId": "43888382012",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43888382012"
+    "runId": "43888611032",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43888611032"
   },
   "items": {
     "bd340631d488": {
@@ -43,6 +43,23 @@
       "title": "הסינגל שיעצור אתכם לרגע: \"נשמה בקרבי\" של יחיאל גינגר",
       "seriesSlug": "music",
       "feed": "music",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "ec0b52c816de": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 41,
+      "azuraPath": "kikar-auto/vod/ec0b52c816de.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-16T14:46:07.576Z",
+      "durationSec": 3690,
+      "title": "הפגישה המוזרה והתהליך לפני החתונה - ראיון עם הרב אסף רצון | צפו",
+      "seriesSlug": "haredim-news",
+      "feed": "vod",
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
