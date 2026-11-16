@@ -1,4 +1,4 @@
-import { planGithubPermissions, planGithubResponse } from "./policy.js";
+import { githubSetupMessage, planGithubPermissions, planGithubResponse } from "./policy.js";
 
 const REPO = "shyberko/kikar-radio";
 const BRANCH = "main";
@@ -119,15 +119,38 @@ export function createGithub(getToken) {
   }
 
   async function verify() {
-    const res = await fetch(`https://api.github.com/repos/${REPO}`, { headers: headers(false) });
+    let res;
+    try {
+      res = await fetch(`https://api.github.com/repos/${REPO}`, { headers: headers(false) });
+    } catch (err) {
+      err.code = "network";
+      err.message = githubSetupMessage(err);
+      throw err;
+    }
+    if (res.status === 401) {
+      const err = await readError(res);
+      err.code = "token";
+      err.message = githubSetupMessage(err);
+      throw err;
+    }
+    if (res.status === 404) {
+      const err = await readError(res);
+      err.code = "repo";
+      err.message = githubSetupMessage(err);
+      throw err;
+    }
     if (!res.ok) throw await readError(res);
     const data = await res.json();
-    const workflows = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows`, { headers: headers(false) });
-    const verdict = planGithubPermissions({
-      contents: data.permissions?.contents,
-      actions: data.permissions?.actions,
-      workflowsOk: workflows.ok,
-    });
+    let workflowsOk = false;
+    try {
+      const workflows = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows`, { headers: headers(false) });
+      workflowsOk = workflows.status === 200;
+    } catch (err) {
+      err.code = "network";
+      err.message = githubSetupMessage(err);
+      throw err;
+    }
+    const verdict = planGithubPermissions({ permissions: data.permissions, workflowsOk });
     return { name: data.full_name, ...verdict };
   }
 

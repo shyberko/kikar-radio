@@ -1,4 +1,5 @@
 import { createGithub } from "./github.js";
+import { githubSetupMessage } from "./policy.js";
 import { createRadio } from "./radio.js";
 import { demoBundle } from "./demo.js";
 import {
@@ -770,9 +771,10 @@ function renderSetup() {
       <p class="${msgClass}" role="status">${esc(msg)}</p>
       <button class="btn primary" type="button" data-act="check-radio">בדוק חיבור</button>` : ""}
     ${step === 2 ? `<h1>חיבור ל־GitHub</h1><p class="muted">טוקן <bdi dir="ltr">fine-grained</bdi> למאגר <bdi dir="ltr">shyberko/kikar-radio</bdi> בלבד, עם <bdi dir="ltr">Contents</bdi> ו־<bdi dir="ltr">Actions</bdi> לכתיבה.</p>
-      <label class="field">טוקן<input id="github-token" type="password" dir="ltr" autocomplete="off"><button class="icon-btn eye" type="button" data-act="toggle-secret" data-target="github-token" aria-label="הצג או הסתר טוקן">👁</button></label>
+      <label class="field">טוקן<input id="github-token" type="password" dir="ltr" autocomplete="off" value="${esc(state.settings.githubToken || "")}"><button class="icon-btn eye" type="button" data-act="toggle-secret" data-target="github-token" aria-label="הצג או הסתר טוקן">👁</button></label>
       <p class="${msgClass}" role="status">${esc(msg)}</p>
-      <div class="row"><button class="btn" type="button" data-act="setup-back">חזרה</button><button class="btn primary" type="button" data-act="check-github">בדוק</button></div>` : ""}
+      <div class="row"><button class="btn" type="button" data-act="setup-back">חזרה</button><button class="btn primary" type="button" data-act="check-github">בדוק</button></div>
+      <button class="btn ghost" type="button" data-act="github-skip">דלג על הבדיקה ושמור בכל זאת</button>` : ""}
     ${step === 3 ? `<h1>שיוך סדרות לפלייליסטים</h1><p class="muted">ברירת המחדל: תוכניות ל־VOD, מוזיקה למוזיקה, למשך השבוע. פלייליסט המבזק השעתי לא נבחר כאן.</p>
       ${renderSeriesMap()}
       <div class="row"><button class="btn" type="button" data-act="setup-skip">דלג, אעשה אחר כך</button><button class="btn primary" type="button" data-act="setup-finish">סיום</button></div>` : ""}
@@ -1531,6 +1533,7 @@ function onClick(event) {
     state.ui.menu = false;
   } else if (act === "check-radio") checkRadio();
   else if (act === "check-github") checkGithub();
+  else if (act === "github-skip") skipGithubCheck();
   else if (act === "setup-back") state.ui.setupStep = 1;
   else if (act === "setup-skip" || act === "setup-finish") finishSetup();
   else if (act === "toggle-secret") {
@@ -1740,19 +1743,33 @@ async function checkRadio() {
   }
   render();
 }
-async function checkGithub() {
+function rememberGithubToken() {
   const input = $("#github-token");
-  if (input?.value) state.settings.githubToken = input.value.trim();
+  if (input && input.value.trim()) state.settings.githubToken = input.value.trim();
+}
+async function checkGithub() {
+  rememberGithubToken();
   try {
     const result = await gh.verify();
-    state.ui.setupMsg[2] = result.message || (result.ok ? "מחובר למאגר ✓" : "לטוקן אין הרשאה להפעיל העלאות");
+    state.ui.setupMsg[2] = result.message;
     if (result.ok) {
       state.ui.setupStep = 3;
       saveSettings();
     }
-  } catch {
-    state.ui.setupMsg[2] = "לטוקן אין הרשאה להפעיל העלאות";
+  } catch (err) {
+    state.ui.setupMsg[2] = githubSetupMessage(err);
   }
+  render();
+}
+function skipGithubCheck() {
+  rememberGithubToken();
+  if (!state.settings.githubToken) {
+    state.ui.setupMsg[2] = "צריך להדביק טוקן לפני השמירה";
+    render();
+    return;
+  }
+  state.ui.setupStep = 3;
+  saveSettings();
   render();
 }
 function finishSetup() {

@@ -52,22 +52,40 @@ export function planGithubResponse(status, attempt = 0, maxAttempts = GITHUB_MAX
   };
 }
 
-export function planGithubPermissions({ contents, actions, workflowsOk }) {
-  if (contents !== "write") {
+/**
+ * Fine-grained tokens report repo access as {admin, maintain, push, triage, pull}.
+ * Contents write is `push: true`. Actions access is a successful GET /actions/workflows.
+ * Classic PATs that still send `contents: "write"` are accepted too.
+ */
+export function planGithubPermissions({ permissions, workflowsOk, contents, actions } = {}) {
+  const perms = permissions || {};
+  const canWrite = perms.push === true || contents === "write" || perms.contents === "write";
+  if (!canWrite) {
     return {
       ok: false,
-      code: "scope",
-      message: "לטוקן אין הרשאת כתיבה לתוכן. צריך Contents: Read and write, רק למאגר shyberko/kikar-radio.",
+      code: "contents",
+      message: "לטוקן אין הרשאת כתיבה לתוכן. צריך Contents: Read and write.",
     };
   }
-  if (!workflowsOk || actions === "read" || (actions && actions !== "write" && actions !== "admin")) {
+  const actionsBlocked = workflowsOk === false || actions === "read";
+  if (actionsBlocked) {
     return {
       ok: false,
-      code: "scope",
+      code: "actions",
       message: "לטוקן אין הרשאה להפעיל העלאות. צריך Actions: Read and write.",
     };
   }
   return { ok: true, code: "ok", message: "מחובר למאגר ✓" };
+}
+
+export function githubSetupMessage(err) {
+  const status = Number(err?.status);
+  if (err?.code === "network" || err?.name === "TypeError") return "אין חיבור ל־GitHub. נסה שוב.";
+  if (status === 401 || err?.code === "token") return "הטוקן לא תקף";
+  if (status === 404 || err?.code === "repo") return "הטוקן לא מכסה את המאגר kikar-radio";
+  if (err?.code === "contents") return "לטוקן אין הרשאת כתיבה לתוכן. צריך Contents: Read and write.";
+  if (err?.code === "actions") return "לטוקן אין הרשאה להפעיל העלאות. צריך Actions: Read and write.";
+  return err?.message || "לא הצלחנו לבדוק את הטוקן";
 }
 
 export function planAzuraError(status, body) {

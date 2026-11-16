@@ -15,7 +15,7 @@ import {
   defaultPlaylistKey,
   cleanSeriesName,
 } from "../site/js/pure.js";
-import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt } from "../site/js/policy.js";
+import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage } from "../site/js/policy.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -101,9 +101,22 @@ assert.equal(token.recovery, "settings");
 assert.match(token.message, /GitHub/);
 const scope = planGithubResponse(403, 0);
 assert.equal(scope.code, "scope");
-assert.equal(planGithubPermissions({ contents: "read", actions: "write", workflowsOk: true }).ok, false);
-assert.equal(planGithubPermissions({ contents: "write", actions: "read", workflowsOk: true }).ok, false);
-assert.equal(planGithubPermissions({ contents: "write", actions: "write", workflowsOk: true }).ok, true);
+const fineGrainedRepo = {
+  permissions: { admin: false, maintain: false, push: true, triage: true, pull: true },
+};
+assert.equal(planGithubPermissions({ permissions: fineGrainedRepo.permissions, workflowsOk: true }).ok, true);
+assert.equal(planGithubPermissions({ permissions: fineGrainedRepo.permissions, workflowsOk: true }).code, "ok");
+assert.equal(
+  planGithubPermissions({ permissions: { admin: false, maintain: false, push: false, triage: false, pull: true }, workflowsOk: true }).code,
+  "contents",
+);
+assert.equal(planGithubPermissions({ permissions: { push: true }, workflowsOk: false }).code, "actions");
+assert.equal(planGithubPermissions({ contents: "write", workflowsOk: true }).ok, true);
+assert.equal(githubSetupMessage({ status: 401 }), "הטוקן לא תקף");
+assert.equal(githubSetupMessage({ status: 404 }), "הטוקן לא מכסה את המאגר kikar-radio");
+assert.equal(githubSetupMessage({ code: "network", name: "TypeError" }), "אין חיבור ל־GitHub. נסה שוב.");
+assert.match(githubSetupMessage({ code: "contents" }), /כתיבה לתוכן/);
+assert.match(githubSetupMessage({ code: "actions" }), /להפעיל העלאות/);
 
 const azuraAuth = planAzuraError(401, { message: "Not logged in" });
 assert.equal(azuraAuth.code, "auth");
