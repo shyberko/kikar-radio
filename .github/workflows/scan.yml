@@ -3,10 +3,6 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
-  push:
-    branches: [cursor/kikar-radio-system-fbe0]
-    paths:
-      - .github/workflows/scan.yml
 permissions:
   contents: write
 concurrency:
