@@ -205,15 +205,41 @@ export function hePlural(n, one, two, many) {
   return many.replace("#", String(n));
 }
 
-/** How a bulletin watcher should behave at a Jerusalem clock time. */
+/**
+ * How a bulletin watcher should behave at a Jerusalem clock time.
+ * From :00 through :20 the first check runs immediately (a dispatch at :03
+ * does not wait). A start in the last 15 minutes only sleeps until :00.
+ */
 export function bulletinWatchPlan(parts) {
   const minute = parts.minute;
   const second = parts.second || 0;
   if (minute >= 45) {
-    return { phase: "sleep-until-hour", waitMs: ((60 - minute) * 60 - second) * 1000 };
+    return { phase: "sleep-until-hour", waitMs: ((60 - minute) * 60 - second) * 1000, immediate: false };
   }
-  if (minute <= 20) return { phase: "poll", waitMs: 60_000 };
-  return { phase: "once", waitMs: 0 };
+  if (minute <= 20) return { phase: "poll", waitMs: 60_000, immediate: true };
+  return { phase: "once", waitMs: 0, immediate: true };
+}
+
+/** once_per_hour plays this minute. Two minutes from now, wrapping the hour. */
+export function bulletinPlayMinute(minute) {
+  const m = Math.floor(Number(minute));
+  if (!Number.isFinite(m)) return 2;
+  return ((m % 60) + 2) % 60;
+}
+
+/**
+ * A bulletin file should leave the station when its hour is over, when it was
+ * already taken off the playlist but the file is still on disk, or when a new
+ * edition is about to replace it. The file we are keeping stays.
+ */
+export function shouldRetireBulletin(row, now, { keepFileId = null, replaceAll = false } = {}) {
+  if (!row?.fileId || row.failed || row.deletedAt) return false;
+  if (keepFileId != null && Number(row.fileId) === Number(keepFileId)) return false;
+  if (replaceAll) return true;
+  if (row.removedAt) return true;
+  const exp = row.expiresAt ? new Date(row.expiresAt).getTime() : NaN;
+  const at = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  return Number.isFinite(exp) && at >= exp;
 }
 
 export function inboxRangeStart(kind, now) {

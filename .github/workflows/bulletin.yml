@@ -1,9 +1,9 @@
 name: מבזק שעתי
 on:
   schedule:
-    # GitHub often starts :00 crons 10–30 min late. Arm at :50 so a modest delay
-    # still reaches HH:00, and again at :00 and :05 if the early arm was missed.
-    # The job then polls the feed every 60s until HH:20.
+    # GitHub cron is often late. Arm at :50 so a modest delay still reaches :00,
+    # and again at :00 and :05. A dispatch at :03 (the hourly routine) polls the
+    # current hour immediately, every 60s, until :20. It does not wait for :08.
     - cron: "50 * * * *"
     - cron: "0,5 * * * *"
   workflow_dispatch:

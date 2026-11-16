@@ -4,18 +4,23 @@ import { DATA, TMP } from "./lib/paths.js";
 import { readJson, writeJson, log } from "./lib/io.js";
 import { parseRss } from "./lib/rss.js";
 import { extractMedia } from "./lib/article.js";
-import { requireKey, uploadBase64, setManagedPlaylists } from "./lib/azura.js";
+import { requireKey, uploadBase64, setManagedPlaylists, deleteFile, getFile, renameFile, setPlaylistHourMinute, listPlaylists } from "./lib/azura.js";
 import { ensureCorePlaylists, emptySystem, knownIdSet } from "./lib/playlists.js";
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
 import {
   bulletinEdition,
+  bulletinPlayMinute,
   bulletinWatchPlan,
   currentHourEdition,
   collapseWs,
   formatShortDate,
+  isProtectedName,
+  isSweeperPlaylist,
   jerusalemParts,
+  MANAGED_PREFIX,
+  shouldRetireBulletin,
 } from "../site/js/pure.js";
 import { spawnSync } from "node:child_process";
 
@@ -69,7 +74,9 @@ async function runOnce() {
     note: status.note,
     activeKey: status.active?.key || null,
     onAir: status.active?.onAir ?? null,
-    removed: (status.history || []).map((row) => [row.key, row.removedAt || null, row.failed || false]),
+    removed: (status.history || []).map((row) => [row.key, row.removedAt || null, row.deletedAt || null, row.failed || false]),
+    slotFor: status.slotFor || null,
+    playMinute: status.playMinute ?? null,
     alert: status.alert || null,
     failure: status.failure?.key || null,
     paused: !!status.paused,
@@ -83,7 +90,7 @@ async function runOnce() {
   status.note = null;
   status.sourcePending = false;
 
-  await expireOld(key, status, managedIds, playlistId, now);
+  await expireOld(key, status, managedIds, now);
 
   let rss = [];
   try {
@@ -132,6 +139,9 @@ async function runOnce() {
       status.note = "on-air";
       status.failure = null;
       uploadedNow = true;
+      if (status.slotPending === current.key && status.slotFor !== current.key) {
+        await rememberSlot(key, playlistId, status, current.key);
+      }
     } else {
       try {
         const uploaded = await publishEdition(key, current, playlistId, managedIds, status);
@@ -198,26 +208,118 @@ function sameDay(a, b) {
   return pa.year === pb.year && pa.month === pb.month && pa.day === pb.day;
 }
 
-async function expireOld(key, status, managedIds, playlistId, now) {
-  const history = status.history || [];
-  for (const row of history) {
-    if (!row.fileId || !row.uploadedAt || row.failed) continue;
-    const exp = row.expiresAt ? new Date(row.expiresAt) : null;
-    if (!exp || now < exp) continue;
-    if (row.removedAt) continue;
-    try {
+function bulletinPathOk(filePath) {
+  const text = String(filePath || "").replace(/\\/g, "/");
+  return text.includes("kikar-auto/bulletins/") && !text.includes("..");
+}
+
+function syncRetired(status, row) {
+  const stamp = (target) => {
+    if (!target || Number(target.fileId) !== Number(row.fileId)) return;
+    target.removedAt = row.removedAt || target.removedAt;
+    target.onAir = false;
+    if (row.deletedAt) target.deletedAt = row.deletedAt;
+    if (row.path) target.path = row.path;
+  };
+  stamp(status.active);
+  for (const other of status.history || []) stamp(other);
+}
+
+async function retireBulletinFile(key, row, managedIds) {
+  if (!row?.fileId || row.deletedAt) return;
+  let filePath = row.path || "";
+  try {
+    if (!row.removedAt) {
       await setManagedPlaylists(key, row.fileId, [], managedIds);
-      row.removedAt = now.toISOString();
+      row.removedAt = new Date().toISOString();
       row.onAir = false;
-      log("expired bulletin removed", { edition: row.key, playlistId });
+      log("bulletin removed from playlist", { fileId: row.fileId, edition: row.key });
+    }
+  } catch (err) {
+    const missing = err.code === "playlist" || /404|not found/i.test(String(err.message || ""));
+    if (!missing) {
+      log("bulletin unassign failed", { fileId: row.fileId, message: String(err.message || err).slice(0, 160) });
+      return;
+    }
+    row.removedAt = row.removedAt || new Date().toISOString();
+    row.onAir = false;
+  }
+  if (!bulletinPathOk(filePath)) {
+    try {
+      const media = await getFile(key, row.fileId);
+      filePath = media?.path || "";
     } catch (err) {
-      log("expire remove failed", { edition: row.key, message: String(err.message || err).slice(0, 180) });
+      if (err.code === "playlist" || /404|not found/i.test(String(err.message || ""))) {
+        row.deletedAt = new Date().toISOString();
+      }
+      return;
     }
   }
+  if (!bulletinPathOk(filePath)) {
+    log("refusing to delete non-bulletin file", { fileId: row.fileId, path: String(filePath).slice(0, 120) });
+    return;
+  }
+  try {
+    await deleteFile(key, row.fileId);
+    row.deletedAt = new Date().toISOString();
+    log("deleted bulletin file", { fileId: row.fileId, path: filePath });
+  } catch (err) {
+    if (err.code === "playlist" || /404|not found/i.test(String(err.message || ""))) {
+      row.deletedAt = new Date().toISOString();
+      return;
+    }
+    const base = filePath.split("/").pop();
+    const dest = `kikar-auto/bulletins/expired/${Date.now()}-${base}`;
+    try {
+      await renameFile(key, filePath, dest);
+      row.path = dest;
+      row.deletedAt = new Date().toISOString();
+      log("moved bulletin file out of rotation", { fileId: row.fileId, dest });
+    } catch (err2) {
+      log("bulletin delete failed", { fileId: row.fileId, message: String(err2.message || err2).slice(0, 160) });
+    }
+  }
+}
+
+async function retireBulletins(key, status, managedIds, now, options) {
+  const rows = [...(status.history || [])];
+  if (status.active?.fileId) rows.push(status.active);
+  const seen = new Set();
+  for (const row of rows) {
+    if (!row?.fileId || seen.has(Number(row.fileId))) continue;
+    seen.add(Number(row.fileId));
+    if (!shouldRetireBulletin(row, now, options)) continue;
+    await retireBulletinFile(key, row, managedIds);
+    syncRetired(status, row);
+  }
+}
+
+async function expireOld(key, status, managedIds, now) {
+  await retireBulletins(key, status, managedIds, now, { replaceAll: false });
   if (status.active?.fileId && status.active.expiresAt && now >= new Date(status.active.expiresAt)) {
     status.active.onAir = false;
     status.active.removedAt = status.active.removedAt || now.toISOString();
   }
+}
+
+async function rememberSlot(key, playlistId, status, editionKey) {
+  const live = await listPlaylists(key);
+  const pl = live.find((row) => Number(row.id) === Number(playlistId));
+  const name = String(pl?.name || "");
+  const description = String(pl?.description || "");
+  if (!pl || isProtectedName(name) || isSweeperPlaylist(pl) || !name.startsWith(MANAGED_PREFIX)) {
+    throw new PipelineError("playlist", "refusing to retune a playlist that is not the hourly bulletin");
+  }
+  if (!description.includes("key:bulletin") && !name.includes("מבזק שעתי")) {
+    throw new PipelineError("playlist", "refusing to retune a playlist that is not the hourly bulletin");
+  }
+  const playAt = bulletinPlayMinute(jerusalemParts(new Date()).minute);
+  await setPlaylistHourMinute(key, playlistId, playAt);
+  status.slotFor = editionKey;
+  status.playMinute = playAt;
+  status.slotPending = null;
+  log("bulletin slot moved", { playlistId, play_per_hour_minute: playAt });
+  return playAt;
 }
 
 async function publishEdition(key, current, playlistId, managedIds, status) {
@@ -240,26 +342,12 @@ async function publishEdition(key, current, playlistId, managedIds, status) {
   const durationSec = (await probeDuration(mp3)) || null;
   const p = jerusalemParts(current.edition.start);
   const dest = `kikar-auto/bulletins/${p.year}${String(p.month).padStart(2, "0")}${String(p.day).padStart(2, "0")}-${current.edition.label.replace(":", "")}.mp3`;
+  await retireBulletins(key, status, managedIds, new Date(), { replaceAll: true });
   const uploadedMedia = await uploadBase64(key, dest, mp3);
   const uploadedAt = new Date().toISOString();
   await setManagedPlaylists(key, uploadedMedia.id, [playlistId], managedIds);
-  for (const row of status.history || []) {
-    if (!row.fileId || row.fileId === uploadedMedia.id || row.removedAt) continue;
-    try {
-      await setManagedPlaylists(key, row.fileId, [], managedIds);
-      row.removedAt = uploadedAt;
-      row.onAir = false;
-    } catch (err) {
-      log("replace remove failed", { edition: row.key, message: String(err.message || err).slice(0, 160) });
-    }
-  }
-  if (status.active?.fileId && status.active.fileId !== uploadedMedia.id) {
-    try {
-      await setManagedPlaylists(key, status.active.fileId, [], managedIds);
-    } catch {
-      /* history loop covers it */
-    }
-  }
+  status.slotPending = current.key;
+  await rememberSlot(key, playlistId, status, current.key);
   const row = {
     key: current.key,
     label: current.edition.label,

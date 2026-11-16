@@ -67,6 +67,26 @@ export async function createPlaylist(key, body) {
   return request(key, "POST", `/station/${STATION}/playlists`, { json: body });
 }
 
+/**
+ * AzuraCast returns 500 when this station receives a full playlist body.
+ * Send only play_per_hour_minute.
+ */
+export async function setPlaylistHourMinute(key, playlistId, minute) {
+  const play = Number(minute);
+  if (!Number.isInteger(play) || play < 0 || play > 59) {
+    throw new PipelineError("playlist", "play_per_hour_minute out of range");
+  }
+  return request(key, "PUT", `/station/${STATION}/playlist/${playlistId}`, {
+    json: { play_per_hour_minute: play },
+  });
+}
+
+export async function renameFile(key, fromPath, toPath) {
+  return request(key, "PUT", `/station/${STATION}/files/rename`, {
+    json: { path: fromPath, newPath: toPath },
+  });
+}
+
 export async function updatePlaylist(key, playlist, patch, knownIds) {
   assertTouchable(playlist, knownIds);
   return request(key, "PUT", `/station/${STATION}/playlist/${playlist.id}`, {

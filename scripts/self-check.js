@@ -16,6 +16,8 @@ import {
   defaultWindow,
   cleanSeriesName,
   bulletinWatchPlan,
+  bulletinPlayMinute,
+  shouldRetireBulletin,
   hePlural,
   UPLOAD_ARM_MS,
   WRITE_DEBOUNCE_MS,
@@ -174,8 +176,22 @@ assert.equal(bulletinWatchPlan({ minute: 50, second: 0 }).phase, "sleep-until-ho
 assert.equal(bulletinWatchPlan({ minute: 50, second: 10 }).waitMs, (10 * 60 - 10) * 1000);
 assert.equal(bulletinWatchPlan({ minute: 3, second: 0 }).phase, "poll");
 assert.equal(bulletinWatchPlan({ minute: 0, second: 0 }).phase, "poll");
+assert.equal(bulletinWatchPlan({ minute: 0, second: 0 }).immediate, true);
+assert.equal(bulletinWatchPlan({ minute: 3, second: 0 }).immediate, true);
 assert.equal(bulletinWatchPlan({ minute: 20, second: 0 }).phase, "poll");
 assert.equal(bulletinWatchPlan({ minute: 21, second: 0 }).phase, "once");
+assert.equal(bulletinPlayMinute(13), 15);
+assert.equal(bulletinPlayMinute(58), 0);
+assert.equal(bulletinPlayMinute(0), 2);
+const keep = { fileId: 52, expiresAt: "2026-11-16T17:00:00.000Z", removedAt: null };
+const stale = { fileId: 38, path: "kikar-auto/bulletins/20261116-1600.mp3", removedAt: "2026-11-16T15:10:32.976Z", expiresAt: "2026-11-16T15:00:00.000Z" };
+const nowBulletin = new Date("2026-11-16T16:14:00.000Z");
+assert.equal(shouldRetireBulletin(stale, nowBulletin), true);
+assert.equal(shouldRetireBulletin({ ...stale, deletedAt: "2026-11-16T16:20:00.000Z" }, nowBulletin), false);
+assert.equal(shouldRetireBulletin(keep, nowBulletin), false);
+assert.equal(shouldRetireBulletin(keep, nowBulletin, { replaceAll: true }), true);
+assert.equal(shouldRetireBulletin(keep, nowBulletin, { keepFileId: 52, replaceAll: true }), false);
+assert.equal(shouldRetireBulletin({ fileId: 50, failed: true, expiresAt: "2026-11-16T16:00:00.000Z" }, nowBulletin), false);
 assert.equal(hePlural(1, "פעולה אחת", "שתי פעולות", "# פעולות"), "פעולה אחת");
 assert.equal(hePlural(2, "פעולה אחת", "שתי פעולות", "# פעולות"), "שתי פעולות");
 assert.equal(hePlural(5, "פעולה אחת", "שתי פעולות", "# פעולות"), "5 פעולות");
