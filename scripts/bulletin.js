@@ -123,7 +123,7 @@ async function main() {
         status.consecutiveFailures = 0;
         status.note = "on-air";
         status.sourcePending = false;
-        log("bulletin uploaded", { key: uploaded.key, at: uploaded.uploadedAt });
+        log("bulletin uploaded", { edition: uploaded.key, at: uploaded.uploadedAt });
       } catch (err) {
         const mapped = err instanceof PipelineError ? err : asPipeline(err);
         pipelineFailed = true;
@@ -182,9 +182,9 @@ async function expireOld(key, status, managedIds, playlistId, now) {
       await setManagedPlaylists(key, row.fileId, [], managedIds);
       row.removedAt = now.toISOString();
       row.onAir = false;
-      log("expired bulletin removed", { key: row.key, playlistId });
+      log("expired bulletin removed", { edition: row.key, playlistId });
     } catch (err) {
-      log("expire remove failed", { key: row.key, message: String(err.message || err).slice(0, 180) });
+      log("expire remove failed", { edition: row.key, message: String(err.message || err).slice(0, 180) });
     }
   }
   if (status.active?.fileId && status.active.expiresAt && now >= new Date(status.active.expiresAt)) {
@@ -223,7 +223,7 @@ async function publishEdition(key, current, playlistId, managedIds, status) {
       row.removedAt = uploadedAt;
       row.onAir = false;
     } catch (err) {
-      log("replace remove failed", { key: row.key, message: String(err.message || err).slice(0, 160) });
+      log("replace remove failed", { edition: row.key, message: String(err.message || err).slice(0, 160) });
     }
   }
   if (status.active?.fileId && status.active.fileId !== uploadedMedia.id) {

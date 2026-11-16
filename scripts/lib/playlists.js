@@ -91,7 +91,7 @@ export async function ensureCorePlaylists(key, system, keys) {
           `פלייליסט בשם ${def.name} כבר קיים ולא נוצר על ידי המערכת. לא נוגעים בו.`,
         );
       }
-      log("creating playlist", { key: keyName, name: def.name });
+      log("creating playlist", { playlist: keyName, name: def.name });
       found = await createPlaylist(key, {
         name: def.name,
         description,
