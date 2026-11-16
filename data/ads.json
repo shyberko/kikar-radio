@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "campaigns": [],
   "jingles": {
-    "everySongs": 4,
+    "everySongs": 3,
     "enabled": true,
     "playlistId": null,
     "files": []
