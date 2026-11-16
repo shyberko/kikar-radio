@@ -1,4 +1,4 @@
-import { githubSetupMessage, planGithubPermissions, planGithubResponse } from "./policy.js";
+import { githubSetupMessage, mergeJsonDocs, planGithubPermissions, planGithubResponse } from "./policy.js";
 
 const REPO = "shyberko/kikar-radio";
 const BRANCH = "main";
@@ -18,6 +18,20 @@ function b64ToUtf8(b64) {
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return new TextDecoder().decode(bytes);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function planFrom(res, attempt, max) {
+  let text = "";
+  try {
+    text = await res.clone().text();
+  } catch {
+    text = "";
+  }
+  return planGithubResponse(res.status, attempt, max, text, res.headers.get("retry-after") || "");
 }
 
 async function readError(res) {
@@ -66,27 +80,54 @@ export function createGithub(getToken) {
     const token = getToken();
     if (!token) throw new Error("חסר טוקן GitHub");
     const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
+    const max = 6;
     let last = null;
-    for (let attempt = 0; attempt < 4; attempt++) {
-      const cur = await fetch(`${url}?ref=${BRANCH}`, { headers: headers(false) });
+    for (let attempt = 0; attempt < max; attempt++) {
+      const latest = typeof json === "function" ? json() : json;
+      const cur = await fetch(`${url}?ref=${BRANCH}&t=${Date.now()}`, { headers: headers(false) });
       let sha;
-      if (cur.status === 404) sha = undefined;
-      else if (!cur.ok) throw await readError(cur);
-      else sha = (await cur.json()).sha;
+      let remote = null;
+      if (cur.status === 404) {
+        sha = undefined;
+      } else if (!cur.ok) {
+        const plan = await planFrom(cur, attempt, max);
+        if (plan.action === "retry") {
+          last = await readError(cur);
+          last.code = plan.code;
+          await sleep(plan.waitMs || 400);
+          continue;
+        }
+        const err = await readError(cur);
+        err.code = plan.code;
+        err.message = plan.message || err.message;
+        err.recovery = plan.recovery;
+        throw err;
+      } else {
+        const data = await cur.json();
+        sha = data.sha;
+        try {
+          remote = JSON.parse(b64ToUtf8(data.content));
+        } catch {
+          remote = null;
+        }
+      }
+      const payload = remote && latest && typeof latest === "object" ? mergeJsonDocs(remote, latest) : latest;
       const res = await fetch(url, {
         method: "PUT",
         headers: headers(true),
         body: JSON.stringify({
           message,
-          content: utf8ToB64(`${JSON.stringify(json, null, 2)}\n`),
+          content: utf8ToB64(`${JSON.stringify(payload, null, 2)}\n`),
           sha,
           branch: BRANCH,
         }),
       });
-      const plan = planGithubResponse(res.status, attempt);
+      const plan = await planFrom(res, attempt, max);
       if (plan.action === "retry") {
         last = await readError(res);
         last.code = plan.code;
+        last.recovery = plan.recovery;
+        await sleep(plan.waitMs || 400);
         continue;
       }
       if (!res.ok) {
@@ -96,10 +137,11 @@ export function createGithub(getToken) {
         err.recovery = plan.recovery;
         throw err;
       }
-      return;
+      return payload;
     }
     const err = last || new Error("השמירה נכשלה");
     err.code = err.code || "conflict";
+    err.message = "לא הצלחנו לשמור אחרי כמה ניסיונות. נסה שוב בעוד רגע.";
     throw err;
   }
 

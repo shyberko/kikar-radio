@@ -16,6 +16,19 @@ if git diff --cached --quiet; then
 fi
 git commit -m "$msg"
 branch="${GITHUB_REF_NAME:?}"
-git fetch origin "$branch"
-git pull --rebase origin "$branch"
-git push origin "HEAD:${branch}"
+for attempt in 1 2 3 4 5 6; do
+  git fetch origin "$branch"
+  if ! git rebase "origin/$branch"; then
+    echo "rebase conflict on attempt ${attempt}; aborting and retrying"
+    git rebase --abort || true
+    sleep $((attempt * 2))
+    continue
+  fi
+  if git push origin "HEAD:${branch}"; then
+    exit 0
+  fi
+  echo "push rejected on attempt ${attempt}"
+  sleep $((attempt * 2))
+done
+echo "could not publish commit after 6 attempts"
+exit 1

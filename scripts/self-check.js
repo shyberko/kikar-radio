@@ -17,8 +17,11 @@ import {
   cleanSeriesName,
   bulletinWatchPlan,
   hePlural,
+  UPLOAD_ARM_MS,
+  WRITE_DEBOUNCE_MS,
+  WRITE_TOAST_AFTER_MS,
 } from "../site/js/pure.js";
-import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage } from "../site/js/policy.js";
+import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -94,9 +97,17 @@ assert.ok(fallback.mediaUrl.endsWith("/play_480p.mp4"));
 const retry = planGithubResponse(409, 0);
 assert.equal(retry.action, "retry");
 assert.equal(retry.code, "conflict");
-assert.equal(planGithubResponse(409, 1).action, "retry");
-assert.equal(planGithubResponse(409, 2).action, "retry");
-assert.equal(planGithubResponse(409, 3).action, "fail");
+assert.equal(planGithubResponse(409, 4).action, "retry");
+assert.equal(planGithubResponse(409, 5).action, "fail");
+assert.match(planGithubResponse(409, 5).message, /כמה ניסיונות/);
+assert.equal(planGithubResponse(422, 0).action, "retry");
+assert.equal(planGithubResponse(422, 0).code, "conflict");
+assert.equal(planGithubResponse(422, 5).action, "fail");
+const rate = planGithubResponse(403, 0, 6, "You have exceeded a secondary rate limit.", "2");
+assert.equal(rate.action, "retry");
+assert.equal(rate.code, "rate");
+assert.equal(rate.waitMs, 2000);
+assert.equal(planGithubResponse(429, 1, 6, "rate limit", "").code, "rate");
 const token = planGithubResponse(401, 0);
 assert.equal(token.action, "fail");
 assert.equal(token.code, "token");
@@ -160,5 +171,40 @@ assert.equal(bulletinWatchPlan({ minute: 21, second: 0 }).phase, "once");
 assert.equal(hePlural(1, "פעולה אחת", "שתי פעולות", "# פעולות"), "פעולה אחת");
 assert.equal(hePlural(2, "פעולה אחת", "שתי פעולות", "# פעולות"), "שתי פעולות");
 assert.equal(hePlural(5, "פעולה אחת", "שתי פעולות", "# פעולות"), "5 פעולות");
+
+assert.equal(WRITE_DEBOUNCE_MS, 1500);
+assert.equal(WRITE_TOAST_AFTER_MS, 30000);
+assert.equal(UPLOAD_ARM_MS, 20000);
+
+const rapid = coalesceWrites([
+  { path: "data/selections.json", body: { items: { a: { status: "approved", updatedAt: "2026-11-16T14:33:01Z" } } } },
+  { path: "data/selections.json", body: { items: { a: { status: "approved", updatedAt: "2026-11-16T14:33:01Z" }, b: { status: "approved", updatedAt: "2026-11-16T14:33:02Z" } } } },
+  { path: "data/rules.json", body: { rules: [{ id: "r1", updatedAt: "2026-11-16T14:31:57Z" }] } },
+  { path: "data/selections.json", body: { items: { a: { status: "approved", updatedAt: "2026-11-16T14:33:01Z" }, b: { status: "approved", updatedAt: "2026-11-16T14:33:02Z" }, c: { status: "skipped", updatedAt: "2026-11-16T14:33:20Z" } } } },
+]);
+assert.equal(rapid.length, 2);
+const selectionsWrite = rapid.find((row) => row.path === "data/selections.json");
+const botCommit = {
+  items: {
+    a: { status: "approved", updatedAt: "2026-11-16T14:32:14Z", playlistKey: "shows" },
+    scan: { status: "approved", updatedAt: "2026-11-16T14:30:00Z", playlistKey: "music" },
+  },
+};
+const merged = mergeJsonDocs(botCommit, selectionsWrite.body);
+assert.equal(merged.items.a.status, "approved");
+assert.equal(merged.items.a.playlistKey, "shows");
+assert.equal(merged.items.b.status, "approved");
+assert.equal(merged.items.c.status, "skipped");
+assert.equal(merged.items.scan.playlistKey, "music");
+const newerLocal = mergeJsonDocs(
+  { items: { a: { status: "approved", updatedAt: "2026-11-16T14:33:01Z" } } },
+  { items: { a: { status: "skipped", updatedAt: "2026-11-16T14:33:20Z" } } },
+);
+assert.equal(newerLocal.items.a.status, "skipped");
+const olderLocal = mergeJsonDocs(
+  { items: { a: { status: "approved", updatedAt: "2026-11-16T14:33:20Z" } } },
+  { items: { a: { status: "skipped", updatedAt: "2026-11-16T14:32:00Z" } } },
+);
+assert.equal(olderLocal.items.a.status, "approved");
 
 console.log("self-check ok");

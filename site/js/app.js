@@ -1,5 +1,5 @@
 import { createGithub } from "./github.js";
-import { githubSetupMessage } from "./policy.js";
+import { githubSetupMessage, mergeJsonDocs } from "./policy.js";
 import { createRadio } from "./radio.js";
 import { demoBundle } from "./demo.js";
 import {
@@ -22,6 +22,9 @@ import {
   cleanSeriesName,
   defaultPlaylistKey,
   defaultWindow,
+  UPLOAD_ARM_MS,
+  WRITE_DEBOUNCE_MS,
+  WRITE_TOAST_AFTER_MS,
   hePlural,
   hebrewWeekday,
   inboxRangeStart,
@@ -277,7 +280,8 @@ function queuedIds() {
   const consider = new Set([...Object.keys(state.selections.items || {}), ...Object.keys(state.auto.items || {})]);
   for (const id of consider) {
     const intent = intentOf(id);
-    if (!intent?.windowEnd || new Date(intent.windowEnd) <= now) continue;
+    if (!intent) continue;
+    if (intent.windowEnd && new Date(intent.windowEnd) <= now) continue;
     const rec = state.uploads.items?.[id];
     if (!rec || rec.state === "queued" || rec.state === "failed" || rec.state === "expired" || rec.state === "removed" || rec.state === "replaced") {
       if (rec?.state === "failed" && rec.attempts >= 3 && !(intent.retryAt && new Date(intent.retryAt) > new Date(rec.failedAt || 0))) continue;
@@ -459,51 +463,148 @@ function upsertQueue(job) {
   state.pending.push(job);
   saveQueue();
 }
+const writer = {
+  timer: null,
+  inflight: false,
+  latest: new Map(),
+  toasted: new Set(),
+};
+function docFromState(path) {
+  if (path === "data/selections.json") return state.selections;
+  if (path === "data/rules.json") return state.rules;
+  if (path === "data/ads.json") return state.ads;
+  if (path === "data/bulletin-control.json") return state.control;
+  return null;
+}
 function queueWrite(path, body, message) {
   const job = { dedupeKey: `put:${path}`, type: "put", path, body: structuredClone(body), message };
   if (state.ui.demo) return;
-  if (!navigator.onLine || !state.settings.githubToken) {
-    if (!state.settings.githubToken) {
-      toast("כדי לשמור צריך טוקן GitHub בהגדרות");
-      return;
-    }
-    upsertQueue(job);
+  const prev = writer.latest.get(path);
+  writer.latest.set(path, { message, since: prev?.since || Date.now(), body: job.body });
+  upsertQueue(job);
+  if (!state.settings.githubToken) {
+    toast("כדי לשמור צריך טוקן GitHub בהגדרות");
+    renderBanner();
+    return;
+  }
+  if (!navigator.onLine) {
     toast("אין חיבור לאינטרנט. הפעולה ממתינה ותישלח כשיחזור.");
     renderBanner();
     return;
   }
-  gh.put(path, job.body, message).catch((err) => {
-    if (isNetwork(err)) {
-      upsertQueue(job);
-      toast("אין חיבור לאינטרנט. הפעולה ממתינה ותישלח כשיחזור.");
-      renderBanner();
-      return;
+  scheduleWrites();
+  if (path === "data/selections.json") armUploadDispatch();
+}
+function scheduleWrites() {
+  clearTimeout(writer.timer);
+  writer.timer = setTimeout(() => {
+    void drainWrites();
+  }, WRITE_DEBOUNCE_MS);
+}
+function payloadFor(path, fallback) {
+  const snap = writer.latest.get(path)?.body || fallback;
+  const live = docFromState(path);
+  if (live && snap) return mergeJsonDocs(live, snap);
+  return snap || live;
+}
+async function drainWrites() {
+  if (writer.inflight || state.ui.demo || !navigator.onLine || !state.settings.githubToken) return;
+  writer.inflight = true;
+  state.ui.flushing = true;
+  try {
+    while (writer.latest.size && navigator.onLine) {
+      const path = writer.latest.keys().next().value;
+      const job = writer.latest.get(path);
+      try {
+        await gh.put(path, () => payloadFor(path, job.body), job.message);
+        if (writer.latest.get(path) === job) writer.latest.delete(path);
+        if (!writer.latest.has(path)) {
+          state.pending = state.pending.filter((row) => row.dedupeKey !== `put:${path}`);
+          saveQueue();
+          writer.toasted.delete(path);
+        }
+      } catch (err) {
+        if (!writer.latest.has(path)) writer.latest.set(path, job);
+        else writer.latest.get(path).since = Math.min(writer.latest.get(path).since || Date.now(), job.since || Date.now());
+        upsertQueue({
+          dedupeKey: `put:${path}`,
+          type: "put",
+          path,
+          body: structuredClone(payloadFor(path, job.body)),
+          message: job.message,
+        });
+        if (isNetwork(err)) {
+          toast("אין חיבור לאינטרנט. הפעולה ממתינה ותישלח כשיחזור.");
+          break;
+        }
+        const waited = Date.now() - (job.since || Date.now());
+        if (waited >= WRITE_TOAST_AFTER_MS && !writer.toasted.has(path)) {
+          writer.toasted.add(path);
+          const recovery = err.recovery === "settings" ? [{ act: "nav-settings", label: "להגדרות" }] : [{ act: "reload", label: "נסה שוב" }];
+          toast(err.message || "לא הצלחנו לשמור אחרי כמה ניסיונות. נסה שוב בעוד רגע.", recovery);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        break;
+      }
     }
-    const recovery = err.recovery === "settings" ? [{ act: "nav-settings", label: "להגדרות" }] : [{ act: "reload", label: "נסה שוב" }];
-    toast(err.message || ERROR_TEXT.unknown, recovery);
-  });
+  } finally {
+    writer.inflight = false;
+    state.ui.flushing = false;
+    renderBanner();
+    if (writer.latest.size && navigator.onLine && state.settings.githubToken) scheduleWrites();
+  }
 }
 async function flushQueue() {
-  if (state.ui.demo || !navigator.onLine || state.ui.flushing || !state.pending.length) return;
-  state.ui.flushing = true;
-  const jobs = [...state.pending];
-  for (const job of jobs) {
+  if (state.ui.demo || !navigator.onLine || !state.settings.githubToken) return;
+  for (const job of [...state.pending]) {
+    if (job.type !== "put") continue;
+    const prev = writer.latest.get(job.path);
+    writer.latest.set(job.path, { message: job.message, since: prev?.since || Date.now(), body: job.body });
+  }
+  for (const job of [...state.pending]) {
+    if (job.type !== "dispatch") continue;
     try {
-      if (job.type === "put") await gh.put(job.path, job.body, job.message);
-      if (job.type === "dispatch") await gh.dispatch(job.workflow, job.inputs);
+      await gh.dispatch(job.workflow, job.inputs);
       state.pending = state.pending.filter((row) => row.dedupeKey !== job.dedupeKey);
       saveQueue();
     } catch (err) {
       if (isNetwork(err)) break;
-      toast(err.message || "פעולה ממתינה נכשלה");
-      break;
     }
   }
-  state.ui.flushing = false;
-  if (!state.pending.length) toast("החיבור חזר");
-  renderBanner();
+  scheduleWrites();
 }
-async function dispatchUpload(itemId) {
+function needsUpload() {
+  return queuedIds().length > 0;
+}
+function armUploadDispatch() {
+  if (state.ui.demo || !needsUpload()) {
+    state.ui.awaitingUpload = false;
+    return;
+  }
+  state.ui.awaitingUpload = true;
+  clearTimeout(state.ui.uploadTimer);
+  state.ui.uploadTimer = setTimeout(() => {
+    void fireArmedUpload();
+  }, UPLOAD_ARM_MS);
+  renderTop();
+}
+async function fireArmedUpload() {
+  if (!needsUpload()) {
+    state.ui.awaitingUpload = false;
+    render();
+    return;
+  }
+  if (!navigator.onLine || writer.inflight || writer.latest.has("data/selections.json") || state.ui.flushing) {
+    state.ui.awaitingUpload = true;
+    state.ui.uploadTimer = setTimeout(() => {
+      void fireArmedUpload();
+    }, 2000);
+    return;
+  }
+  state.ui.awaitingUpload = false;
+  await dispatchUpload("", { quiet: true, armed: true });
+}
+async function dispatchUpload(itemId, opts = {}) {
   if (state.ui.demo) {
     toast("מצב הדגמה: ההעלאה לא נשלחת לשרת");
     return;
@@ -516,11 +617,21 @@ async function dispatchUpload(itemId) {
     return;
   }
   if (state.ui.activeRun) {
+    if (opts.armed) {
+      state.ui.awaitingUpload = true;
+      clearTimeout(state.ui.uploadTimer);
+      state.ui.uploadTimer = setTimeout(() => {
+        void fireArmedUpload();
+      }, UPLOAD_ARM_MS);
+      renderTop();
+      return;
+    }
     toast("העלאה כבר רצה. פריטים חדשים ייכנסו להרצה הבאה.");
     return;
   }
   try {
     await gh.dispatch("upload.yml", inputs);
+    state.ui.awaitingUpload = false;
     state.ui.inflight = { at: Date.now(), ids: itemId ? [itemId] : queuedIds() };
     toast("ההעלאה התחילה");
     pollRun("upload.yml");
@@ -532,6 +643,13 @@ async function dispatchUpload(itemId) {
       return;
     }
     toast("לא הצלחנו להפעיל את ההעלאה. בדוק את טוקן GitHub בהגדרות.");
+    if (opts.armed) {
+      state.ui.awaitingUpload = true;
+      clearTimeout(state.ui.uploadTimer);
+      state.ui.uploadTimer = setTimeout(() => {
+        void fireArmedUpload();
+      }, UPLOAD_ARM_MS);
+    }
   }
 }
 async function dispatchBulletin() {
@@ -554,7 +672,9 @@ async function pollRun(workflow) {
       state.ui.activeRun = run.status !== "completed" ? run : null;
       if (run.status === "completed") {
         state.ui.inflight = null;
+        state.ui.activeRun = null;
         await reloadStatus();
+        if (needsUpload()) armUploadDispatch();
         const failed = run.conclusion !== "success";
         toast(failed ? "ההעלאה הסתיימה עם שגיאה" : "הפריטים עלו לרדיו", failed ? [{ act: "goto-air", label: "הצג" }] : []);
         render();
@@ -720,6 +840,7 @@ function statusControls() {
   const uploading = uploadingCount();
   const pending = state.settings.setupDone ? state.pending.length : 0;
   const bits = [];
+  if (state.ui.awaitingUpload && !uploading) bits.push(`<button class="pill neutral" type="button" data-act="goto-air">ממתין להעלאה</button>`);
   if (uploading) bits.push(`<button class="pill neutral" type="button" data-act="pipeline" data-filter="uploading">${esc(hePlural(uploading, "העלאה אחת", "שתי העלאות", "# העלאות"))}</button>`);
   if (failed) bits.push(`<button class="pill neutral" type="button" data-act="pipeline" data-filter="failed"><i class="dot live" aria-hidden="true"></i>${esc(hePlural(failed, "כשלון אחד", "שני כשלונות", "# כשלונות"))}</button>`);
   if (pending) bits.push(`<button class="pill neutral" type="button" data-act="nav" data-path="/settings">${esc(pendingPhrase(pending))}</button>`);
@@ -879,9 +1000,17 @@ function emptyInbox(status, counts) {
   if (status === "new" && counts.new === 0 && counts.approved + counts.skipped > 0) return `<div class="notice"><h2>סיימת!</h2><p>כל הפריטים טופלו.</p></div>`;
   return `<div class="notice"><h2>אין פריטים שמתאימים לסינון</h2><button class="btn" type="button" data-act="clear-filter">נקה סינון</button></div>`;
 }
+function waitingUpload(id) {
+  if (!state.ui.awaitingUpload) return false;
+  const sel = state.selections.items?.[id];
+  if (!sel || sel.status !== "approved") return false;
+  const rec = state.uploads.items?.[id];
+  return !rec || rec.state !== "active";
+}
 function pipelineChip(item) {
   const rec = state.uploads.items?.[item.id];
   if (state.ui.inflight?.ids?.includes(item.id) || rec?.state === "uploading") return { label: "בהעלאה", cls: "st-up" };
+  if (waitingUpload(item.id)) return { label: "ממתין להעלאה", cls: "st-up" };
   if (rec?.state === "failed") return { label: "נכשל", cls: "st-bad" };
   if (rec?.state === "active") return { label: "בפלייליסט", cls: "st-live" };
   if (rec?.state === "expired" || rec?.state === "removed" || rec?.state === "replaced") return { label: "פג", cls: "st-old" };
@@ -951,8 +1080,9 @@ function renderAir() {
   const focus = state.route.q.get("focus");
   const shown = focus ? rows.filter((row) => row.kind === focus) : rows;
   const mins = nextUploadMinutes();
+  const hero = state.ui.awaitingUpload ? "ממתין להעלאה" : state.ui.inflight || state.ui.activeRun ? "בהעלאה" : `ההעלאה הבאה בעוד <span class="num">${mins}</span> דק׳`;
   return `<section class="stack">
-    <div class="spread"><div><h1>בשידור</h1><p class="hero-line">ההעלאה הבאה בעוד <span class="num">${mins}</span> דק׳</p></div><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
+    <div class="spread"><div><h1>בשידור</h1><p class="hero-line">${hero}</p></div><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
     ${renderBulletinCard()}
     ${shown.length ? shown.map(renderAirRow).join("") : `<div class="notice"><h2>אין כרגע פריטים בתור או בפלייליסטים</h2><button class="btn" type="button" data-act="nav" data-path="/inbox">לבחירת פריטים</button></div>`}
   </section>`;
@@ -989,9 +1119,10 @@ function airRows() {
       continue;
     }
     if (intent && (!rec || ["queued", "expired", "removed", "replaced", "failed"].includes(rec.state))) {
-      const end = new Date(intent.windowEnd);
-      if (end > now) {
-        rows.push({ id, kind: "queued", title, text: uploadTimingText(), item, intent });
+      const end = intent.windowEnd ? new Date(intent.windowEnd) : null;
+      if (!end || end > now) {
+        const text = waitingUpload(id) ? "ממתין להעלאה" : state.ui.inflight?.ids?.includes(id) ? "בהעלאה" : uploadTimingText();
+        rows.push({ id, kind: "queued", title, text, item, intent });
         continue;
       }
     }

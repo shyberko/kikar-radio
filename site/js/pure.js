@@ -309,6 +309,10 @@ export function playlistShort(key) {
   return PLAYLISTS[key]?.short || key || "";
 }
 
+export const UPLOAD_ARM_MS = 20000;
+export const WRITE_DEBOUNCE_MS = 1500;
+export const WRITE_TOAST_AFTER_MS = 30000;
+
 export function daysUntil(end, now) {
   const ms = new Date(end).getTime() - (now instanceof Date ? now : new Date(now)).getTime();
   return Math.ceil(ms / 86400000);
