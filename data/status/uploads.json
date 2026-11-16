@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T15:04:24.633Z",
+  "updatedAt": "2026-11-16T15:06:20.554Z",
   "lastRun": {
-    "startedAt": "2026-11-16T15:04:22.247Z",
-    "finishedAt": "2026-11-16T15:04:24.633Z",
+    "startedAt": "2026-11-16T15:06:09.721Z",
+    "finishedAt": "2026-11-16T15:06:20.554Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
-    "removed": 1,
-    "reassigned": 4,
-    "itemId": "ec0b52c816de",
-    "runId": "43892216139",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43892216139"
+    "removed": 0,
+    "held": 0,
+    "reassigned": 5,
+    "itemId": null,
+    "runId": "43892703785",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43892703785"
   },
   "items": {
     "bd340631d488": {
@@ -112,6 +113,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "dba093b1148d": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 49,
+      "azuraPath": "kikar-auto/music/dba093b1148d.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-16T15:06:20.353Z",
+      "durationSec": 188,
+      "title": "שרולי וינברגר בקליפ חדש לחנוכה: \"הנרות הללו\" - שיפתיע אתכם בגדול",
+      "seriesSlug": "music",
+      "feed": "music",
+      "windowEnd": "2026-11-30T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
