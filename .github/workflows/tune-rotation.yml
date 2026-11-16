@@ -1,10 +1,6 @@
 name: כיוון רוטציה
 on:
   workflow_dispatch:
-  push:
-    branches: [cursor/tune-rotation-fbe0]
-    paths:
-      - scripts/tune-rotation.js
 permissions:
   contents: read
 jobs:
