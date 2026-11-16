@@ -1,4 +1,158 @@
 {
   "schemaVersion": 1,
-  "items": {}
+  "items": {
+    "55353d5e6183": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "f4df5c794e5c": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "3b38538fd6e3": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "61a92d66852c": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "fff856c53f1b": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "9002b7e7271a": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "2084ed2ebb59": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "9d9c426358dd": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "7f73615907a7": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "4e530b9c493a": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "0f56be2a5e97": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "dbfc7d1df079": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "b6599a493a01": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "3ca0133794a7": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "05045b2553e6": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "296b7b1f31ba": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    },
+    "5b61861666a2": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-16T17:15:17.548Z",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-16T17:15:17.548Z"
+    }
+  }
 }
