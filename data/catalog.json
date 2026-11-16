@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T20:30:34.185Z",
+  "updatedAt": "2026-11-16T20:45:35.113Z",
   "items": [
+    {
+      "id": "7da751d586c3",
+      "feed": "vod",
+      "title": "ליברמן מבטיח חוק שיעבור את ר' דוב לנדו | חתך את פסי הרכבת ושילם ביוקר",
+      "link": "https://www.kikar.co.il/ayom-bakikar/avigdor-lieberman-haredi-draft-law",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/avigdor-lieberman-haredi-draft-law",
+      "pubDate": "2026-11-16T20:37:00.000Z",
+      "description": "חוק הגיוס: ליברמן מבטיח הסכמה עם הרב לנדו | נתניהו לחרדים: נסדיר את מעמד לומדי התורה | ועדת הכספים: עימות בין אבישר בן חורין לאשר | מעצרי הבחירות: המפכ\"ל בודק את ההחלטות | הנגב: תשעה כלי נשק נתפסו בפשיטות | בית שמש: אלפי ביצים הושמדו | מזג האוויר: ייתכן גשם קל | והתיעוד: האסון במחסום הרכבת | צפו (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/16/fe7e12a0-e1c8-11f1-a0b2-8bfb8af89af3__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/821076c1-cb85-4462-b4b0-4f2b52b41ef8/play_480p.mp4",
+      "durationSec": 189,
+      "durationIso": "PT3M9S"
+    },
     {
       "id": "55353d5e6183",
       "feed": "vod",
