@@ -80,6 +80,24 @@
       "playlistKey": "music",
       "window": "week",
       "replacePrevious": false
+    },
+    {
+      "id": "auto-davar-rishon",
+      "seriesSlug": "davar-rishon",
+      "action": "auto",
+      "enabled": true,
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": true
+    },
+    {
+      "id": "auto-ayom-bakikar",
+      "seriesSlug": "ayom-bakikar",
+      "action": "auto",
+      "enabled": true,
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": true
     }
   ]
 }
