@@ -77,6 +77,7 @@ async function runOnce() {
   });
   const before = fingerprint();
   let pipelineFailed = false;
+  let uploadedNow = false;
   status.lastCheck = now.toISOString();
   status.paused = isPaused;
   status.note = null;
@@ -129,13 +130,17 @@ async function runOnce() {
     if (already?.fileId) {
       status.active = { ...already, onAir: true };
       status.note = "on-air";
+      status.failure = null;
+      uploadedNow = true;
     } else {
       try {
         const uploaded = await publishEdition(key, current, playlistId, managedIds, status);
         status.active = uploaded;
         status.consecutiveFailures = 0;
         status.note = "on-air";
+        status.failure = null;
         status.sourcePending = false;
+        uploadedNow = true;
         log("bulletin uploaded", { edition: uploaded.key, at: uploaded.uploadedAt });
       } catch (err) {
         const mapped = err instanceof PipelineError ? err : asPipeline(err);
@@ -172,15 +177,19 @@ async function runOnce() {
   }
   status.hour = { label: hour.label, start: hour.start.toISOString(), expires: hour.expires.toISOString() };
   status.history = (status.history || []).slice(0, 80);
+  const outcome = {
+    uploaded: uploadedNow,
+    failed: pipelineFailed,
+    note: pipelineFailed ? status.failure?.message || status.sourceMessage || "העלאת המבזק נכשלה" : "",
+  };
   if (fingerprint() === before) {
     log("bulletin unchanged; skipping commit");
-    if (pipelineFailed) process.exitCode = 1;
-    return;
+    return outcome;
   }
   status.updatedAt = new Date().toISOString();
   writeJson(path.join(DATA, "status/bulletin.json"), status);
   writeJson(path.join(DATA, "system.json"), system);
-  if (pipelineFailed) process.exitCode = 1;
+  return outcome;
 }
 
 function sameDay(a, b) {
@@ -292,7 +301,32 @@ function commitStatus() {
   if (result.status) log("status commit failed", { status: result.status });
 }
 
+function writeOutputs(uploaded, note) {
+  const file = process.env.GITHUB_OUTPUT;
+  if (!file) return;
+  const safe = String(note || "").replace(/[\r\n]/g, " ").slice(0, 500);
+  fs.appendFileSync(file, `uploaded=${uploaded ? "true" : "false"}\nnote=${safe}\n`);
+}
+
+function finish(result) {
+  const uploaded = !!result?.uploaded;
+  const note = result?.note || "";
+  writeOutputs(uploaded, note);
+  if (uploaded) {
+    console.log(note ? `המהדורה עלתה. ניסיונות מוקדמים שלא הצליחו: ${note}` : "המהדורה עלתה.");
+    process.exitCode = 0;
+    return;
+  }
+  if (result?.failed) {
+    console.error(`המבזק לא עלה. ${note}`.trim());
+    process.exitCode = 1;
+  }
+}
+
 async function watch() {
+  let uploaded = false;
+  let failed = false;
+  const notes = [];
   for (let loop = 0; loop < 30; loop += 1) {
     const plan = bulletinWatchPlan(jerusalemParts(new Date()));
     const clock = jerusalemParts(new Date());
@@ -305,15 +339,29 @@ async function watch() {
       await sleep(plan.waitMs);
       continue;
     }
-    await runOnce();
+    let result = { uploaded: false, failed: false, note: "" };
+    try {
+      result = (await runOnce()) || result;
+    } catch (err) {
+      result = { uploaded: false, failed: true, note: String(err?.message || err).slice(0, 300) };
+    }
+    if (result.uploaded) uploaded = true;
+    if (result.failed) failed = true;
+    if (result.note) notes.push(result.note);
     commitStatus();
     if (plan.phase === "once") break;
     await sleep(plan.waitMs);
   }
+  return { uploaded, failed, note: [...new Set(notes.filter(Boolean))].join(" | ").slice(0, 500) };
 }
 
-const entry = process.env.BULLETIN_WATCH === "1" ? watch : runOnce;
+const entry = async () => {
+  if (process.env.BULLETIN_WATCH === "1") finish(await watch());
+  else finish(await runOnce());
+};
 entry().catch((err) => {
-  console.error(String(err?.message || err).slice(0, 400));
+  const note = String(err?.message || err).slice(0, 400);
+  console.error(note);
+  writeOutputs(false, note);
   process.exit(1);
 });

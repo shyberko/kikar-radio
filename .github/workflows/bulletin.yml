@@ -37,5 +37,21 @@ jobs:
       - name: שמירת סטטוס
         run: bash scripts/ci-commit.sh "עדכון מבזק שעתי" data/system.json data/status/bulletin.json
       - name: תוצאה
-        if: steps.bulletin.outcome == 'failure'
-        run: exit 1
+        if: always()
+        env:
+          UPLOADED: ${{ steps.bulletin.outputs.uploaded }}
+          NOTE: ${{ steps.bulletin.outputs.note }}
+          OUTCOME: ${{ steps.bulletin.outcome }}
+        run: |
+          echo "uploaded=$UPLOADED"
+          if [ -n "$NOTE" ]; then echo "note=$NOTE"; fi
+          if [ "$UPLOADED" = "true" ]; then
+            echo "המהדורה עלתה."
+            if [ -n "$NOTE" ]; then echo "ניסיונות מוקדמים שלא הצליחו: $NOTE"; fi
+            exit 0
+          fi
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "המבזק לא עלה. ${NOTE}"
+            exit 1
+          fi
+          exit 0

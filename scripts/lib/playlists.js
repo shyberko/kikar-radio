@@ -1,4 +1,4 @@
-import { PLAYLISTS, MANAGED_MARKER, isProtectedName } from "../../site/js/pure.js";
+import { PLAYLISTS, MANAGED_MARKER, isProtectedName, isSweeperPlaylist } from "../../site/js/pure.js";
 import { createPlaylist, listPlaylists } from "./azura.js";
 import { log } from "./io.js";
 import { PipelineError } from "./errors.js";
@@ -82,6 +82,10 @@ export async function ensureCorePlaylists(key, system, keys) {
     const description = `${MANAGED_MARKER} key:${keyName}`;
     const currentId = system.playlists[keyName]?.id;
     let found = live.find((pl) => currentId && Number(pl.id) === Number(currentId));
+    if (found && isSweeperPlaylist(found)) {
+      log("leaving sweeper playlist untouched", { id: found.id });
+      found = null;
+    }
     if (found && (isProtectedName(found.name) || !String(found.name).startsWith("כיכר אוטו"))) {
       throw new PipelineError("playlist", "stored playlist id no longer points at a managed playlist");
     }
@@ -90,7 +94,8 @@ export async function ensureCorePlaylists(key, system, keys) {
         (pl) =>
           pl.name === def.name &&
           String(pl.description || "").includes(MANAGED_MARKER) &&
-          !isProtectedName(pl.name),
+          !isProtectedName(pl.name) &&
+          !isSweeperPlaylist(pl),
       );
     }
     if (!found) {

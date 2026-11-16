@@ -313,6 +313,82 @@ export const UPLOAD_ARM_MS = 20000;
 export const WRITE_DEBOUNCE_MS = 1500;
 export const WRITE_TOAST_AFTER_MS = 30000;
 
+/** General rotation is the default shows + music playlists, not briefs or the hourly bulletin. */
+export const ROTATION_PLAYLIST_KEYS = ["shows", "music"];
+export const ROTATION_MIN = 5;
+export const DEAD_AIR_TEXT = "אין תוכן בשידור רציף — הרדיו משמיע הודעת ברירת מחדל";
+export const SWEEPER_NAME = "כיכר אוטו – מעברונים";
+
+export function isSweeperPlaylist(pl) {
+  if (!pl || isProtectedName(pl.name)) return false;
+  const description = String(pl.description || "");
+  if (description.includes(MANAGED_MARKER) && description.includes("sweepers")) return true;
+  return pl.name === SWEEPER_NAME;
+}
+
+export function existingSweeperId(playlists) {
+  const found = (playlists || []).find((pl) => isSweeperPlaylist(pl));
+  return found?.id != null ? Number(found.id) : null;
+}
+
+export function rotationSongCount(playlists, rotationIds) {
+  const wanted = new Set((rotationIds || []).map(Number).filter((id) => Number.isFinite(id)));
+  if (!wanted.size) return null;
+  let seen = 0;
+  let total = 0;
+  for (const pl of playlists || []) {
+    if (!wanted.has(Number(pl?.id))) continue;
+    seen += 1;
+    total += Math.max(0, Number(pl.num_songs ?? pl.song_count ?? pl.count ?? 0) || 0);
+  }
+  return seen ? total : null;
+}
+
+/** Empty string when rotation is healthy or still unknown. */
+export function rotationWarning(count, min = ROTATION_MIN) {
+  if (count == null || count >= min) return "";
+  if (count <= 0) return DEAD_AIR_TEXT;
+  if (count === 1) return "השידור הרציף כמעט ריק — נשאר פריט אחד בתוכניות ובמוזיקה";
+  const left = hePlural(count, "פריט אחד", "שני פריטים", "# פריטים");
+  return `השידור הרציף כמעט ריק — נשארו ${left} בתוכניות ובמוזיקה`;
+}
+
+function isRotationRecord(row) {
+  return ROTATION_PLAYLIST_KEYS.includes(row?.playlistKey) && row?.state === "active" && row?.azuraFileId;
+}
+
+/**
+ * Never let expiry empty shows+music. If removing expired items would leave
+ * fewer than `min` files, keep the oldest-expired ones until replacements exist.
+ * An explicit removal (no approval) is still removed.
+ */
+export function planRotationExpiry(records, now, min = ROTATION_MIN) {
+  const at = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  const floor = Math.max(1, Number(min) || ROTATION_MIN);
+  const general = (records || []).filter(isRotationRecord);
+  const explicit = [];
+  const staying = [];
+  const ending = [];
+  for (const row of general) {
+    if (row.explicitRemove) {
+      explicit.push(row);
+      continue;
+    }
+    const end = row.windowEnd ? new Date(row.windowEnd).getTime() : null;
+    if (end != null && !Number.isNaN(end) && at >= end) ending.push(row);
+    else staying.push(row);
+  }
+  const oldestFirst = [...ending].sort((a, b) => {
+    const endDelta = (Date.parse(a.windowEnd || "") || 0) - (Date.parse(b.windowEnd || "") || 0);
+    if (endDelta) return endDelta;
+    return (Date.parse(a.uploadedAt || "") || 0) - (Date.parse(b.uploadedAt || "") || 0);
+  });
+  const keepCount = Math.max(0, floor - staying.length);
+  const keepIds = oldestFirst.slice(0, keepCount).map((row) => row.id);
+  const expireIds = [...oldestFirst.slice(keepCount), ...explicit].map((row) => row.id);
+  return { expireIds, keepIds, held: keepIds.length > 0, floor };
+}
+
 export function daysUntil(end, now) {
   const ms = new Date(end).getTime() - (now instanceof Date ? now : new Date(now)).getTime();
   return Math.ceil(ms / 86400000);

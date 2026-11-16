@@ -7,7 +7,7 @@ import { ensureCorePlaylists, emptySystem, knownIdSet } from "./lib/playlists.js
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
-import { isProtectedName, collapseWs, endOfJerusalemDay, jerusalemParts } from "../site/js/pure.js";
+import { isProtectedName, collapseWs, endOfJerusalemDay, jerusalemParts, planRotationExpiry, ROTATION_PLAYLIST_KEYS, ROTATION_MIN } from "../site/js/pure.js";
 
 function intentFor(id, selections, auto) {
   const sel = selections.items?.[id];
@@ -80,12 +80,37 @@ async function main() {
   };
 
   const started = new Date();
-  const summary = { uploaded: 0, failed: 0, removed: 0, reassigned: 0 };
+  const summary = { uploaded: 0, failed: 0, removed: 0, held: 0, reassigned: 0 };
   const ids = new Set([
     ...Object.keys(selections.items || {}),
     ...Object.keys(auto.items || {}),
     ...Object.keys(uploads.items || {}),
   ]);
+  const rotationPlan = planRotationExpiry(
+    [...ids].map((id) => {
+      const intent = intentFor(id, selections, auto);
+      const rec = uploads.items[id] || {};
+      return {
+        id,
+        playlistKey: intent?.playlistKey || rec.playlistKey,
+        playlistId: rec.playlistId,
+        state: rec.state,
+        azuraFileId: rec.azuraFileId,
+        uploadedAt: rec.uploadedAt,
+        windowEnd: intent ? intent.windowEnd : rec.windowEnd,
+        explicitRemove: !intent,
+      };
+    }),
+    started,
+  );
+  const holdIds = new Set(rotationPlan.keepIds);
+  if (rotationPlan.held) {
+    log("kept oldest-expired general-rotation items", {
+      ids: rotationPlan.keepIds,
+      floor: rotationPlan.floor,
+      reason: "rotation would drop below the minimum",
+    });
+  }
 
   for (const id of ids) {
     const item = byId.get(id);
@@ -108,6 +133,14 @@ async function main() {
       const playlistId = playlistKey && system.playlists?.[playlistKey]?.id ? Number(system.playlists[playlistKey].id) : rec.playlistId;
       const windowEndAt = intent?.windowEnd ? new Date(intent.windowEnd) : null;
       const active = rec.state === "active" && rec.azuraFileId && playlistId;
+
+      if (holdIds.has(id)) {
+        rec.state = "active";
+        rec.heldForRotation = true;
+        summary.held += 1;
+        log("kept general-rotation item past its window", { id, playlistKey, floor: ROTATION_MIN });
+        continue;
+      }
 
       if (!intent || (windowEndAt && now >= windowEndAt)) {
         if (rec.azuraFileId && playlistId && (rec.state === "active" || rec.state === "expiring")) {
@@ -222,12 +255,29 @@ async function main() {
   if (summary.failed > 0) process.exitCode = 1;
 }
 
+function rotationActiveCount(uploads) {
+  let count = 0;
+  for (const rec of Object.values(uploads.items || {})) {
+    if (rec.state === "active" && rec.azuraFileId && ROTATION_PLAYLIST_KEYS.includes(rec.playlistKey)) count += 1;
+  }
+  return count;
+}
+
 async function replaceOlder(key, uploads, item, current, managedIds) {
+  const candidates = [];
   for (const [otherId, other] of Object.entries(uploads.items)) {
     if (otherId === item.id) continue;
     if (other.seriesSlug !== item.seriesSlug) continue;
     if (other.playlistId !== current.playlistId) continue;
     if (other.state !== "active" || !other.azuraFileId) continue;
+    candidates.push([otherId, other]);
+  }
+  candidates.sort((a, b) => (Date.parse(b[1].uploadedAt || "") || 0) - (Date.parse(a[1].uploadedAt || "") || 0));
+  for (const [otherId, other] of candidates) {
+    if (ROTATION_PLAYLIST_KEYS.includes(other.playlistKey) && rotationActiveCount(uploads) - 1 < ROTATION_MIN) {
+      log("kept general-rotation item; replacement would drop below minimum", { id: otherId, floor: ROTATION_MIN });
+      continue;
+    }
     await assignExact(key, other.azuraFileId, [], managedIds);
     other.state = "replaced";
     other.removedAt = new Date().toISOString();

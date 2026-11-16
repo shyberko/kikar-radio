@@ -20,8 +20,16 @@ import {
   UPLOAD_ARM_MS,
   WRITE_DEBOUNCE_MS,
   WRITE_TOAST_AFTER_MS,
+  ROTATION_MIN,
+  DEAD_AIR_TEXT,
+  planRotationExpiry,
+  rotationSongCount,
+  rotationWarning,
+  isSweeperPlaylist,
+  existingSweeperId,
 } from "../site/js/pure.js";
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
+import { knownIdSet } from "./lib/playlists.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -206,5 +214,70 @@ const olderLocal = mergeJsonDocs(
   { items: { a: { status: "skipped", updatedAt: "2026-11-16T14:32:00Z" } } },
 );
 assert.equal(olderLocal.items.a.status, "approved");
+
+assert.equal(ROTATION_MIN, 5);
+assert.equal(DEAD_AIR_TEXT, "אין תוכן בשידור רציף — הרדיו משמיע הודעת ברירת מחדל");
+const stationPlaylists = [
+  { id: 8, name: "כיכר אוטו – מוזיקה", type: "default", num_songs: 3 },
+  { id: 9, name: "כיכר אוטו – תוכניות", type: "default", num_songs: 1 },
+  { id: 7, name: "כיכר אוטו – מבזקים", type: "default", num_songs: 20 },
+  { id: 10, name: "כיכר אוטו – מעברונים", description: "managed-by:kikar-radio sweepers", type: "once_per_x_songs", num_songs: 2 },
+];
+assert.equal(rotationSongCount(stationPlaylists, [8, 9]), 4);
+assert.match(rotationWarning(4), /כמעט ריק/);
+assert.equal(rotationWarning(0), DEAD_AIR_TEXT);
+assert.equal(rotationWarning(5), "");
+assert.equal(rotationWarning(rotationSongCount([], [8, 9])), "");
+
+const at = new Date("2026-11-16T12:00:00Z");
+const expired = (id, key, uploadedAt, windowEnd) => ({
+  id, playlistKey: key, state: "active", azuraFileId: id, uploadedAt, windowEnd,
+});
+const healthy = planRotationExpiry([
+  expired("e1", "shows", "2026-11-16T08:00:00Z", "2026-11-16T09:00:00Z"),
+  expired("e2", "music", "2026-11-16T10:00:00Z", "2026-11-16T11:00:00Z"),
+  ...["s1", "s2", "s3", "s4", "s5", "s6"].map((id, i) => expired(id, i % 2 ? "music" : "shows", `2026-11-16T07:0${i}:00Z`, "2026-11-16T18:00:00Z")),
+], at);
+assert.deepEqual(healthy.keepIds, []);
+assert.deepEqual(healthy.expireIds, ["e1", "e2"]);
+const thin = planRotationExpiry([
+  expired("oldest", "shows", "2026-11-16T01:00:00Z", "2026-11-16T08:00:00Z"),
+  expired("older", "music", "2026-11-16T02:00:00Z", "2026-11-16T09:00:00Z"),
+  expired("mid", "shows", "2026-11-16T03:00:00Z", "2026-11-16T10:00:00Z"),
+  expired("newer", "music", "2026-11-16T04:00:00Z", "2026-11-16T11:00:00Z"),
+  expired("newest", "shows", "2026-11-16T05:00:00Z", "2026-11-16T11:30:00Z"),
+  expired("stay", "music", "2026-11-16T06:00:00Z", "2026-11-16T18:00:00Z"),
+  expired("brief", "briefs", "2026-11-16T01:00:00Z", "2026-11-16T02:00:00Z"),
+  { ...expired("skipped", "shows", "2026-11-16T00:00:00Z", "2026-11-16T07:00:00Z"), explicitRemove: true },
+], at);
+assert.equal(thin.held, true);
+assert.deepEqual(thin.keepIds, ["oldest", "older", "mid", "newer"]);
+assert.deepEqual(thin.expireIds, ["newest", "skipped"]);
+const empty = planRotationExpiry([
+  expired("a", "shows", "2026-11-16T01:00:00Z", "2026-11-16T08:00:00Z"),
+  expired("b", "music", "2026-11-16T02:00:00Z", "2026-11-16T09:00:00Z"),
+], at);
+assert.deepEqual(empty.keepIds, ["a", "b"]);
+assert.deepEqual(empty.expireIds, []);
+
+const sweeperAds = {
+  campaigns: [],
+  jingles: { playlistId: null, files: [] },
+  sweepers: {
+    playlistId: 10,
+    files: [{ mediaId: 47, enabled: true }, { mediaId: 48, enabled: true }],
+  },
+};
+const known = knownIdSet({ playlists: { shows: { id: 9 }, music: { id: 8 }, bulletin: { id: 6 } } }, sweeperAds);
+assert.equal(known.has(10), true);
+assert.equal(known.has(8), true);
+assert.equal(known.has(9), true);
+assert.equal(isManagedPlaylist({ id: 10, name: "כיכר אוטו – מעברונים", description: "managed-by:kikar-radio sweepers" }, known), true);
+assert.equal(isSweeperPlaylist({ id: 10, name: "כיכר אוטו – מעברונים", description: "managed-by:kikar-radio sweepers" }), true);
+assert.equal(existingSweeperId(stationPlaylists), 10);
+for (const name of ["Shows", "Jingles", "Hourly News", "election"]) {
+  assert.equal(isManagedPlaylist({ id: 1, name, description: "managed-by:kikar-radio" }, known), false);
+  assert.equal(isSweeperPlaylist({ id: 1, name, description: "" }), false);
+}
 
 console.log("self-check ok");

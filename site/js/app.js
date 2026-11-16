@@ -25,6 +25,9 @@ import {
   UPLOAD_ARM_MS,
   WRITE_DEBOUNCE_MS,
   WRITE_TOAST_AFTER_MS,
+  existingSweeperId,
+  rotationSongCount,
+  rotationWarning,
   hePlural,
   hebrewWeekday,
   inboxRangeStart,
@@ -753,14 +756,23 @@ async function refreshPlaylists() {
       type: row.name?.includes("שעתי") ? "once_per_hour" : "default",
       play_per_hour_minute: 8,
     }));
+    syncRotationNotice();
     return;
   }
   if (!state.settings.azuraKey) return;
   try {
     state.playlists = await radio.playlists();
   } catch {
-    state.playlists = [];
+    /* keep the last list so a blip does not hide a rotation warning */
   }
+  if (syncRotationNotice()) render();
+}
+function syncRotationNotice() {
+  const ids = [state.system?.playlists?.shows?.id, state.system?.playlists?.music?.id];
+  const notice = rotationWarning(rotationSongCount(state.playlists, ids));
+  const changed = notice !== (state.ui.rotationNotice || "");
+  state.ui.rotationNotice = notice;
+  return changed;
 }
 
 function render() {
@@ -824,6 +836,7 @@ function renderTop() {
       <b><bdi>${esc(title)}</bdi></b>
       <span class="dotline"><i class="dot ${live ? "live" : "idle"}"></i>${icon("meter")}<span class="num">${listeners == null ? "" : `${esc(listeners)} מאזינים`}</span></span>
     </div>
+    ${state.ui.rotationNotice ? `<p class="dead-air" role="alert">${esc(state.ui.rotationNotice)}</p>` : ""}
     ${statusControls()}
     <button class="icon-btn" type="button" data-act="menu" aria-label="תפריט">${icon("menu")}</button>
     <span class="elapsed" aria-hidden="true"><span style="width:${Math.round(ratio * 100)}%"></span></span>`;
@@ -1082,6 +1095,7 @@ function renderAir() {
   const mins = nextUploadMinutes();
   const hero = state.ui.awaitingUpload ? "ממתין להעלאה" : state.ui.inflight || state.ui.activeRun ? "בהעלאה" : `ההעלאה הבאה בעוד <span class="num">${mins}</span> דק׳`;
   return `<section class="stack">
+    ${state.ui.rotationNotice ? `<p class="air-dead" role="alert">${esc(state.ui.rotationNotice)}</p>` : ""}
     <div class="spread"><div><h1>בשידור</h1><p class="hero-line">${hero}</p></div><button class="btn primary" type="button" data-act="upload-all" ${queuedIds().length ? "" : "disabled"}>העלה עכשיו</button></div>
     ${renderBulletinCard()}
     ${shown.length ? shown.map(renderAirRow).join("") : `<div class="notice"><h2>אין כרגע פריטים בתור או בפלייליסטים</h2><button class="btn" type="button" data-act="nav" data-path="/inbox">לבחירת פריטים</button></div>`}
@@ -2377,6 +2391,10 @@ async function toggleGroupFile(group, mediaId) {
 async function onGroupFiles(group, files) {
   const bucket = state.ads[group];
   const label = group === "jingles" ? "ג׳ינגלים" : "מעברונים";
+  if (!bucket.playlistId && group === "sweepers") {
+    const existing = existingSweeperId(state.playlists);
+    if (existing) bucket.playlistId = existing;
+  }
   if (!bucket.playlistId) {
     const created = await radio.createPlaylist({
       name: `כיכר אוטו – ${label}`,
@@ -2665,7 +2683,10 @@ async function boot() {
   refreshNowPlaying();
   refreshPlaylists();
   flushQueue();
-  setInterval(refreshNowPlaying, 30000);
+  setInterval(() => {
+    refreshNowPlaying();
+    refreshPlaylists();
+  }, 30000);
   setInterval(() => {
     if (navigator.onLine) loadAll();
   }, 60000);
