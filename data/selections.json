@@ -73,11 +73,11 @@
       "windowStart": "2026-11-16T14:46:58.534Z",
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "replacePrevious": false,
-      "uploadNow": false,
+      "uploadNow": true,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-16T14:46:58.534Z",
-      "retryAt": null
+      "updatedAt": "2026-11-16T14:47:49.254Z",
+      "retryAt": "2026-11-16T14:47:49.254Z"
     }
   }
 }
