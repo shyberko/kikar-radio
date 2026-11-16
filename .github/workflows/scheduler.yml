@@ -1,0 +1,34 @@
+name: מתזמן
+on:
+  # Backstop only. This public repo has not been receiving schedule events.
+  # The job restarts itself with repository_dispatch, which GITHUB_TOKEN is
+  # allowed to create. Cron is evaluated only from the default branch.
+  schedule:
+    - cron: "15 */6 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [kikar-scheduler]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: kikar-scheduler
+  cancel-in-progress: false
+jobs:
+  clock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: לוח זמנים
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SCHEDULER_PAT: ${{ secrets.SCHEDULER_PAT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SCHEDULER_STATE: ${{ github.event_name == 'repository_dispatch' && toJson(github.event.client_payload) || '{}' }}
+        run: node scripts/scheduler.js

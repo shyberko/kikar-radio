@@ -1,6 +1,7 @@
 name: העלאה לרדיו
 on:
   schedule:
+    # Valid UTC cron, registered from the default branch. Minute 5 of every hour.
     - cron: "5 * * * *"
   workflow_dispatch:
     inputs:
@@ -9,6 +10,8 @@ on:
         required: false
         type: string
         default: ""
+  repository_dispatch:
+    types: [kikar-upload]
 permissions:
   contents: write
 concurrency:
@@ -25,6 +28,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: מתזמן גיבוי
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/scheduler.js --poke
       - name: ffmpeg
         run: |
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
@@ -33,7 +43,7 @@ jobs:
         id: upload
         env:
           RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
-          ITEM_ID: ${{ inputs.item_id }}
+          ITEM_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.item_id || '' }}
         run: node scripts/upload.js
         continue-on-error: true
       - name: שמירת סטטוס

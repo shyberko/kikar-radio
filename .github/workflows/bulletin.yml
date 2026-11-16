@@ -1,12 +1,14 @@
 name: מבזק שעתי
 on:
   schedule:
-    # GitHub cron is often late. Arm at :50 so a modest delay still reaches :00,
-    # and again at :00 and :05. A dispatch at :03 (the hourly routine) polls the
-    # current hour immediately, every 60s, until :20. It does not wait for :08.
+    # Valid UTC cron, registered from the default branch only.
+    # :50 arms the hour; :00 and :05 are backstops if the early run was missed.
+    # The in-repo מתזמן is the clock that actually starts this workflow.
     - cron: "50 * * * *"
     - cron: "0,5 * * * *"
   workflow_dispatch:
+  repository_dispatch:
+    types: [kikar-bulletin]
 permissions:
   contents: write
 concurrency:
@@ -23,6 +25,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: מתזמן גיבוי
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/scheduler.js --poke
       - name: ffmpeg
         run: |
           if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi

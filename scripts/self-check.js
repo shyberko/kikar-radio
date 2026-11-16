@@ -31,6 +31,8 @@ import {
   existingSweeperId,
 } from "../site/js/pure.js";
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
+import { readFileSync } from "node:fs";
+import { schedulerTick, applySchedulerAction, cronOk, SCHEDULER_RUN_MINUTES } from "./scheduler-plan.js";
 import { knownIdSet } from "./lib/playlists.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
@@ -295,5 +297,50 @@ for (const name of ["Shows", "Jingles", "Hourly News", "election"]) {
   assert.equal(isManagedPlaylist({ id: 1, name, description: "managed-by:kikar-radio" }, known), false);
   assert.equal(isSweeperPlaylist({ id: 1, name, description: "" }), false);
 }
+
+assert.equal(SCHEDULER_RUN_MINUTES, 345);
+assert.equal(cronOk("50 * * * *"), true);
+assert.equal(cronOk("0,5 * * * *"), true);
+assert.equal(cronOk("*/15 * * * *"), true);
+assert.equal(cronOk("5 * * * *"), true);
+assert.equal(cronOk("15 */6 * * *"), true);
+assert.equal(cronOk("60 * * * *"), false);
+assert.equal(cronOk("* * *"), false);
+for (const [file, expr] of [
+  ["bulletin.yml", "50 * * * *"],
+  ["bulletin.yml", "0,5 * * * *"],
+  ["upload.yml", "5 * * * *"],
+  ["scan.yml", "*/15 * * * *"],
+  ["scheduler.yml", "15 */6 * * *"],
+]) {
+  const yml = readFileSync(new URL(`../.github/workflows/${file}`, import.meta.url), "utf8");
+  assert.equal(yml.includes(`cron: "${expr}"`), true, file);
+  assert.equal(cronOk(expr), true);
+}
+const clock = { year: 2026, month: 11, day: 16, hour: 18, minute: 0, second: 0 };
+let slot = {};
+const fired = [];
+for (let minute = 0; minute < 60; minute++) {
+  const plan = schedulerTick({ ...clock, minute }, slot);
+  for (const action of plan.actions) {
+    fired.push(`${action.kind}@${minute}`);
+    slot = applySchedulerAction(slot, action);
+  }
+}
+assert.deepEqual(fired.filter((row) => row.startsWith("bulletin")), ["bulletin@0", "bulletin@50"]);
+assert.deepEqual(fired.filter((row) => row.startsWith("upload")), ["upload@5"]);
+assert.deepEqual(fired.filter((row) => row.startsWith("scan")), ["scan@0", "scan@15", "scan@30", "scan@45"]);
+const armed = schedulerTick({ ...clock, minute: 50 }, {});
+assert.equal(armed.actions.find((row) => row.kind === "bulletin").key, "2026-11-16-19");
+const late = schedulerTick({ ...clock, minute: 3 }, {});
+assert.equal(late.actions.find((row) => row.kind === "bulletin").key, "2026-11-16-18");
+const wrapped = schedulerTick({ year: 2026, month: 11, day: 16, hour: 23, minute: 50, second: 0 }, {});
+assert.equal(wrapped.actions.find((row) => row.kind === "bulletin").key, "2026-11-17-00");
+let mid = {};
+for (const minute of [0, 5, 10]) {
+  const plan = schedulerTick({ ...clock, minute }, mid);
+  for (const action of plan.actions) mid = applySchedulerAction(mid, action);
+}
+assert.equal(schedulerTick({ ...clock, minute: 12 }, mid).actions.length, 0);
 
 console.log("self-check ok");
