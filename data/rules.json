@@ -1,5 +1,66 @@
 {
   "schemaVersion": 1,
-  "seriesMap": {},
+  "seriesMap": {
+    "ayom-bakikar": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "davar-rishon": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "music": {
+      "playlistKey": "music",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "haredim-news": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "friday-night-studio": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "chaim-beizy": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "studio-kikar": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "vod": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "news-interviews": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "kipot-shchorot": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "interviews": {
+      "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "the-music-critic": {
+      "playlistKey": "music",
+      "window": "week",
+      "replacePrevious": false
+    }
+  },
   "rules": []
 }
