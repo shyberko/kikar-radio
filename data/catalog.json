@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T13:38:36.380Z",
+  "updatedAt": "2026-11-16T16:49:11.826Z",
   "items": [
+    {
+      "id": "55353d5e6183",
+      "feed": "vod",
+      "title": "לשבור את המוסכמות: \"מי שלא לומד בכולל יום שלם הופך אצלנו לסוג ב\"",
+      "link": "https://www.kikar.co.il/davar-rishon/mental-health-stigma-haredi-community",
+      "guid": "https://www.kikar.co.il/davar-rishon/mental-health-stigma-haredi-community",
+      "pubDate": "2026-11-16T13:47:12.000Z",
+      "description": "היום בתוכנית: האלימות בחיידרים, אלפי ההודעות והוידוי של המלמד | הכדור השקוף של המגזר: למה פוסלים שידוך בשידוכים בגלל טיפול נפשי | המגיש החרדי שחשף מדוע הוציא את בתו מהסמינר הקלאסי | המקרים בהם שימוש בתרופות ומשחות לא מאושרות גורם לאסונות | וגם, יום ההולדת לאושיה והדרך להתמודד עם דכאונות (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/16/3fd08050-e1c2-11f1-a0b2-8bfb8af89af3__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/85ab8a7e-27a4-42be-b7d9-257e371d782f/play_480p.mp4",
+      "durationSec": 2422,
+      "durationIso": "PT40M22S"
+    },
     {
       "id": "bd340631d488",
       "feed": "vod",
