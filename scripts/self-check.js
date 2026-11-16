@@ -33,7 +33,7 @@ import {
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
 import { readFileSync } from "node:fs";
 import { schedulerTick, applySchedulerAction, cronOk, SCHEDULER_RUN_MINUTES } from "./scheduler-plan.js";
-import { knownIdSet } from "./lib/playlists.js";
+import { knownIdSet, ROTATION_PATCH, SWEEPER_MEDIA_IDS } from "./lib/playlists.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -342,5 +342,24 @@ for (const minute of [0, 5, 10]) {
   for (const action of plan.actions) mid = applySchedulerAction(mid, action);
 }
 assert.equal(schedulerTick({ ...clock, minute: 12 }, mid).actions.length, 0);
+
+assert.equal(ROTATION_PATCH.shows.type, "once_per_x_songs");
+assert.equal(ROTATION_PATCH.shows.play_per_songs, 4);
+assert.equal(ROTATION_PATCH.shows.order, "shuffle");
+assert.equal(ROTATION_PATCH.shows.avoid_duplicates, true);
+assert.equal(ROTATION_PATCH.shows.is_jingle, false);
+assert.equal(ROTATION_PATCH.music.type, "default");
+assert.equal(ROTATION_PATCH.music.order, "shuffle");
+assert.equal(ROTATION_PATCH.music.weight >= 5, true);
+assert.equal(ROTATION_PATCH.music.avoid_duplicates, true);
+assert.equal(ROTATION_PATCH.sweepers.type, "once_per_x_songs");
+assert.equal(ROTATION_PATCH.sweepers.play_per_songs, 1);
+assert.equal(ROTATION_PATCH.sweepers.is_jingle, true);
+assert.equal(ROTATION_PATCH.sweepers.is_enabled, true);
+assert.deepEqual(ROTATION_PATCH.sweepers.schedule_items, []);
+assert.deepEqual(SWEEPER_MEDIA_IDS, [47, 48]);
+for (const id of [1, 2, 3, 5]) {
+  assert.equal(Object.values(ROTATION_PATCH).some((row) => row.id === id), false);
+}
 
 console.log("self-check ok");

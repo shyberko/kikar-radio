@@ -1,0 +1,22 @@
+name: כיוון רוטציה
+on:
+  workflow_dispatch:
+  push:
+    branches: [cursor/tune-rotation-fbe0]
+    paths:
+      - scripts/tune-rotation.js
+permissions:
+  contents: read
+jobs:
+  tune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: כיוון פלייליסטים 8 9 10
+        env:
+          RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
+        run: node scripts/tune-rotation.js

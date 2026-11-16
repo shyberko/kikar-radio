@@ -71,6 +71,40 @@ export async function createPlaylist(key, body) {
  * AzuraCast returns 500 when this station receives a full playlist body.
  * Send only play_per_hour_minute.
  */
+const UNTOUCHABLE_PLAYLISTS = new Set([1, 2, 3, 5]);
+
+/** Partial playlist update. A full playlist body returns 500 on this station. */
+export async function patchPlaylist(key, playlistId, fields) {
+  const id = Number(playlistId);
+  if (UNTOUCHABLE_PLAYLISTS.has(id)) {
+    throw new PipelineError("playlist", "refusing to modify a protected playlist");
+  }
+  const allowed = [
+    "type",
+    "order",
+    "weight",
+    "play_per_songs",
+    "play_per_minutes",
+    "play_per_hour_minute",
+    "is_jingle",
+    "avoid_duplicates",
+    "is_enabled",
+    "schedule_items",
+  ];
+  const body = {};
+  for (const name of allowed) if (fields[name] !== undefined) body[name] = fields[name];
+  try {
+    return await request(key, "PUT", `/station/${STATION}/playlist/${id}`, { json: body });
+  } catch (err) {
+    if (!/500|internal/i.test(String(err.message || ""))) throw err;
+    let last = null;
+    for (const [name, value] of Object.entries(body)) {
+      last = await request(key, "PUT", `/station/${STATION}/playlist/${id}`, { json: { [name]: value } });
+    }
+    return last;
+  }
+}
+
 export async function setPlaylistHourMinute(key, playlistId, minute) {
   const play = Number(minute);
   if (!Number.isInteger(play) || play < 0 || play > 59) {

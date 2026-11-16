@@ -3,7 +3,7 @@ import path from "node:path";
 import { DATA, TMP } from "./lib/paths.js";
 import { readJson, writeJson, log } from "./lib/io.js";
 import { requireKey, uploadBase64, setManagedPlaylists, updatePlaylist, listPlaylists } from "./lib/azura.js";
-import { ensureCorePlaylists, emptySystem, knownIdSet } from "./lib/playlists.js";
+import { ensureCorePlaylists, ensureSweeperRotation, emptySystem, knownIdSet } from "./lib/playlists.js";
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
@@ -72,6 +72,7 @@ async function main() {
   const byId = new Map((catalog.items || []).map((item) => [item.id, item]));
 
   await ensureCorePlaylists(key, system, ["shows", "briefs", "music"]);
+  await ensureSweeperRotation(key, ads, await listPlaylists(key));
   const managedIds = knownIdSet(system, ads);
   const playlistIdFor = (playlistKey) => {
     const id = system.playlists?.[playlistKey]?.id;

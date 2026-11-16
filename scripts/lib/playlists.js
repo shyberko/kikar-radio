@@ -1,17 +1,18 @@
 import { PLAYLISTS, MANAGED_MARKER, isProtectedName, isSweeperPlaylist } from "../../site/js/pure.js";
-import { createPlaylist, listPlaylists } from "./azura.js";
+import { createPlaylist, listPlaylists, patchPlaylist } from "./azura.js";
 import { log } from "./io.js";
 import { PipelineError } from "./errors.js";
 
 const CORE = {
   shows: {
-    type: "default",
+    type: "once_per_x_songs",
     order: "shuffle",
-    weight: 3,
+    weight: 1,
     is_jingle: false,
-    play_per_songs: 0,
+    play_per_songs: 4,
     play_per_minutes: 0,
     play_per_hour_minute: 0,
+    avoid_duplicates: true,
   },
   briefs: {
     type: "default",
@@ -25,11 +26,12 @@ const CORE = {
   music: {
     type: "default",
     order: "shuffle",
-    weight: 3,
+    weight: 5,
     is_jingle: false,
     play_per_songs: 0,
     play_per_minutes: 0,
     play_per_hour_minute: 0,
+    avoid_duplicates: true,
   },
   bulletin: {
     type: "once_per_hour",
@@ -41,6 +43,37 @@ const CORE = {
     play_per_hour_minute: 8,
   },
 };
+
+/** Re-applied whenever we touch these playlists, so a later run does not restore equal weights. */
+export const ROTATION_PATCH = {
+  shows: {
+    type: "once_per_x_songs",
+    order: "shuffle",
+    weight: 1,
+    is_jingle: false,
+    play_per_songs: 4,
+    avoid_duplicates: true,
+  },
+  music: {
+    type: "default",
+    order: "shuffle",
+    weight: 5,
+    is_jingle: false,
+    play_per_songs: 0,
+    avoid_duplicates: true,
+  },
+  sweepers: {
+    type: "once_per_x_songs",
+    order: "shuffle",
+    is_jingle: true,
+    play_per_songs: 1,
+    avoid_duplicates: true,
+    is_enabled: true,
+    schedule_items: [],
+  },
+};
+
+export const SWEEPER_MEDIA_IDS = [47, 48];
 
 export function emptySystem() {
   return {
@@ -123,6 +156,22 @@ export async function ensureCorePlaylists(key, system, keys) {
     }
     if (!system.playlists[keyName] || system.playlists[keyName].id !== found.id) changed = true;
     system.playlists[keyName] = { id: found.id, name: found.name || def.name };
+    if (ROTATION_PATCH[keyName] && !isSweeperPlaylist(found) && !isProtectedName(found.name)) {
+      await patchPlaylist(key, found.id, ROTATION_PATCH[keyName]);
+      log("applied rotation settings", { playlist: keyName, id: found.id });
+    }
   }
   return changed;
+}
+
+export async function ensureSweeperRotation(key, ads, live) {
+  const id = Number(ads?.sweepers?.playlistId);
+  if (!id) return;
+  const found = (live || (await listPlaylists(key))).find((pl) => Number(pl.id) === id);
+  if (!found || isProtectedName(found.name) || !isSweeperPlaylist(found)) {
+    log("sweeper playlist id is not the managed sweeper; leaving it", { id });
+    return;
+  }
+  await patchPlaylist(key, id, ROTATION_PATCH.sweepers);
+  log("applied sweeper rotation", { id });
 }
