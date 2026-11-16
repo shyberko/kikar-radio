@@ -1,6 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": null,
-  "lastRun": null,
+  "updatedAt": "2026-11-16T13:41:24.480Z",
+  "lastRun": {
+    "startedAt": "2026-11-16T13:41:24.279Z",
+    "finishedAt": "2026-11-16T13:41:24.480Z",
+    "ok": true,
+    "uploaded": 0,
+    "failed": 0,
+    "removed": 0,
+    "reassigned": 0,
+    "itemId": null,
+    "runId": "43878126105",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43878126105"
+  },
   "items": {}
 }
