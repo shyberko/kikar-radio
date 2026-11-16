@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T14:57:56.079Z",
+  "updatedAt": "2026-11-16T15:04:24.633Z",
   "lastRun": {
-    "startedAt": "2026-11-16T14:57:53.434Z",
-    "finishedAt": "2026-11-16T14:57:56.079Z",
+    "startedAt": "2026-11-16T15:04:22.247Z",
+    "finishedAt": "2026-11-16T15:04:24.633Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 0,
-    "reassigned": 6,
-    "itemId": null,
-    "runId": "43891125506",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43891125506"
+    "removed": 1,
+    "reassigned": 4,
+    "itemId": "ec0b52c816de",
+    "runId": "43892216139",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43892216139"
   },
   "items": {
     "bd340631d488": {
-      "state": "active",
+      "state": "removed",
       "attempts": 1,
       "azuraFileId": 39,
       "azuraPath": "kikar-auto/vod/bd340631d488.mp3",
@@ -29,7 +29,7 @@
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-16T15:04:22.247Z"
     },
     "3d823f5d4bec": {
       "state": "active",
@@ -77,7 +77,7 @@
       "title": "נותי טייטלבוים משיק סינגל בכורה מרגש: 'חמדה לבי' - הפקה משפחתית מיוחדת",
       "seriesSlug": "music",
       "feed": "music",
-      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "windowEnd": "2026-11-23T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
