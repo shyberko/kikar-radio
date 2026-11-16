@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T20:06:08.577Z",
+  "updatedAt": "2026-11-16T21:06:20.290Z",
   "lastRun": {
-    "startedAt": "2026-11-16T20:05:40.663Z",
-    "finishedAt": "2026-11-16T20:06:08.577Z",
+    "startedAt": "2026-11-16T21:05:30.553Z",
+    "finishedAt": "2026-11-16T21:06:20.290Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 60,
     "itemId": null,
-    "runId": "43946093103",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43946093103"
+    "runId": "43956403346",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/43956403346"
   },
   "items": {
     "bd340631d488": {
@@ -30,7 +30,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:57.417Z"
+      "removedAt": "2026-11-16T21:05:52.369Z"
     },
     "3d823f5d4bec": {
       "state": "active",
@@ -625,7 +625,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:55.840Z"
+      "removedAt": "2026-11-16T21:05:50.332Z"
     },
     "2150856a20c4": {
       "state": "replaced",
@@ -642,7 +642,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:55.541Z"
+      "removedAt": "2026-11-16T21:05:49.918Z"
     },
     "e8c136b25f2a": {
       "state": "replaced",
@@ -659,7 +659,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:55.237Z"
+      "removedAt": "2026-11-16T21:05:49.525Z"
     },
     "44b36f7fea5d": {
       "state": "active",
@@ -693,7 +693,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:57.098Z"
+      "removedAt": "2026-11-16T21:05:51.972Z"
     },
     "06b595bda7cf": {
       "state": "active",
@@ -727,7 +727,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:56.782Z"
+      "removedAt": "2026-11-16T21:05:51.577Z"
     },
     "216d0b0893e3": {
       "state": "replaced",
@@ -744,7 +744,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:54.894Z"
+      "removedAt": "2026-11-16T21:05:49.129Z"
     },
     "55353d5e6183": {
       "state": "replaced",
@@ -761,7 +761,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:58.040Z"
+      "removedAt": "2026-11-16T21:05:53.176Z"
     },
     "f4df5c794e5c": {
       "state": "replaced",
@@ -778,7 +778,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:58.648Z"
+      "removedAt": "2026-11-16T21:05:53.982Z"
     },
     "3b38538fd6e3": {
       "state": "replaced",
@@ -795,7 +795,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:59.258Z"
+      "removedAt": "2026-11-16T21:05:54.799Z"
     },
     "61a92d66852c": {
       "state": "replaced",
@@ -812,7 +812,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:00.591Z"
+      "removedAt": "2026-11-16T21:05:56.405Z"
     },
     "fff856c53f1b": {
       "state": "replaced",
@@ -829,7 +829,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:05:59.918Z"
+      "removedAt": "2026-11-16T21:05:55.619Z"
     },
     "9002b7e7271a": {
       "state": "replaced",
@@ -846,7 +846,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:01.883Z"
+      "removedAt": "2026-11-16T21:05:57.213Z"
     },
     "2084ed2ebb59": {
       "state": "replaced",
@@ -863,7 +863,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:03.699Z"
+      "removedAt": "2026-11-16T21:05:58.799Z"
     },
     "9d9c426358dd": {
       "state": "replaced",
@@ -880,7 +880,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:02.922Z"
+      "removedAt": "2026-11-16T21:05:58.021Z"
     },
     "7f73615907a7": {
       "state": "replaced",
@@ -897,7 +897,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:05.044Z"
+      "removedAt": "2026-11-16T21:06:00.429Z"
     },
     "4e530b9c493a": {
       "state": "replaced",
@@ -914,7 +914,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:04.377Z"
+      "removedAt": "2026-11-16T21:05:59.589Z"
     },
     "0f56be2a5e97": {
       "state": "replaced",
@@ -931,7 +931,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:05.712Z"
+      "removedAt": "2026-11-16T21:06:01.885Z"
     },
     "dbfc7d1df079": {
       "state": "replaced",
@@ -948,7 +948,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:06.370Z"
+      "removedAt": "2026-11-16T21:06:02.982Z"
     },
     "b6599a493a01": {
       "state": "replaced",
@@ -965,7 +965,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:07.063Z"
+      "removedAt": "2026-11-16T21:06:03.832Z"
     },
     "3ca0133794a7": {
       "state": "replaced",
@@ -982,7 +982,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:07.725Z"
+      "removedAt": "2026-11-16T21:06:04.707Z"
     },
     "05045b2553e6": {
       "state": "replaced",
@@ -999,7 +999,7 @@
       "windowEnd": "2026-11-16T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-16T20:06:08.417Z"
+      "removedAt": "2026-11-16T21:06:05.585Z"
     },
     "296b7b1f31ba": {
       "state": "active",
@@ -1019,7 +1019,7 @@
       "removedAt": null
     },
     "5b61861666a2": {
-      "state": "active",
+      "state": "replaced",
       "attempts": 1,
       "azuraFileId": 104,
       "azuraPath": "kikar-auto/vod/5b61861666a2.mp3",
@@ -1028,6 +1028,23 @@
       "uploadedAt": "2026-11-16T18:19:59.688Z",
       "durationSec": 214,
       "title": "אכזריות: כך נגמר ריב חמולות | בן גביר לחרדים: אל תפלו בפח של השמאל",
+      "seriesSlug": "ayom-bakikar",
+      "feed": "vod",
+      "windowEnd": "2026-11-16T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": "2026-11-16T21:06:20.051Z"
+    },
+    "7da751d586c3": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 105,
+      "azuraPath": "kikar-auto/vod/7da751d586c3.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-16T21:06:19.648Z",
+      "durationSec": 188,
+      "title": "ליברמן מבטיח חוק שיעבור את ר' דוב לנדו | חתך את פסי הרכבת ושילם ביוקר",
       "seriesSlug": "ayom-bakikar",
       "feed": "vod",
       "windowEnd": "2026-11-16T21:59:59.000Z",
