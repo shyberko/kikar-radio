@@ -87,7 +87,7 @@
       "action": "auto",
       "enabled": true,
       "playlistKey": "shows",
-      "window": "week",
+      "window": "day",
       "replacePrevious": true
     },
     {
@@ -96,7 +96,7 @@
       "action": "auto",
       "enabled": true,
       "playlistKey": "shows",
-      "window": "week",
+      "window": "day",
       "replacePrevious": true
     }
   ]
