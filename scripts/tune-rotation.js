@@ -75,7 +75,7 @@ async function main() {
       patch.backend_options = options.filter((item) => item !== "single_track" && item !== "interrupt");
     }
     await patchPlaylist(key, id, patch);
-    console.log(JSON.stringify({ id, patched: spec.key, backend_options: patch.backend_options || options }));
+    console.log(JSON.stringify({ id, patched: spec.key, sent_backend_options: patch.backend_options ?? null }));
   }
 
   for (const mediaId of SWEEPER_MEDIA_IDS) {

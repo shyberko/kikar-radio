@@ -357,6 +357,7 @@ assert.equal(ROTATION_PATCH.sweepers.play_per_songs, 1);
 assert.equal(ROTATION_PATCH.sweepers.is_jingle, true);
 assert.equal(ROTATION_PATCH.sweepers.is_enabled, true);
 assert.deepEqual(ROTATION_PATCH.sweepers.schedule_items, []);
+assert.deepEqual(ROTATION_PATCH.sweepers.backend_options, []);
 assert.deepEqual(SWEEPER_MEDIA_IDS, [47, 48]);
 for (const id of [1, 2, 3, 5]) {
   assert.equal(Object.values(ROTATION_PATCH).some((row) => row.id === id), false);

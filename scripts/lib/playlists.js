@@ -70,6 +70,7 @@ export const ROTATION_PATCH = {
     avoid_duplicates: true,
     is_enabled: true,
     schedule_items: [],
+    backend_options: [],
   },
 };
 
