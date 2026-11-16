@@ -1,0 +1,36 @@
+name: מבזק שעתי
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kikar-bulletin
+  cancel-in-progress: false
+jobs:
+  bulletin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          ffmpeg -version
+      - name: מבזק
+        id: bulletin
+        env:
+          RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
+        run: node scripts/bulletin.js
+        continue-on-error: true
+      - name: שמירת סטטוס
+        run: bash scripts/ci-commit.sh "עדכון מבזק שעתי" data/system.json data/status/bulletin.json
+      - name: תוצאה
+        if: steps.bulletin.outcome == 'failure'
+        run: exit 1

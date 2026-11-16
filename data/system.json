@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "playlists": {
+    "briefs": { "id": null, "name": "כיכר אוטו – מבזקים" },
+    "music": { "id": null, "name": "כיכר אוטו – מוזיקה" },
+    "bulletin": { "id": null, "name": "כיכר אוטו – מבזק שעתי" }
+  }
+}

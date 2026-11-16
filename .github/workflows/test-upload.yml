@@ -1,0 +1,22 @@
+name: בדיקת העלאה
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          ffmpeg -version
+      - name: העלאה לתיקיית בדיקה ומחיקה
+        env:
+          RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
+        run: node scripts/test-upload.js

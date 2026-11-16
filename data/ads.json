@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "campaigns": [],
+  "jingles": {
+    "everySongs": 4,
+    "enabled": true,
+    "playlistId": null,
+    "files": []
+  },
+  "sweepers": {
+    "everySongs": 3,
+    "enabled": true,
+    "playlistId": null,
+    "files": []
+  }
+}

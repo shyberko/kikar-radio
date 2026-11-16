@@ -1,0 +1,12 @@
+{
+  "name": "kikar-radio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scan": "node scripts/scan.js",
+    "upload": "node scripts/upload.js",
+    "bulletin": "node scripts/bulletin.js",
+    "test-upload": "node scripts/test-upload.js",
+    "self-check": "node scripts/self-check.js"
+  }
+}

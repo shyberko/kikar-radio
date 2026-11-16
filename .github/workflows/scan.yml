@@ -1,0 +1,25 @@
+name: סריקת פידים
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kikar-scan
+  cancel-in-progress: false
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: סריקה
+        run: node scripts/scan.js
+      - name: שמירת קטלוג
+        run: bash scripts/ci-commit.sh "עדכון קטלוג מהפידים" data/catalog.json data/auto-approvals.json
