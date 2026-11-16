@@ -24,6 +24,7 @@ function view(pl) {
     is_enabled: pl.is_enabled !== false,
     num_songs: pl.num_songs ?? null,
     schedule: Array.isArray(pl.schedule_items) ? pl.schedule_items.length : 0,
+    backend_options: pl.backend_options || [],
   };
 }
 
@@ -68,8 +69,13 @@ async function main() {
       console.log(JSON.stringify({ id, skipped: true, reason: pl ? pl.name : "missing" }));
       continue;
     }
-    await patchPlaylist(key, id, ROTATION_PATCH[spec.key]);
-    console.log(JSON.stringify({ id, patched: spec.key }));
+    const patch = { ...ROTATION_PATCH[spec.key] };
+    const options = Array.isArray(pl.backend_options) ? pl.backend_options : [];
+    if (options.includes("single_track") || options.includes("interrupt")) {
+      patch.backend_options = options.filter((item) => item !== "single_track" && item !== "interrupt");
+    }
+    await patchPlaylist(key, id, patch);
+    console.log(JSON.stringify({ id, patched: spec.key, backend_options: patch.backend_options || options }));
   }
 
   for (const mediaId of SWEEPER_MEDIA_IDS) {

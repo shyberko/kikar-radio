@@ -90,6 +90,7 @@ export async function patchPlaylist(key, playlistId, fields) {
     "avoid_duplicates",
     "is_enabled",
     "schedule_items",
+    "backend_options",
   ];
   const body = {};
   for (const name of allowed) if (fields[name] !== undefined) body[name] = fields[name];
