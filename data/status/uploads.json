@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T11:06:39.898Z",
+  "updatedAt": "2026-11-17T12:05:55.694Z",
   "lastRun": {
-    "startedAt": "2026-11-17T11:06:22.916Z",
-    "finishedAt": "2026-11-17T11:06:39.899Z",
+    "startedAt": "2026-11-17T12:05:40.920Z",
+    "finishedAt": "2026-11-17T12:05:55.694Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
@@ -11,8 +11,8 @@
     "held": 0,
     "reassigned": 43,
     "itemId": null,
-    "runId": "44070787640",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44070787640"
+    "runId": "44079824569",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44079824569"
   },
   "items": {
     "bd340631d488": {
@@ -513,8 +513,8 @@
       "attempts": 1,
       "azuraFileId": 74,
       "azuraPath": "kikar-auto/music/2d20656937e6.mp3",
-      "playlistKey": "music",
-      "playlistId": 8,
+      "playlistKey": "shows",
+      "playlistId": 9,
       "uploadedAt": "2026-11-16T16:45:56.946Z",
       "durationSec": 1635,
       "title": "9 שנים, 500 ברגים וחלום אחד: עדי נתנאלי משיק את אוזניות האולפן הייחודיות שלו",
