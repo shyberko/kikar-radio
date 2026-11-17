@@ -171,6 +171,15 @@
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "replacePrevious": false,
       "approvedAt": "2026-11-17T16:30:38.280Z"
+    },
+    "8fd1b7965997": {
+      "ruleId": "auto-davar-rishon",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-17T21:30:25.982Z",
+      "windowEnd": "2026-11-17T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-17T21:30:25.982Z"
     }
   }
 }

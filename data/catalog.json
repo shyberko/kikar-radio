@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T21:15:17.505Z",
+  "updatedAt": "2026-11-17T21:30:25.980Z",
   "items": [
+    {
+      "id": "8fd1b7965997",
+      "feed": "vod",
+      "title": "\"בירת העכברים החולדות והביוב\": תושב בני ברק מדבר מדם ליבו על המחדל המתמשך מתחת לבית",
+      "link": "https://www.kikar.co.il/davar-rishon/dvar-rishon-show-bnei-brak-smoking-risks",
+      "guid": "https://www.kikar.co.il/davar-rishon/dvar-rishon-show-bnei-brak-smoking-risks",
+      "pubDate": "2026-11-17T18:25:16.000Z",
+      "description": "קובי ישראל בראיון דרמטי על מערכת צבע שחור ועל המציאות ההזויה בבני ברק | הסיפור המרגש שלא יראו לכם לכם בתקשורת | בדיקה של 2.8 מיליון נחקרים מלחמד כמה סיגריות אתם צריכים לעשן בשביל לחטוף דמנציה? | מדוע הפלגים הקיצוניים שותקים מול מעצרי העריקים בנתב\"ג? | האם אלו חיילים יהודים בחזית האוקראינית? התיעוד מסתורי מסעיר (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/17/5e5c6dc0-e29b-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/75ba4c5d-8cd1-4d1d-b3f6-e43a32228fcd/play_480p.mp4",
+      "durationSec": 1244,
+      "durationIso": "PT20M44S"
+    },
     {
       "id": "7dd894dd9cb3",
       "feed": "vod",
