@@ -22,6 +22,23 @@ export function cleanSeriesName(name, slug) {
   return text;
 }
 
+/** A track longer than this is a show, even if the feed or the approval says music. */
+export const MUSIC_MAX_SECONDS = 12 * 60;
+
+export function playlistKeyForIntent(playlistKey, durationSec) {
+  if (playlistKey === "music" && Number(durationSec) > MUSIC_MAX_SECONDS) return "shows";
+  return playlistKey;
+}
+
+/** A manual approval that asked to keep the episode is not removed when a later episode replaces the series. */
+export function keepDespiteReplace(selection, now) {
+  if (!selection || selection.status !== "approved" || selection.replacePrevious) return false;
+  if (!selection.windowEnd) return true;
+  const end = new Date(selection.windowEnd).getTime();
+  const at = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  return Number.isFinite(end) && end > at;
+}
+
 export function defaultPlaylistKey(item, seriesMap) {
   const mapped = seriesMap?.[item?.seriesSlug]?.playlistKey;
   if (mapped && mapped !== "bulletin" && PLAYLISTS[mapped]) return mapped;

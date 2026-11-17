@@ -57,7 +57,7 @@
       "replacePrevious": false
     },
     "the-music-critic": {
-      "playlistKey": "music",
+      "playlistKey": "shows",
       "window": "week",
       "replacePrevious": false
     }
@@ -77,7 +77,7 @@
       "seriesSlug": "the-music-critic",
       "action": "auto",
       "enabled": true,
-      "playlistKey": "music",
+      "playlistKey": "shows",
       "window": "week",
       "replacePrevious": false
     },

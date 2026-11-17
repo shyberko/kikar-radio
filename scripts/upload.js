@@ -7,7 +7,7 @@ import { ensureCorePlaylists, ensureSweeperRotation, emptySystem, knownIdSet } f
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
-import { isProtectedName, collapseWs, endOfJerusalemDay, jerusalemParts, planRotationExpiry, ROTATION_PLAYLIST_KEYS, ROTATION_MIN } from "../site/js/pure.js";
+import { isProtectedName, collapseWs, endOfJerusalemDay, jerusalemParts, planRotationExpiry, playlistKeyForIntent, keepDespiteReplace, ROTATION_PLAYLIST_KEYS, ROTATION_MIN } from "../site/js/pure.js";
 
 function intentFor(id, selections, auto) {
   const sel = selections.items?.[id];
@@ -130,7 +130,7 @@ async function main() {
     const intent = intentFor(id, selections, auto);
     const now = new Date();
     try {
-      const playlistKey = intent?.playlistKey || rec.playlistKey;
+      const playlistKey = playlistKeyForIntent(intent?.playlistKey || rec.playlistKey, item?.durationSec || rec.durationSec);
       const playlistId = playlistKey && system.playlists?.[playlistKey]?.id ? Number(system.playlists[playlistKey].id) : rec.playlistId;
       const windowEndAt = intent?.windowEnd ? new Date(intent.windowEnd) : null;
       const active = rec.state === "active" && rec.azuraFileId && playlistId;
@@ -165,16 +165,17 @@ async function main() {
       }
 
       if (rec.azuraFileId && rec.state !== "failed") {
-        await assignExact(key, rec.azuraFileId, [playlistIdFor(intent.playlistKey)], managedIds);
+        const targetKey = playlistKeyForIntent(intent.playlistKey, item?.durationSec || rec.durationSec);
+        await assignExact(key, rec.azuraFileId, [playlistIdFor(targetKey)], managedIds);
         rec.state = "active";
-        rec.playlistKey = intent.playlistKey;
-        rec.playlistId = playlistIdFor(intent.playlistKey);
+        rec.playlistKey = targetKey;
+        rec.playlistId = playlistIdFor(targetKey);
         rec.windowEnd = intent.windowEnd;
         rec.removedAt = null;
         rec.errorCode = null;
         rec.errorMessage = null;
         summary.reassigned += 1;
-        if (intent.replacePrevious && item) await replaceOlder(key, uploads, item, rec, managedIds);
+        if (intent.replacePrevious && item) await replaceOlder(key, uploads, item, rec, managedIds, selections);
         continue;
       }
 
@@ -202,12 +203,13 @@ async function main() {
       const dest = `kikar-auto/${item.feed === "music" ? "music" : "vod"}/${id}.mp3`;
       log("upload", { id, dest, bytes: fs.statSync(mp3).size });
       const media = await uploadBase64(key, dest, mp3);
-      const plId = playlistIdFor(intent.playlistKey);
+      const targetKey = playlistKeyForIntent(intent.playlistKey, durationSec || item?.durationSec);
+      const plId = playlistIdFor(targetKey);
       await assignExact(key, media.id, [plId], managedIds);
       rec.state = "active";
       rec.azuraFileId = media.id;
       rec.azuraPath = media.path || dest;
-      rec.playlistKey = intent.playlistKey;
+      rec.playlistKey = targetKey;
       rec.playlistId = plId;
       rec.uploadedAt = new Date().toISOString();
       rec.durationSec = durationSec;
@@ -220,7 +222,7 @@ async function main() {
       rec.attempts = (rec.attempts || 0) + 1;
       rec.removedAt = null;
       summary.uploaded += 1;
-      if (intent.replacePrevious) await replaceOlder(key, uploads, item, rec, managedIds);
+      if (intent.replacePrevious) await replaceOlder(key, uploads, item, rec, managedIds, selections);
       fs.rmSync(work, { recursive: true, force: true });
     } catch (err) {
       const mapped = err instanceof PipelineError ? err : asPipeline(err);
@@ -264,7 +266,7 @@ function rotationActiveCount(uploads) {
   return count;
 }
 
-async function replaceOlder(key, uploads, item, current, managedIds) {
+async function replaceOlder(key, uploads, item, current, managedIds, selections) {
   const candidates = [];
   for (const [otherId, other] of Object.entries(uploads.items)) {
     if (otherId === item.id) continue;
@@ -275,6 +277,10 @@ async function replaceOlder(key, uploads, item, current, managedIds) {
   }
   candidates.sort((a, b) => (Date.parse(b[1].uploadedAt || "") || 0) - (Date.parse(a[1].uploadedAt || "") || 0));
   for (const [otherId, other] of candidates) {
+    if (keepDespiteReplace(selections?.items?.[otherId], new Date())) {
+      log("kept approved episode; it was not marked replace-previous", { id: otherId });
+      continue;
+    }
     if (ROTATION_PLAYLIST_KEYS.includes(other.playlistKey) && rotationActiveCount(uploads) - 1 < ROTATION_MIN) {
       log("kept general-rotation item; replacement would drop below minimum", { id: otherId, floor: ROTATION_MIN });
       continue;

@@ -13,6 +13,9 @@ import {
   inboxRangeStart,
   formatDayMonth,
   defaultPlaylistKey,
+  playlistKeyForIntent,
+  keepDespiteReplace,
+  MUSIC_MAX_SECONDS,
   defaultWindow,
   cleanSeriesName,
   bulletinWatchPlan,
@@ -163,6 +166,12 @@ assert.equal(bulletinOffAirAt(scoop.start.getTime()), scoop.expires.getTime());
 
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "davar-rishon" }, {}), "shows");
 assert.equal(defaultPlaylistKey({ feed: "music", seriesSlug: "music" }, {}), "music");
+assert.equal(MUSIC_MAX_SECONDS, 12 * 60);
+assert.equal(playlistKeyForIntent("music", 1636), "shows");
+assert.equal(playlistKeyForIntent("music", 230), "music");
+assert.equal(playlistKeyForIntent("shows", 4000), "shows");
+assert.equal(keepDespiteReplace({ status: "approved", replacePrevious: false, windowEnd: "2026-11-23T16:40:28.000Z" }, new Date("2026-11-17T10:00:00Z")), true);
+assert.equal(keepDespiteReplace({ status: "approved", replacePrevious: true, windowEnd: "2026-11-23T16:40:28.000Z" }, new Date("2026-11-17T10:00:00Z")), false);
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "bulletin" } }), "shows");
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "briefs" } }), "briefs");
 assert.equal(cleanSeriesName("חדשות\u200dחרדי", "haredi"), "חדשות חרדי");

@@ -51,6 +51,13 @@ async function request(key, method, apiPath, { json, timeout = 180000 } = {}) {
   return data;
 }
 
+export async function listHistory(key, startIso) {
+  const q = new URLSearchParams({ start: startIso });
+  const rows = await request(key, "GET", `/station/${STATION}/history?${q}`);
+  if (Array.isArray(rows)) return rows;
+  return Array.isArray(rows?.rows) ? rows.rows : [];
+}
+
 export async function listPlaylists(key) {
   const rows = await request(key, "GET", `/station/${STATION}/playlists`);
   return Array.isArray(rows) ? rows : [];
