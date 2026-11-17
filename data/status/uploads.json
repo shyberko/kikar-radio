@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T21:35:13.791Z",
+  "updatedAt": "2026-11-17T22:06:04.487Z",
   "lastRun": {
-    "startedAt": "2026-11-17T21:34:19.766Z",
-    "finishedAt": "2026-11-17T21:35:13.791Z",
+    "startedAt": "2026-11-17T22:05:49.370Z",
+    "finishedAt": "2026-11-17T22:06:04.487Z",
     "ok": true,
-    "uploaded": 1,
+    "uploaded": 0,
     "failed": 0,
-    "removed": 0,
+    "removed": 1,
     "held": 0,
     "reassigned": 43,
     "itemId": null,
-    "runId": "44181130772",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44181130772"
+    "runId": "44186509233",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44186509233"
   },
   "items": {
     "bd340631d488": {
@@ -1070,7 +1070,7 @@
       "removedAt": null
     },
     "8fd1b7965997": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 115,
       "azuraPath": "kikar-auto/vod/8fd1b7965997.mp3",
@@ -1084,7 +1084,7 @@
       "windowEnd": "2026-11-17T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-17T22:06:03.934Z"
     }
   }
 }
