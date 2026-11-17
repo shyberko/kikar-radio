@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T18:00:36.661Z",
+  "updatedAt": "2026-11-17T18:15:34.709Z",
   "items": [
+    {
+      "id": "7dd894dd9cb3",
+      "feed": "vod",
+      "title": "\"הליכה של החרדים עם השמאל - זה קידוש ה'\"; ומי רצה להוריד את הכיפה השחורה - באולפן? • צפו",
+      "link": "https://www.kikar.co.il/kipot-shchorot/haredi-left-political-partnership",
+      "guid": "https://www.kikar.co.il/kipot-shchorot/haredi-left-political-partnership",
+      "pubDate": "2026-11-17T18:00:56.000Z",
+      "description": "עימות סוער באולפן 'כיפות שחורות' | נציג השמאל אייבי בנימין תקף בחריפות את ח\"כ אלישע מדן וטען כי מאהל האחדות שהקים הוא \"הצגה של הליכוד שנועדה להשאיר את נתניהו בשלטון\" | וגם, קרב הגרסאות על \"זיופי הבחירות\" והפנייה מלשכת ראש הממשלה למשטרה, הפליק-פלאק של ליברמן בחוק הגיוס, האם הליכה של החרדים לשמאל תהיה \"קידוש השם\" או שבר מול הציבור המסורתי, והמחמאה המפתיעה לראשי יהדות התורה • צפו (כיפות שחורות)",
+      "poster": "https://i.kikar.co.il/2026/11/17/38de39b0-e28d-11f1-98e0-edd5111e9def__h1080_w1920.jpg",
+      "seriesSlug": "kipot-shchorot",
+      "seriesName": "כיפות שחורות",
+      "mediaUrl": "https://stream.kikar.co.il/c3c93c03-b540-4151-937b-09a3029f8f64/play_480p.mp4",
+      "durationSec": 3310,
+      "durationIso": "PT55M10S"
+    },
     {
       "id": "04fe61d41661",
       "feed": "vod",
