@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T16:05:59.502Z",
+  "updatedAt": "2026-11-17T16:51:36.416Z",
   "lastRun": {
-    "startedAt": "2026-11-17T16:05:45.444Z",
-    "finishedAt": "2026-11-17T16:05:59.502Z",
+    "startedAt": "2026-11-17T16:51:15.874Z",
+    "finishedAt": "2026-11-17T16:51:36.416Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 42,
     "itemId": null,
-    "runId": "44121723310",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44121723310"
+    "runId": "44130397522",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44130397522"
   },
   "items": {
     "bd340631d488": {
@@ -1051,6 +1051,23 @@
       "errorCode": null,
       "errorMessage": null,
       "removedAt": "2026-11-16T22:06:04.907Z"
+    },
+    "0c482cb195f2": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 114,
+      "azuraPath": "kikar-auto/music/0c482cb195f2.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-17T16:51:36.204Z",
+      "durationSec": 123,
+      "title": "מוישי באדנסקי חוזר עם 'בנים' - פרק 4 בפרשה זינג שישבור לכם את הלב",
+      "seriesSlug": "music",
+      "feed": "music",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
     }
   }
 }
