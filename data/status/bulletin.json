@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T09:00:04.784Z",
+  "updatedAt": "2026-11-17T09:05:11.000Z",
   "active": {
     "key": "2026-11-17-10:00",
     "label": "10:00",
@@ -21,6 +21,17 @@
     "deletedAt": "2026-11-17T09:00:03.745Z"
   },
   "history": [
+    {
+      "key": "2026-11-17-11:00",
+      "label": "11:00",
+      "editionStart": "2026-11-17T09:00:00.000Z",
+      "expiresAt": "2026-11-17T10:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/ton27v",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-17T09:05:11.000Z"
+    },
     {
       "key": "2026-11-17-10:00",
       "label": "10:00",
@@ -117,11 +128,11 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 0,
-  "lastCheck": "2026-11-17T09:00:00.426Z",
-  "note": "source",
+  "consecutiveFailures": 1,
+  "lastCheck": "2026-11-17T09:05:09.220Z",
+  "note": "failed",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -129,7 +140,13 @@
     "start": "2026-11-17T09:00:00.000Z",
     "expires": "2026-11-17T10:00:00.000Z"
   },
-  "failure": null,
+  "failure": {
+    "key": "2026-11-17-11:00",
+    "label": "11:00",
+    "code": "download",
+    "message": "לא נמצא קובץ וידאו בכתבה",
+    "at": "2026-11-17T09:05:11.000Z"
+  },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 11:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-17-10:00",
