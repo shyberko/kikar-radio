@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T21:05:41.858Z",
+  "updatedAt": "2026-11-17T21:35:13.791Z",
   "lastRun": {
-    "startedAt": "2026-11-17T21:05:28.187Z",
-    "finishedAt": "2026-11-17T21:05:41.858Z",
+    "startedAt": "2026-11-17T21:34:19.766Z",
+    "finishedAt": "2026-11-17T21:35:13.791Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 43,
     "itemId": null,
-    "runId": "44176059473",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44176059473"
+    "runId": "44181130772",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44181130772"
   },
   "items": {
     "bd340631d488": {
@@ -1065,6 +1065,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "8fd1b7965997": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 115,
+      "azuraPath": "kikar-auto/vod/8fd1b7965997.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-17T21:35:13.586Z",
+      "durationSec": 1243,
+      "title": "\"בירת העכברים החולדות והביוב\": תושב בני ברק מדבר מדם ליבו על המחדל המתמשך מתחת לבית",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-17T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
