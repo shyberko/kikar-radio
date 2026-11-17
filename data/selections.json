@@ -457,16 +457,16 @@
       "retryAt": null
     },
     "bb6f4fa577d1": {
-      "status": "approved",
+      "status": "skipped",
       "playlistKey": "shows",
       "window": "week",
-      "windowStart": "2026-11-16T16:40:28.000Z",
-      "windowEnd": "2026-11-23T16:40:28.000Z",
+      "windowStart": null,
+      "windowEnd": null,
       "replacePrevious": false,
-      "uploadNow": true,
+      "uploadNow": false,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-16T16:40:28.000Z",
+      "updatedAt": "2026-11-17T13:25:09.019Z",
       "retryAt": null
     },
     "2150856a20c4": {
