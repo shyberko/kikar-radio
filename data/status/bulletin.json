@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T12:00:13.800Z",
+  "updatedAt": "2026-11-17T13:00:04.916Z",
   "active": {
     "key": "2026-11-17-14:00",
     "label": "14:00",
@@ -14,10 +14,11 @@
     "poster": "https://i.kikar.co.il/2026/11/17/b363b240-e25c-11f1-a761-818aba60818f__h720_w1280.jpg",
     "mediaUrl": "https://stream.kikar.co.il/205aae1e-d595-4d90-bad0-47ee7c55ccca/play_480p.mp4",
     "title": "מבזק חדשות כיכר FM | מהדורת השעה 14:00",
-    "onAir": true,
-    "removedAt": null,
+    "onAir": false,
+    "removedAt": "2026-11-17T13:00:03.204Z",
     "failed": false,
-    "dateLabel": "17.11"
+    "dateLabel": "17.11",
+    "deletedAt": "2026-11-17T13:00:03.415Z"
   },
   "history": [
     {
@@ -33,10 +34,11 @@
       "poster": "https://i.kikar.co.il/2026/11/17/b363b240-e25c-11f1-a761-818aba60818f__h720_w1280.jpg",
       "mediaUrl": "https://stream.kikar.co.il/205aae1e-d595-4d90-bad0-47ee7c55ccca/play_480p.mp4",
       "title": "מבזק חדשות כיכר FM | מהדורת השעה 14:00",
-      "onAir": true,
-      "removedAt": null,
+      "onAir": false,
+      "removedAt": "2026-11-17T13:00:03.204Z",
       "failed": false,
-      "dateLabel": "17.11"
+      "dateLabel": "17.11",
+      "deletedAt": "2026-11-17T13:00:03.415Z"
     },
     {
       "key": "2026-11-17-13:00",
@@ -192,19 +194,19 @@
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-17T12:00:00.850Z",
-  "note": "on-air",
+  "lastCheck": "2026-11-17T13:00:00.871Z",
+  "note": "source",
   "paused": false,
-  "sourcePending": false,
+  "sourcePending": true,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
-    "label": "14:00",
-    "start": "2026-11-17T12:00:00.000Z",
-    "expires": "2026-11-17T13:00:00.000Z"
+    "label": "15:00",
+    "start": "2026-11-17T13:00:00.000Z",
+    "expires": "2026-11-17T14:00:00.000Z"
   },
   "failure": null,
-  "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 13:00. נמשיך לבדוק.",
+  "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 15:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-17-14:00",
   "playMinute": 2
