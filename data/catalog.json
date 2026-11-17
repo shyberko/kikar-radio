@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T16:00:27.674Z",
+  "updatedAt": "2026-11-17T16:15:38.061Z",
   "items": [
+    {
+      "id": "8600374dd562",
+      "feed": "vod",
+      "title": "סערת טוהר הבחירות במגזר הערבי: פרקליטו של המקור שהעביר את המידע למשטרה בראיון | צפו",
+      "link": "https://www.kikar.co.il/news-interviews/election-purity-arab-sector-controversy",
+      "guid": "https://www.kikar.co.il/news-interviews/election-purity-arab-sector-controversy",
+      "pubDate": "2026-11-17T16:01:26.000Z",
+      "description": "בעוד שבמערכת הפוליטית ובתקשורת נמשכות הביקורות על הזיקה שבין לשכת ראש הממשלה לבין מעצרים שבוצעו בחברה הערבית ביום הבחירות, עו\"ד אביחי יהוסף, המייצג את דניאל גרינברג, בכיר לשעבר במשרד ראש הממשלה, טוען כי המידע המודיעיני הגיע מחבר כנסת ערבי וכי כל התנהלותו של מרשו הייתה כשרה לחלוטין | צפו",
+      "poster": "https://i.kikar.co.il/2026/11/17/6f12fb10-e297-11f1-98e0-edd5111e9def__h1080_w1920.jpg",
+      "seriesSlug": "news-interviews",
+      "seriesName": "ראיונות חדשותיים",
+      "mediaUrl": "https://stream.kikar.co.il/4a3c125c-1012-4818-84e7-fe562aad996b/play_480p.mp4",
+      "durationSec": 697,
+      "durationIso": "PT11M37S"
+    },
     {
       "id": "7da751d586c3",
       "feed": "vod",
