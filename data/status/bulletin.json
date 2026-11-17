@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T15:00:05.302Z",
+  "updatedAt": "2026-11-17T15:01:07.248Z",
   "active": {
     "key": "2026-11-17-15:00",
     "label": "15:00",
@@ -30,7 +30,7 @@
       "failed": true,
       "errorCode": "download",
       "errorMessage": "לא נמצא קובץ וידאו בכתבה",
-      "checkedAt": "2026-11-17T15:00:05.302Z"
+      "checkedAt": "2026-11-17T15:01:07.248Z"
     },
     {
       "key": "2026-11-17-16:00",
@@ -234,13 +234,13 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 2,
-  "lastCheck": "2026-11-17T15:00:01.430Z",
+  "consecutiveFailures": 3,
+  "lastCheck": "2026-11-17T15:01:06.593Z",
   "note": "failed",
   "paused": false,
   "sourcePending": false,
   "pauseRemovalFor": null,
-  "alert": null,
+  "alert": "3 מהדורות אחרונות לא עלו",
   "hour": {
     "label": "17:00",
     "start": "2026-11-17T15:00:00.000Z",
@@ -251,7 +251,7 @@
     "label": "17:00",
     "code": "download",
     "message": "לא נמצא קובץ וידאו בכתבה",
-    "at": "2026-11-17T15:00:05.301Z"
+    "at": "2026-11-17T15:01:07.248Z"
   },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 16:00. נמשיך לבדוק.",
   "slotPending": null,
