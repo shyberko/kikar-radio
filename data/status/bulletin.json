@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-16T17:00:04.312Z",
+  "updatedAt": "2026-11-17T08:00:07.671Z",
   "active": {
     "key": "2026-11-16-18:00",
     "label": "18:00",
@@ -99,10 +99,10 @@
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-16T17:00:00.591Z",
+  "lastCheck": "2026-11-17T08:00:00.235Z",
   "note": "source",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -111,5 +111,5 @@
     "expires": "2026-11-16T18:00:00.000Z"
   },
   "failure": null,
-  "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 19:00. נמשיך לבדוק."
+  "sourceMessage": "לא הצלחנו לקרוא את פיד המבזקים. ננסה שוב."
 }
