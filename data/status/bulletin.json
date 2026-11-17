@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T13:00:04.916Z",
+  "updatedAt": "2026-11-17T13:05:11.700Z",
   "active": {
     "key": "2026-11-17-14:00",
     "label": "14:00",
@@ -21,6 +21,17 @@
     "deletedAt": "2026-11-17T13:00:03.415Z"
   },
   "history": [
+    {
+      "key": "2026-11-17-15:00",
+      "label": "15:00",
+      "editionStart": "2026-11-17T13:00:00.000Z",
+      "expiresAt": "2026-11-17T14:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/tonda3",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-17T13:05:11.700Z"
+    },
     {
       "key": "2026-11-17-14:00",
       "label": "14:00",
@@ -193,11 +204,11 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 0,
-  "lastCheck": "2026-11-17T13:00:00.871Z",
-  "note": "source",
+  "consecutiveFailures": 1,
+  "lastCheck": "2026-11-17T13:05:10.092Z",
+  "note": "failed",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -205,7 +216,13 @@
     "start": "2026-11-17T13:00:00.000Z",
     "expires": "2026-11-17T14:00:00.000Z"
   },
-  "failure": null,
+  "failure": {
+    "key": "2026-11-17-15:00",
+    "label": "15:00",
+    "code": "download",
+    "message": "לא נמצא קובץ וידאו בכתבה",
+    "at": "2026-11-17T13:05:11.700Z"
+  },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 15:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-17-14:00",
