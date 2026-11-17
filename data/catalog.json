@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T16:45:32.252Z",
+  "updatedAt": "2026-11-17T17:00:11.461Z",
   "items": [
+    {
+      "id": "04fe61d41661",
+      "feed": "vod",
+      "title": "פליטת פה? \"עימות מול איראן כבר בשישי\" | ליברמן מתנער מהמתווה שהציג אתמול",
+      "link": "https://www.kikar.co.il/vod/lieberman-iran-confrontation-warning",
+      "guid": "https://www.kikar.co.il/vod/lieberman-iran-confrontation-warning",
+      "pubDate": "2026-11-17T16:58:30.000Z",
+      "description": "חוק הגיוס: ליברמן מתנער מהמתווה החדש | יו\"ר הכנסת: החרדים יתמכו באופיר כץ | אזהרה מדימונה: עימות מול איראן כבר בשישי? | ירושלים: סוכל פיגוע משולב בהר הבית | שיאני השכר: בנק ישראל בראש הטבלה | מזג האוויר: נוח עם סיכוי לטפטוף קל בחוף | והתיעוד: התשובה לשאלה למה יש תאונות בהודו | צפו (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/17/bbd5a210-e2a4-11f1-a19b-c319d5c1ae95__h1081_w1921.png",
+      "seriesSlug": "vod",
+      "seriesName": "VOD",
+      "mediaUrl": "https://stream.kikar.co.il/73db4c92-b96e-409e-9a4f-e1f482940d9d/play_480p.mp4",
+      "durationSec": 241,
+      "durationIso": "PT4M1S"
+    },
     {
       "id": "8600374dd562",
       "feed": "vod",
