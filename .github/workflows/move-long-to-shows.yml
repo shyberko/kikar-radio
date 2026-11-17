@@ -1,10 +1,6 @@
 name: העברת ארוכים לתוכניות
 on:
   workflow_dispatch:
-  push:
-    branches: [cursor/move-long-shows-fbe0]
-    paths:
-      - scripts/move-long-to-shows.js
 permissions:
   contents: read
 jobs:
