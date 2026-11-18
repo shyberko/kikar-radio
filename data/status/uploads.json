@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T12:13:07.692Z",
+  "updatedAt": "2026-11-18T13:07:09.247Z",
   "lastRun": {
-    "startedAt": "2026-11-18T12:12:53.807Z",
-    "finishedAt": "2026-11-18T12:13:07.692Z",
+    "startedAt": "2026-11-18T13:05:49.866Z",
+    "finishedAt": "2026-11-18T13:07:09.247Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 2,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 43,
     "itemId": null,
-    "runId": "44300554429",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44300554429"
+    "runId": "44310152234",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44310152234"
   },
   "items": {
     "bd340631d488": {
@@ -1085,6 +1085,40 @@
       "errorCode": null,
       "errorMessage": null,
       "removedAt": "2026-11-17T22:06:03.934Z"
+    },
+    "5ea5d448653f": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 121,
+      "azuraPath": "kikar-auto/vod/5ea5d448653f.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-18T13:06:42.366Z",
+      "durationSec": 683,
+      "title": "בלי רישיון, על קורקינט ומקפיצים מאות מפגינים: הבלוף מאחורי חלק ממעצרי ה'עריקים' נחשף",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-18T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "0060f116a32b": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 122,
+      "azuraPath": "kikar-auto/music/0060f116a32b.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-18T13:07:08.997Z",
+      "durationSec": 534,
+      "title": "מיילך ברוינשטיין בקליפ חדש שיעביר אתכם: 'נשמה של גאולה'",
+      "seriesSlug": "music",
+      "feed": "music",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
     }
   }
 }
