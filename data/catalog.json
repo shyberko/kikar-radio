@@ -1,7 +1,37 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T19:15:30.735Z",
+  "updatedAt": "2026-11-18T19:30:33.548Z",
   "items": [
+    {
+      "id": "14da48aaa278",
+      "feed": "vod",
+      "title": "הון, שלטון ומה שביניהם: האם האזרח הקטן נשאר מאחור?",
+      "link": "https://www.kikar.co.il/kipot-shchorot/conflict-of-interest-knesset-finance-committee",
+      "guid": "https://www.kikar.co.il/kipot-shchorot/conflict-of-interest-knesset-finance-committee",
+      "pubDate": "2026-11-18T19:20:23.000Z",
+      "description": "סערה סביב מינויה של ח\"כ לירן אבישר בן חורין (מפלגתו של בנט) לראשות ועדת הכספים: כתב \"כלכליסט\" שלמה טייטלבום מפרק באולפן את ההתנגשות המובנית שבין תפקידה הרגיש של יו\"ר הוועדה לבין עיסוקו של בעלה, שמייצג בנקים, בתי השקעות וחברות ענק, \"היא צריכה לחשוב על האינטרס הציבורי והוא תמיד צריך לחשוב על אינטרס של הלקוח הפרטי\", הוא מסביר, ומדגיש מדוע החוק בכנסת משאיר את הכל תלוי ברצונה הטוב בלבד | צפו (מתוך התוכ",
+      "poster": "https://i.kikar.co.il/2026/11/18/da0c2e10-e331-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
+      "seriesSlug": "kipot-shchorot",
+      "seriesName": "כיפות שחורות",
+      "mediaUrl": "https://stream.kikar.co.il/f1ce14c0-705e-4498-a43e-2b2428ffa9a2/play_480p.mp4",
+      "durationSec": 190,
+      "durationIso": "PT3M10S"
+    },
+    {
+      "id": "a53265d46211",
+      "feed": "vod",
+      "title": "סערת הפלאפונים הכשרים שנפרצו בישיבות, הלינץ' האכזרי בבחור הישיבה ורדיפת הצדיק",
+      "link": "https://www.kikar.co.il/davar-rishon/haredi-kosher-phones-breach-controversy",
+      "guid": "https://www.kikar.co.il/davar-rishon/haredi-kosher-phones-breach-controversy",
+      "pubDate": "2026-11-18T19:16:15.000Z",
+      "description": "היום בתוכנית: היסטוריה של פוליטיקה ובגידות בכנסת ישראל | החייל החרדי מתלונן: הבטיחו לנו קדושה, בפועל חיילות השתמשו בשרותי הגברים | חילוץ הבז הפצוע בשולי הכביש | גינוי לתחקים המקומם שנעשה לרב | וגם, הפלאפונים הכשרים שמלאים בבעיות צניעות חמורות (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/18/94ac7c10-e365-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/a40d3704-3bb0-4a1a-ae78-6fd8336f16df/play_480p.mp4",
+      "durationSec": 1998,
+      "durationIso": "PT33M18S"
+    },
     {
       "id": "6b5063fb0f6b",
       "feed": "vod",
