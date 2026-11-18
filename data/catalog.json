@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T16:45:17.648Z",
+  "updatedAt": "2026-11-18T17:00:41.131Z",
   "items": [
+    {
+      "id": "6b5063fb0f6b",
+      "feed": "vod",
+      "title": "מודיעין עילית: אב חשוד בפגיעה בבנותיו | שי טראמפ ופוטין לחצו ידיים",
+      "link": "https://www.kikar.co.il/ayom-bakikar/netanyahu-bennett-meeting-knesset",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/netanyahu-bennett-meeting-knesset",
+      "pubDate": "2026-11-18T16:32:11.000Z",
+      "description": "כנסת: פגישה חריגה של נתניהו ובנט | מליאה: גוש השינוי נטש וחוקי הליכוד עברו | סין: טראמפ ופוטין לחצו ידיים | מודיעין עילית: אב חשוד בפגיעה בבנותיו | דריסת יוסף אייזנטל: הנהג יואשם בהמתה בלבד | הגר\"א סאלים במכתב חיזוק לאברך הכלוא | תחזית: נוח עם עלייה קלה בטמפרטורות | והתיעוד: הנזק שעשה פקח בעשרים שניות | צפו (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/18/8cef00d0-e36d-11f1-98e0-edd5111e9def__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/2d814ceb-0de1-4bdd-9367-aa8996e8a2b6/play_480p.mp4",
+      "durationSec": 246,
+      "durationIso": "PT4M6S"
+    },
     {
       "id": "222440774e42",
       "feed": "music",
