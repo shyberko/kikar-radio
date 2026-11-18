@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T16:17:32.461Z",
+  "updatedAt": "2026-11-18T17:05:54.211Z",
   "lastRun": {
-    "startedAt": "2026-11-18T16:17:14.192Z",
-    "finishedAt": "2026-11-18T16:17:32.461Z",
+    "startedAt": "2026-11-18T17:05:29.446Z",
+    "finishedAt": "2026-11-18T17:05:54.211Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 45,
     "itemId": null,
-    "runId": "44345366297",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44345366297"
+    "runId": "44354637659",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44354637659"
   },
   "items": {
     "bd340631d488": {
@@ -1116,6 +1116,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "6b5063fb0f6b": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 127,
+      "azuraPath": "kikar-auto/vod/6b5063fb0f6b.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-18T17:05:54.037Z",
+      "durationSec": 245,
+      "title": "מודיעין עילית: אב חשוד בפגיעה בבנותיו | שי טראמפ ופוטין לחצו ידיים",
+      "seriesSlug": "ayom-bakikar",
+      "feed": "vod",
+      "windowEnd": "2026-11-18T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
