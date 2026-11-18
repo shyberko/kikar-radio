@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T19:06:19.538Z",
+  "updatedAt": "2026-11-18T20:07:00.779Z",
   "lastRun": {
-    "startedAt": "2026-11-18T19:06:00.437Z",
-    "finishedAt": "2026-11-18T19:06:19.539Z",
+    "startedAt": "2026-11-18T20:05:29.469Z",
+    "finishedAt": "2026-11-18T20:07:00.779Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 46,
     "itemId": null,
-    "runId": "44376727175",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44376727175"
+    "runId": "44387239664",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44387239664"
   },
   "items": {
     "bd340631d488": {
@@ -1087,7 +1087,7 @@
       "removedAt": "2026-11-17T22:06:03.934Z"
     },
     "5ea5d448653f": {
-      "state": "active",
+      "state": "replaced",
       "attempts": 1,
       "azuraFileId": 121,
       "azuraPath": "kikar-auto/vod/5ea5d448653f.mp3",
@@ -1101,7 +1101,7 @@
       "windowEnd": "2026-11-18T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-18T20:07:00.406Z"
     },
     "0060f116a32b": {
       "state": "active",
@@ -1131,6 +1131,23 @@
       "durationSec": 245,
       "title": "מודיעין עילית: אב חשוד בפגיעה בבנותיו | שי טראמפ ופוטין לחצו ידיים",
       "seriesSlug": "ayom-bakikar",
+      "feed": "vod",
+      "windowEnd": "2026-11-18T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "a53265d46211": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 128,
+      "azuraPath": "kikar-auto/vod/a53265d46211.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-18T20:07:00.034Z",
+      "durationSec": 1998,
+      "title": "סערת הפלאפונים הכשרים שנפרצו בישיבות, הלינץ' האכזרי בבחור הישיבה ורדיפת הצדיק",
+      "seriesSlug": "davar-rishon",
       "feed": "vod",
       "windowEnd": "2026-11-18T21:59:59.000Z",
       "errorCode": null,
