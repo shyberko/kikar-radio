@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T12:45:28.437Z",
+  "updatedAt": "2026-11-18T13:00:29.388Z",
   "items": [
     {
       "id": "5ea5d448653f",
@@ -16,6 +16,21 @@
       "mediaUrl": "https://stream.kikar.co.il/09738ab4-b046-47d2-a614-70fc74057bc1/play_480p.mp4",
       "durationSec": 684,
       "durationIso": "PT11M24S"
+    },
+    {
+      "id": "0060f116a32b",
+      "feed": "music",
+      "title": "מיילך ברוינשטיין בקליפ חדש שיעביר אתכם: 'נשמה של גאולה'",
+      "link": "https://www.kikar.co.il/music/mailech-braunstein-neshama-shel-geula-new-clip",
+      "guid": "https://www.kikar.co.il/music/mailech-braunstein-neshama-shel-geula-new-clip",
+      "pubDate": "2026-11-17T21:39:05.000Z",
+      "description": "הזמר משיק ביצוע מיוחד בליווי תזמורת שלוימי שינפלד • הקליפ המלא יצא | צפו (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/17/034ad6e0-e2cf-11f1-a19b-c319d5c1ae95__h4500_w8000.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/67f07c8e-cc4b-45b7-af5f-a61932747ba4/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
     },
     {
       "id": "8fd1b7965997",
