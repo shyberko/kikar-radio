@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T16:00:03.569Z",
+  "updatedAt": "2026-11-18T16:05:11.880Z",
   "active": {
     "key": "2026-11-18-17:00",
     "label": "17:00",
@@ -21,6 +21,17 @@
     "deletedAt": "2026-11-18T16:00:02.625Z"
   },
   "history": [
+    {
+      "key": "2026-11-18-18:00",
+      "label": "18:00",
+      "editionStart": "2026-11-18T16:00:00.000Z",
+      "expiresAt": "2026-11-18T17:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/topghh",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-18T16:05:11.880Z"
+    },
     {
       "key": "2026-11-18-17:00",
       "label": "17:00",
@@ -405,11 +416,11 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 0,
-  "lastCheck": "2026-11-18T16:00:00.372Z",
-  "note": "source",
+  "consecutiveFailures": 1,
+  "lastCheck": "2026-11-18T16:05:08.869Z",
+  "note": "failed",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -417,7 +428,13 @@
     "start": "2026-11-18T16:00:00.000Z",
     "expires": "2026-11-18T17:00:00.000Z"
   },
-  "failure": null,
+  "failure": {
+    "key": "2026-11-18-18:00",
+    "label": "18:00",
+    "code": "download",
+    "message": "לא נמצא קובץ וידאו בכתבה",
+    "at": "2026-11-18T16:05:11.880Z"
+  },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 18:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-18-17:00",
