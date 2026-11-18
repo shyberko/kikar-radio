@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T12:36:30.878Z",
+  "updatedAt": "2026-11-18T12:45:28.437Z",
   "items": [
+    {
+      "id": "5ea5d448653f",
+      "feed": "vod",
+      "title": "בלי רישיון, על קורקינט ומקפיצים מאות מפגינים: הבלוף מאחורי חלק ממעצרי ה'עריקים' נחשף",
+      "link": "https://www.kikar.co.il/davar-rishon/kobi-israel-bnei-brak-crisis-black-color",
+      "guid": "https://www.kikar.co.il/davar-rishon/kobi-israel-bnei-brak-crisis-black-color",
+      "pubDate": "2026-11-18T12:41:00.000Z",
+      "description": "בראיון בכורה סוער באולפן 'כיכר השבת' העיתונאי קובי ישראל מטיל פצצות בשתי הזירות הבוערות ביותר במגזר החרדי • מחשיפת הרקע האמיתי למעצרים שמקפיצים את הרחוב החרדי, דרך הנתונים המטרידים מנתב\"ג, ועד לעדות האישית מתוך הזוהמה בבני ברק והאמת שאמרו גדולי ישראל מאחורי הקלעים (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/18/8a601200-e340-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/09738ab4-b046-47d2-a614-70fc74057bc1/play_480p.mp4",
+      "durationSec": 684,
+      "durationIso": "PT11M24S"
+    },
     {
       "id": "8fd1b7965997",
       "feed": "vod",
