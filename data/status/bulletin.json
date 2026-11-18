@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T10:00:12.170Z",
+  "updatedAt": "2026-11-18T11:00:06.536Z",
   "active": {
     "key": "2026-11-18-12:00",
     "label": "12:00",
@@ -14,12 +14,24 @@
     "poster": "https://i.kikar.co.il/2026/11/17/d9bba6e0-e29e-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
     "mediaUrl": "https://stream.kikar.co.il/82dff815-0ea7-4074-a0d3-b1ed585759f5/play_480p.mp4",
     "title": "מבזק חדשות כיכר FM | מהדורת השעה 12:00",
-    "onAir": true,
-    "removedAt": null,
+    "onAir": false,
+    "removedAt": "2026-11-18T11:00:02.631Z",
     "failed": false,
-    "dateLabel": "18.11"
+    "dateLabel": "18.11",
+    "deletedAt": "2026-11-18T11:00:03.032Z"
   },
   "history": [
+    {
+      "key": "2026-11-18-13:00",
+      "label": "13:00",
+      "editionStart": "2026-11-18T11:00:00.000Z",
+      "expiresAt": "2026-11-18T12:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/tooxba",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-18T11:00:06.536Z"
+    },
     {
       "key": "2026-11-18-12:00",
       "label": "12:00",
@@ -33,10 +45,11 @@
       "poster": "https://i.kikar.co.il/2026/11/17/d9bba6e0-e29e-11f1-a19b-c319d5c1ae95__h1080_w1920.jpg",
       "mediaUrl": "https://stream.kikar.co.il/82dff815-0ea7-4074-a0d3-b1ed585759f5/play_480p.mp4",
       "title": "מבזק חדשות כיכר FM | מהדורת השעה 12:00",
-      "onAir": true,
-      "removedAt": null,
+      "onAir": false,
+      "removedAt": "2026-11-18T11:00:02.631Z",
       "failed": false,
-      "dateLabel": "18.11"
+      "dateLabel": "18.11",
+      "deletedAt": "2026-11-18T11:00:03.032Z"
     },
     {
       "key": "2026-11-18-11:00",
@@ -316,19 +329,25 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 0,
-  "lastCheck": "2026-11-18T10:00:00.779Z",
-  "note": "on-air",
+  "consecutiveFailures": 1,
+  "lastCheck": "2026-11-18T11:00:00.275Z",
+  "note": "failed",
   "paused": false,
   "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
-    "label": "12:00",
-    "start": "2026-11-18T10:00:00.000Z",
-    "expires": "2026-11-18T11:00:00.000Z"
+    "label": "13:00",
+    "start": "2026-11-18T11:00:00.000Z",
+    "expires": "2026-11-18T12:00:00.000Z"
   },
-  "failure": null,
+  "failure": {
+    "key": "2026-11-18-13:00",
+    "label": "13:00",
+    "code": "download",
+    "message": "לא נמצא קובץ וידאו בכתבה",
+    "at": "2026-11-18T11:00:06.536Z"
+  },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 19:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-18-12:00",
