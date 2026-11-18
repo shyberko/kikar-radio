@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-18T14:15:35.275Z",
+  "updatedAt": "2026-11-18T14:30:38.419Z",
   "items": [
+    {
+      "id": "222440774e42",
+      "feed": "music",
+      "title": "הזמר החרדי שזכה בפרס אקו\"ם היוקרתי: \"מיצב את עצמו כגשר בין העולמות\"",
+      "link": "https://www.kikar.co.il/tassel/shouli-rand-acum-uzi-hitman-prize-2025",
+      "guid": "https://www.kikar.co.il/tassel/shouli-rand-acum-uzi-hitman-prize-2025",
+      "pubDate": "2026-11-18T14:25:41.000Z",
+      "description": "הזמר והיוצר שולי רנד יקבל את פרס הישג השנה לאלבום • הוועדה: \"מיצב את עצמו כגשר ישראלי בין העולמות\" | כבוד למגזר (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/18/c0722070-e35b-11f1-98e0-edd5111e9def__h1066_w1600.jpeg",
+      "seriesSlug": "tassel",
+      "seriesName": "ציצית",
+      "mediaUrl": "https://stream.kikar.co.il/ad5d784f-07af-4af7-9a3f-198c15146b70/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "5ea5d448653f",
       "feed": "vod",
