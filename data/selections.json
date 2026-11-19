@@ -572,6 +572,19 @@
       "ruleId": null,
       "updatedAt": "2026-11-19T13:16:10.648Z",
       "retryAt": null
+    },
+    "8600374dd562": {
+      "status": "approved",
+      "playlistKey": "shows",
+      "window": "week",
+      "windowStart": "2026-11-19T13:16:21.152Z",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "replacePrevious": false,
+      "uploadNow": false,
+      "source": "manual",
+      "ruleId": null,
+      "updatedAt": "2026-11-19T13:16:21.152Z",
+      "retryAt": null
     }
   }
 }
