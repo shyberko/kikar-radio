@@ -56,7 +56,8 @@ function applyRules(catalog, selections, rules, auto) {
     if (next.items[item.id]) continue;
     const rule = (rules.rules || []).find((r) => r.enabled && r.seriesSlug === item.seriesSlug && r.action === "auto");
     if (!rule) continue;
-    const end = windowEnd(rule.window || "week", now);
+    const from = rule.window === "day" && item.pubDate ? new Date(item.pubDate) : now;
+    const end = windowEnd(rule.window || "week", from);
     next.items[item.id] = {
       ruleId: rule.id,
       playlistKey: rule.playlistKey || (item.feed === "music" ? "music" : "briefs"),

@@ -6,6 +6,7 @@ import {
   windowEnd,
   jerusalemToUtc,
   jerusalemParts,
+  endOfJerusalemDay,
   bulletinEdition,
   swipeDecision,
   isProtectedName,
@@ -37,6 +38,8 @@ import {
   markRepeats,
   groupPlays,
   projectSchedule,
+  capDayRule,
+  dayRuleFor,
 } from "../site/js/pure.js";
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
 import { readFileSync } from "node:fs";
@@ -178,6 +181,16 @@ assert.equal(playlistKeyForIntent("music", 230), "music");
 assert.equal(playlistKeyForIntent("shows", 4000), "shows");
 assert.equal(keepDespiteReplace({ status: "approved", replacePrevious: false, windowEnd: "2026-11-23T16:40:28.000Z" }, new Date("2026-11-17T10:00:00Z")), true);
 assert.equal(keepDespiteReplace({ status: "approved", replacePrevious: true, windowEnd: "2026-11-23T16:40:28.000Z" }, new Date("2026-11-17T10:00:00Z")), false);
+const dayRules = { rules: [{ id: "auto-ayom-bakikar", seriesSlug: "ayom-bakikar", window: "day", playlistKey: "shows", enabled: true, replacePrevious: true }] };
+const weekApproval = { status: "approved", playlistKey: "shows", window: "week", windowEnd: "2026-11-23T16:40:28.000Z", replacePrevious: false };
+const capped = capDayRule(weekApproval, { seriesSlug: "ayom-bakikar", pubDate: "2026-11-12T16:10:17.000Z" }, dayRules);
+assert.equal(capped.window, "day");
+assert.equal(capped.replacePrevious, true);
+assert.equal(capped.windowEnd, endOfJerusalemDay("2026-11-12T16:10:17.000Z").toISOString());
+assert.equal(capped.playlistKey, "shows");
+assert.equal(capDayRule(weekApproval, { seriesSlug: "music", pubDate: "2026-11-12T16:10:17.000Z" }, dayRules).window, "week");
+assert.equal(dayRuleFor(dayRules, "music"), null);
+assert.equal(windowEnd("day", monday).toISOString(), endOfJerusalemDay(monday).toISOString());
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "bulletin" } }), "shows");
 assert.equal(defaultPlaylistKey({ feed: "vod", seriesSlug: "x" }, { x: { playlistKey: "briefs" } }), "briefs");
 assert.equal(cleanSeriesName("חדשות\u200dחרדי", "haredi"), "חדשות חרדי");
@@ -292,6 +305,12 @@ const empty = planRotationExpiry([
 ], at);
 assert.deepEqual(empty.keepIds, ["a", "b"]);
 assert.deepEqual(empty.expireIds, []);
+const dailyHold = planRotationExpiry([
+  { ...expired("old-daily", "shows", "2026-11-12T10:00:00Z", "2026-11-12T21:59:59Z"), floorExempt: true },
+  expired("stay", "music", "2026-11-16T06:00:00Z", "2026-11-20T18:00:00Z"),
+], at);
+assert.deepEqual(dailyHold.keepIds, []);
+assert.equal(dailyHold.expireIds.includes("old-daily"), false);
 
 const sweeperAds = {
   campaigns: [],

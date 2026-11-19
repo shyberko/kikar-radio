@@ -39,6 +39,34 @@ export function keepDespiteReplace(selection, now) {
   return Number.isFinite(end) && end > at;
 }
 
+/** An enabled rule whose window is a single publish day. */
+export function dayRuleFor(rules, seriesSlug) {
+  if (!seriesSlug) return null;
+  return (
+    (rules?.rules || []).find((rule) => rule.enabled !== false && rule.window === "day" && rule.seriesSlug === seriesSlug) ||
+    null
+  );
+}
+
+/**
+ * A day rule wins over a manual week approval.
+ * The episode ends when its publish day ends, and older episodes of the series are replaced.
+ */
+export function capDayRule(intent, item, rules) {
+  if (!intent || !item) return intent;
+  const rule = dayRuleFor(rules, item.seriesSlug);
+  if (!rule) return intent;
+  const end = item.pubDate ? endOfJerusalemDay(item.pubDate) : null;
+  return {
+    ...intent,
+    playlistKey: rule.playlistKey || intent.playlistKey,
+    window: "day",
+    windowEnd: end ? end.toISOString() : intent.windowEnd,
+    replacePrevious: true,
+    dayRule: rule.id,
+  };
+}
+
 export function defaultPlaylistKey(item, seriesMap) {
   const mapped = seriesMap?.[item?.seriesSlug]?.playlistKey;
   if (mapped && mapped !== "bulletin" && PLAYLISTS[mapped]) return mapped;
@@ -179,7 +207,7 @@ export function formatDayMonth(date) {
  */
 export function windowEnd(kind, fromDate, customEnd) {
   const from = fromDate instanceof Date ? fromDate : new Date(fromDate);
-  if (kind === "today") return endOfJerusalemDay(from);
+  if (kind === "today" || kind === "day") return endOfJerusalemDay(from);
   if (kind === "week") {
     const p = jerusalemParts(from);
     const delta = (5 - p.weekday + 7) % 7;
@@ -418,7 +446,9 @@ export function planRotationExpiry(records, now, min = ROTATION_MIN) {
       continue;
     }
     const end = row.windowEnd ? new Date(row.windowEnd).getTime() : null;
-    if (end != null && !Number.isNaN(end) && at >= end) ending.push(row);
+    const ended = end != null && !Number.isNaN(end) && at >= end;
+    if (row.floorExempt && ended) continue;
+    if (ended) ending.push(row);
     else staying.push(row);
   }
   const oldestFirst = [...ending].sort((a, b) => {

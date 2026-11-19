@@ -8,27 +8,30 @@ import { PROTECTED_PLAYLIST_IDS, campaignEnded, frequencyPatch, fixedPatch } fro
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
-import { isProtectedName, collapseWs, jerusalemParts, planRotationExpiry, playlistKeyForIntent, keepDespiteReplace, ROTATION_PLAYLIST_KEYS, ROTATION_MIN, MANAGED_MARKER } from "../site/js/pure.js";
+import { isProtectedName, collapseWs, jerusalemParts, planRotationExpiry, playlistKeyForIntent, keepDespiteReplace, capDayRule, ROTATION_PLAYLIST_KEYS, ROTATION_MIN, MANAGED_MARKER } from "../site/js/pure.js";
 
-function intentFor(id, selections, auto) {
+function intentFor(id, selections, auto, item, rules) {
   const sel = selections.items?.[id];
+  let intent = null;
   if (sel) {
     if (sel.status !== "approved") return null;
-    return sel;
+    intent = sel;
+  } else {
+    const row = auto.items?.[id];
+    if (!row) return null;
+    intent = {
+      status: "approved",
+      playlistKey: row.playlistKey,
+      window: row.window,
+      windowStart: row.windowStart,
+      windowEnd: row.windowEnd,
+      replacePrevious: !!row.replacePrevious,
+      uploadNow: false,
+      source: "rule",
+      ruleId: row.ruleId,
+    };
   }
-  const row = auto.items?.[id];
-  if (!row) return null;
-  return {
-    status: "approved",
-    playlistKey: row.playlistKey,
-    window: row.window,
-    windowStart: row.windowStart,
-    windowEnd: row.windowEnd,
-    replacePrevious: !!row.replacePrevious,
-    uploadNow: false,
-    source: "rule",
-    ruleId: row.ruleId,
-  };
+  return capDayRule(intent, item, rules);
 }
 
 function runMeta() {
@@ -61,6 +64,7 @@ async function main() {
   const catalog = readJson(path.join(DATA, "catalog.json"), { items: [] });
   const selections = readJson(path.join(DATA, "selections.json"), { items: {} });
   const auto = readJson(path.join(DATA, "auto-approvals.json"), { items: {} });
+  const rules = readJson(path.join(DATA, "rules.json"), { rules: [] });
   const ads = readJson(path.join(DATA, "ads.json"), { campaigns: [] });
   const system = readJson(path.join(DATA, "system.json"), emptySystem());
   const uploads = readJson(path.join(DATA, "status/uploads.json"), {
@@ -90,7 +94,7 @@ async function main() {
   ]);
   const rotationPlan = planRotationExpiry(
     [...ids].map((id) => {
-      const intent = intentFor(id, selections, auto);
+      const intent = intentFor(id, selections, auto, byId.get(id), rules);
       const rec = uploads.items[id] || {};
       return {
         id,
@@ -101,6 +105,7 @@ async function main() {
         uploadedAt: rec.uploadedAt,
         windowEnd: intent ? intent.windowEnd : rec.windowEnd,
         explicitRemove: !intent,
+        floorExempt: Boolean(intent?.dayRule),
       };
     }),
     started,
@@ -117,7 +122,7 @@ async function main() {
   for (const id of ids) {
     const item = byId.get(id);
     const existing = uploads.items[id];
-    const intentPreview = intentFor(id, selections, auto);
+    const intentPreview = intentFor(id, selections, auto, item, rules);
     if (!existing && !intentPreview) continue;
     const rec = existing || {
       state: "queued",
@@ -128,7 +133,7 @@ async function main() {
       playlistId: null,
     };
     uploads.items[id] = rec;
-    const intent = intentFor(id, selections, auto);
+    const intent = intentFor(id, selections, auto, item, rules);
     const now = new Date();
     try {
       const playlistKey = playlistKeyForIntent(intent?.playlistKey || rec.playlistKey, item?.durationSec || rec.durationSec);
@@ -176,7 +181,7 @@ async function main() {
         rec.errorCode = null;
         rec.errorMessage = null;
         summary.reassigned += 1;
-        if (intent.replacePrevious && item) await replaceOlder(key, uploads, item, rec, managedIds, selections);
+        if (intent.replacePrevious && item) await replaceOlder(key, uploads, item, rec, managedIds, selections, rules, byId);
         continue;
       }
 
@@ -223,7 +228,7 @@ async function main() {
       rec.attempts = (rec.attempts || 0) + 1;
       rec.removedAt = null;
       summary.uploaded += 1;
-      if (intent.replacePrevious) await replaceOlder(key, uploads, item, rec, managedIds, selections);
+      if (intent.replacePrevious) await replaceOlder(key, uploads, item, rec, managedIds, selections, rules, byId);
       fs.rmSync(work, { recursive: true, force: true });
     } catch (err) {
       const mapped = err instanceof PipelineError ? err : asPipeline(err);
@@ -268,7 +273,7 @@ function rotationActiveCount(uploads) {
   return count;
 }
 
-async function replaceOlder(key, uploads, item, current, managedIds, selections) {
+async function replaceOlder(key, uploads, item, current, managedIds, selections, rules, byId) {
   const candidates = [];
   for (const [otherId, other] of Object.entries(uploads.items)) {
     if (otherId === item.id) continue;
@@ -278,12 +283,21 @@ async function replaceOlder(key, uploads, item, current, managedIds, selections)
     candidates.push([otherId, other]);
   }
   candidates.sort((a, b) => (Date.parse(b[1].uploadedAt || "") || 0) - (Date.parse(a[1].uploadedAt || "") || 0));
+  const currentPub = Date.parse(item.pubDate || "") || 0;
   for (const [otherId, other] of candidates) {
-    if (keepDespiteReplace(selections?.items?.[otherId], new Date())) {
+    const otherItem = byId?.get(otherId) || { id: otherId, seriesSlug: other.seriesSlug, pubDate: "" };
+    const capped = capDayRule(selections?.items?.[otherId] || { status: "approved", replacePrevious: false }, otherItem, rules);
+    if (capped?.dayRule) {
+      const otherPub = Date.parse(otherItem?.pubDate || "") || 0;
+      if (currentPub && otherPub >= currentPub) {
+        log("kept newer daily episode", { id: otherId });
+        continue;
+      }
+    } else if (keepDespiteReplace(selections?.items?.[otherId], new Date())) {
       log("kept approved episode; it was not marked replace-previous", { id: otherId });
       continue;
     }
-    if (ROTATION_PLAYLIST_KEYS.includes(other.playlistKey) && rotationActiveCount(uploads) - 1 < ROTATION_MIN) {
+    if (!capped?.dayRule && ROTATION_PLAYLIST_KEYS.includes(other.playlistKey) && rotationActiveCount(uploads) - 1 < ROTATION_MIN) {
       log("kept general-rotation item; replacement would drop below minimum", { id: otherId, floor: ROTATION_MIN });
       continue;
     }

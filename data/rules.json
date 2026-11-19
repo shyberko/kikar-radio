@@ -3,13 +3,13 @@
   "seriesMap": {
     "ayom-bakikar": {
       "playlistKey": "shows",
-      "window": "week",
-      "replacePrevious": false
+      "window": "day",
+      "replacePrevious": true
     },
     "davar-rishon": {
       "playlistKey": "shows",
-      "window": "week",
-      "replacePrevious": false
+      "window": "day",
+      "replacePrevious": true
     },
     "music": {
       "playlistKey": "music",

@@ -34,6 +34,7 @@ import {
   markRepeats,
   groupPlays,
   projectSchedule,
+  capDayRule,
   hePlural,
   hebrewWeekday,
   inboxRangeStart,
@@ -246,11 +247,12 @@ function seriesLabel(item) {
   return cleanSeriesName(item?.seriesName, item?.seriesSlug);
 }
 function intentOf(id) {
+  const item = itemById(id);
   const sel = state.selections.items?.[id];
-  if (sel) return sel.status === "approved" ? sel : null;
+  if (sel) return sel.status === "approved" ? capDayRule(sel, item, state.rules) : null;
   const auto = state.auto.items?.[id];
   if (!auto) return null;
-  return { ...auto, status: "approved", source: "rule", uploadNow: false };
+  return capDayRule({ ...auto, status: "approved", source: "rule", uploadNow: false }, item, state.rules);
 }
 function statusOf(item) {
   const sel = state.selections.items?.[item.id];
@@ -366,7 +368,7 @@ function selectionRecord(item, overrides) {
   const now = new Date();
   const kind = overrides.window || base.window;
   const end = kind === "next" ? null : (overrides.windowEnd || windowEnd(kind, now, overrides.customEnd));
-  return {
+  const record = {
     status: "approved",
     playlistKey: overrides.playlistKey || base.playlistKey,
     window: kind,
@@ -379,6 +381,7 @@ function selectionRecord(item, overrides) {
     updatedAt: now.toISOString(),
     retryAt: overrides.retryAt || null,
   };
+  return capDayRule(record, item, state.rules);
 }
 function rememberSelection(id, next) {
   const prev = state.selections.items[id] ? structuredClone(state.selections.items[id]) : null;
