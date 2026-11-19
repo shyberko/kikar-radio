@@ -3,13 +3,13 @@
   "seriesMap": {
     "ayom-bakikar": {
       "playlistKey": "shows",
-      "window": "day",
-      "replacePrevious": true
+      "window": "week",
+      "replacePrevious": false
     },
     "davar-rishon": {
       "playlistKey": "shows",
-      "window": "day",
-      "replacePrevious": true
+      "window": "week",
+      "replacePrevious": false
     },
     "music": {
       "playlistKey": "music",
@@ -58,6 +58,11 @@
     },
     "the-music-critic": {
       "playlistKey": "shows",
+      "window": "week",
+      "replacePrevious": false
+    },
+    "tassel": {
+      "playlistKey": "music",
       "window": "week",
       "replacePrevious": false
     }
