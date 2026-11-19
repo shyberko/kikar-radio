@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T11:00:03.596Z",
+  "updatedAt": "2026-11-19T11:05:09.334Z",
   "active": {
     "key": "2026-11-19-12:00",
     "label": "12:00",
@@ -21,6 +21,17 @@
     "deletedAt": "2026-11-19T11:00:02.890Z"
   },
   "history": [
+    {
+      "key": "2026-11-19-13:00",
+      "label": "13:00",
+      "editionStart": "2026-11-19T11:00:00.000Z",
+      "expiresAt": "2026-11-19T12:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/toqunu",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-19T11:05:09.334Z"
+    },
     {
       "key": "2026-11-19-12:00",
       "label": "12:00",
@@ -481,11 +492,11 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 0,
-  "lastCheck": "2026-11-19T11:00:00.852Z",
-  "note": "source",
+  "consecutiveFailures": 1,
+  "lastCheck": "2026-11-19T11:05:07.766Z",
+  "note": "failed",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -493,7 +504,13 @@
     "start": "2026-11-19T11:00:00.000Z",
     "expires": "2026-11-19T12:00:00.000Z"
   },
-  "failure": null,
+  "failure": {
+    "key": "2026-11-19-13:00",
+    "label": "13:00",
+    "code": "download",
+    "message": "לא נמצא קובץ וידאו בכתבה",
+    "at": "2026-11-19T11:05:09.334Z"
+  },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 13:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-19-12:00",
