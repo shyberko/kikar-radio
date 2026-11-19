@@ -630,11 +630,11 @@
       "windowStart": "2026-11-19T20:20:40.400Z",
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "replacePrevious": false,
-      "uploadNow": false,
+      "uploadNow": true,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-19T20:20:40.400Z",
-      "retryAt": null
+      "updatedAt": "2026-11-19T20:21:14.502Z",
+      "retryAt": "2026-11-19T20:21:14.502Z"
     },
     "04fe61d41661": {
       "status": "approved",
@@ -643,11 +643,11 @@
       "windowStart": "2026-11-19T20:20:49.388Z",
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "replacePrevious": false,
-      "uploadNow": false,
+      "uploadNow": true,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-19T20:20:49.388Z",
-      "retryAt": null
+      "updatedAt": "2026-11-19T20:21:15.808Z",
+      "retryAt": "2026-11-19T20:21:15.808Z"
     }
   }
 }
