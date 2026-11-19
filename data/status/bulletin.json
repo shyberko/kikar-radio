@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T15:03:21.445Z",
+  "updatedAt": "2026-11-19T16:00:04.010Z",
   "active": {
     "key": "2026-11-19-14:00",
     "label": "14:00",
@@ -21,6 +21,17 @@
     "deletedAt": "2026-11-19T13:00:02.972Z"
   },
   "history": [
+    {
+      "key": "2026-11-19-18:00",
+      "label": "18:00",
+      "editionStart": "2026-11-19T16:00:00.000Z",
+      "expiresAt": "2026-11-19T17:00:00.000Z",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/tora1d",
+      "failed": true,
+      "errorCode": "download",
+      "errorMessage": "לא נמצא קובץ וידאו בכתבה",
+      "checkedAt": "2026-11-19T16:00:04.010Z"
+    },
     {
       "key": "2026-11-19-17:00",
       "label": "17:00",
@@ -552,24 +563,24 @@
       "deletedAt": "2026-11-16T16:23:17.357Z"
     }
   ],
-  "consecutiveFailures": 4,
-  "lastCheck": "2026-11-19T15:03:18.282Z",
+  "consecutiveFailures": 5,
+  "lastCheck": "2026-11-19T16:00:01.651Z",
   "note": "failed",
   "paused": false,
   "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": "3 מהדורות אחרונות לא עלו",
   "hour": {
-    "label": "17:00",
-    "start": "2026-11-19T15:00:00.000Z",
-    "expires": "2026-11-19T16:00:00.000Z"
+    "label": "18:00",
+    "start": "2026-11-19T16:00:00.000Z",
+    "expires": "2026-11-19T17:00:00.000Z"
   },
   "failure": {
-    "key": "2026-11-19-17:00",
-    "label": "17:00",
+    "key": "2026-11-19-18:00",
+    "label": "18:00",
     "code": "download",
     "message": "לא נמצא קובץ וידאו בכתבה",
-    "at": "2026-11-19T15:03:21.445Z"
+    "at": "2026-11-19T16:00:04.010Z"
   },
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 13:00. נמשיך לבדוק.",
   "slotPending": null,
