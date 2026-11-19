@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T14:07:21.840Z",
+  "updatedAt": "2026-11-19T15:05:56.739Z",
   "lastRun": {
-    "startedAt": "2026-11-19T14:05:30.591Z",
-    "finishedAt": "2026-11-19T14:07:21.840Z",
+    "startedAt": "2026-11-19T15:05:37.961Z",
+    "finishedAt": "2026-11-19T15:05:56.739Z",
     "ok": true,
-    "uploaded": 3,
+    "uploaded": 0,
     "failed": 0,
-    "removed": 0,
+    "removed": 6,
     "held": 0,
-    "reassigned": 47,
+    "reassigned": 44,
     "itemId": null,
-    "runId": "44539938848",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44539938848"
+    "runId": "44550807868",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44550807868"
   },
   "items": {
     "bd340631d488": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 39,
       "azuraPath": "kikar-auto/vod/bd340631d488.mp3",
@@ -30,7 +30,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:37.990Z"
     },
     "3d823f5d4bec": {
       "state": "active",
@@ -628,7 +628,7 @@
       "removedAt": "2026-11-17T14:06:15.921Z"
     },
     "2150856a20c4": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 81,
       "azuraPath": "kikar-auto/vod/2150856a20c4.mp3",
@@ -642,10 +642,10 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:51.061Z"
     },
     "e8c136b25f2a": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 82,
       "azuraPath": "kikar-auto/vod/e8c136b25f2a.mp3",
@@ -659,7 +659,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:51.432Z"
     },
     "44b36f7fea5d": {
       "state": "active",
@@ -679,7 +679,7 @@
       "removedAt": null
     },
     "7c771cd50a41": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 84,
       "azuraPath": "kikar-auto/vod/7c771cd50a41.mp3",
@@ -693,7 +693,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:52.166Z"
     },
     "06b595bda7cf": {
       "state": "active",
@@ -713,7 +713,7 @@
       "removedAt": null
     },
     "3024bbafc567": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 86,
       "azuraPath": "kikar-auto/vod/3024bbafc567.mp3",
@@ -727,10 +727,10 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:52.901Z"
     },
     "216d0b0893e3": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 87,
       "azuraPath": "kikar-auto/vod/216d0b0893e3.mp3",
@@ -744,7 +744,7 @@
       "windowEnd": "2026-11-23T16:40:28.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-19T15:05:53.258Z"
     },
     "55353d5e6183": {
       "state": "expired",
