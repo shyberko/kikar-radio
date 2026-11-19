@@ -47,7 +47,7 @@ jobs:
         run: node scripts/upload.js
         continue-on-error: true
       - name: שמירת סטטוס
-        run: bash scripts/ci-commit.sh "עדכון סטטוס העלאה" data/system.json data/status/uploads.json data/status/runs.json
+        run: bash scripts/ci-commit.sh "עדכון סטטוס העלאה" data/system.json data/status/uploads.json data/status/runs.json data/ads.json
       - name: תוצאה
         if: steps.upload.outcome == 'failure'
         run: exit 1

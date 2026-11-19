@@ -1340,11 +1340,12 @@ function waitingCount(rule) {
 
 function renderAds() {
   const tab = state.route.q.get("tab") || "campaigns";
+  const showAdd = tab === "campaigns" && state.route.q.get("new") !== "1";
   return `<section class="stack">
-    <h1>פרסומות, ג׳ינגלים ומעברונים</h1>
+    <div class="spread"><h1>פרסומות, ג׳ינגלים ומעברונים</h1></div>
+    ${showAdd ? `<button class="btn primary" id="new-campaign" type="button" data-act="campaign-new">+ קמפיין חדש</button>` : ""}
     <div class="seg">${seg("tab", [["campaigns", "קמפיינים"], ["jingles", "ג׳ינגלים"], ["sweepers", "סוויפרים"]], tab)}</div>
     ${tab === "campaigns" ? renderCampaigns() : renderGroup(tab === "jingles" ? "jingles" : "sweepers")}
-    ${tab === "campaigns" && state.route.q.get("new") !== "1" && (state.ads.campaigns || []).length ? `<button class="fab" type="button" data-act="campaign-new">+ קמפיין חדש</button>` : ""}
     ${state.route.q.get("new") === "1" ? renderCampaignWizard() : ""}
   </section>`;
 }
@@ -1366,7 +1367,7 @@ function renderCampaigns() {
   ];
   const campaigns = state.ads.campaigns || [];
   if (!campaigns.length && !state.ui.draft) {
-    return `<div class="notice"><h2>עדיין אין קמפיינים</h2><p>קמפיין משמיע פרסומת בתדירות או בשעות שתבחר, ונכבה לבד בסוף.</p><button class="btn primary" type="button" data-act="campaign-new">צור קמפיין ראשון</button></div>`;
+    return `<div class="notice"><h2>עדיין אין קמפיינים</h2><p>קמפיין משמיע פרסומת בתדירות או בשעות שתבחר, ונכבה לבד בסוף. לחצו על ״+ קמפיין חדש״ למעלה.</p></div>`;
   }
   return groups.map(([key, label]) => {
     const rows = campaigns.filter((campaign) => campaignPhase(campaign) === key);
@@ -1393,8 +1394,9 @@ function renderCampaign(campaign) {
     ${campaign.uploadError ? `<div class="err-inline" role="alert">הקובץ לא עלה לשרת. הקמפיין לא משודר. <button class="btn" type="button" data-act="campaign-retry" data-id="${esc(campaign.id)}">נסה שוב</button></div>` : ""}
     <div class="row">
       <button class="btn" type="button" data-act="play-url" data-url="${esc(campaign.files?.[0]?.previewUrl || "")}" ${campaign.files?.[0]?.previewUrl ? "" : "disabled"}>נגן</button>
+      <button class="btn" type="button" data-act="campaign-edit" data-id="${esc(campaign.id)}">ערוך</button>
+      <button class="btn danger" type="button" data-act="campaign-delete" data-id="${esc(campaign.id)}">מחק</button>
       <button class="switch" type="button" role="switch" aria-pressed="${campaign.paused ? "false" : "true"}" data-act="campaign-pause" data-id="${esc(campaign.id)}" aria-label="השהיית הקמפיין"><i></i></button>
-      <button class="icon-btn" type="button" data-act="campaign-menu" data-id="${esc(campaign.id)}" aria-label="פעולות">${icon("more")}</button>
       ${phase === "active" && left < 2 ? `<button class="btn" type="button" data-act="campaign-extend" data-id="${esc(campaign.id)}">הארך</button>` : ""}
       ${phase === "ended" ? `<button class="btn" type="button" data-act="campaign-duplicate" data-id="${esc(campaign.id)}">שכפל</button><button class="btn" type="button" data-act="campaign-extend" data-id="${esc(campaign.id)}">הארך</button>` : ""}
     </div>
@@ -1415,11 +1417,12 @@ function renderCampaignWizard() {
     <p class="tiny">שלב ${step} מתוך 4</p>
     <div class="wizard-steps">${[1, 2, 3, 4].map((n) => `<span class="${n <= step ? "on" : ""}"></span>`).join("")}</div>
     ${errors.length ? `<div class="summary-errors" role="alert"><strong>יש לתקן:</strong><ul>${errors.map((err) => `<li><a href="#${esc(err.id)}">${esc(err.text)}</a></li>`).join("")}</ul></div>` : ""}
-    ${step === 1 ? `<h2>קובץ</h2><div class="drop"><p>גרור לכאן או בחר קובץ</p><input id="ad-file" type="file" accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,audio/mpeg,audio/wav,audio/mp4,audio/aac,audio/ogg,audio/flac"></div>
+    ${step === 1 ? `<h2>קובץ</h2><div class="drop"><p>גרור לכאן או בחרו קובץ שמע</p><label class="btn primary" for="ad-file">בחירת קובץ</label><input id="ad-file" class="sr" type="file" accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,audio/mpeg,audio/wav,audio/mp4,audio/aac,audio/ogg,audio/flac"></div>
       <p class="tiny" aria-live="polite">${state.ui.uploadProgress != null ? `מעלה קובץ… ${Math.round(state.ui.uploadProgress * 100)}%` : ""}</p>
       ${(draft.files || []).map((file) => `<p>${esc(file.name)} · ${esc(formatDuration(file.durationSec))}${file.durationSec > 60 ? " · פרסומת ארוכה (מעל 60 שניות)" : ""}</p>`).join("")}
       <label class="field">שם הקמפיין<input id="ad-name" name="name" value="${esc(draft.name || "")}" required></label>
-      <label class="field">לקוח (לא חובה)<input id="ad-client" name="client" value="${esc(draft.client || "")}"></label>` : ""}
+      <label class="field">לקוח (לא חובה)<input id="ad-client" name="client" value="${esc(draft.client || "")}"></label>
+      <label class="toggle"><input id="ad-enabled" type="checkbox" ${draft.paused ? "" : "checked"}> הקמפיין פעיל</label>` : ""}
     ${step === 2 ? `<h2>תאריכים</h2><div class="chips">${[["0", "מהיום"], ["7", "שבוע"], ["14", "שבועיים"], ["30", "חודש"]].map(([days, label]) => `<button class="chip" type="button" data-act="ad-span" data-days="${days}">${label}</button>`).join("")}</div>
       <label class="field">התחלה<input id="ad-start" name="startDate" type="date" value="${esc(draft.startDate || todayKey())}" required></label>
       <label class="field">סיום<input id="ad-end" name="endDate" type="date" value="${esc(draft.endDate || "")}" required></label>
@@ -1486,6 +1489,8 @@ function readDraftFromForm(draft) {
   if (data.get("client") != null) draft.client = String(data.get("client") || "");
   if (data.get("startDate")) draft.startDate = String(data.get("startDate"));
   if (data.get("endDate")) draft.endDate = String(data.get("endDate"));
+  const enabled = $("#ad-enabled");
+  if (enabled) draft.paused = !enabled.checked;
   const freq = $("#freq-on");
   if (freq) {
     draft.frequencyEvery = freq.checked ? Number($("#freq-val")?.textContent || draft.frequencyEvery || 4) : 0;
@@ -2266,38 +2271,49 @@ async function ensureCampaignPlaylists(draft) {
     backend_options: [],
   };
   const name = `כיכר אוטו – פרסומת – ${String(draft.name).slice(0, 40)}`;
+  const enabled = !draft.paused && !(todayKey() > draft.endDate);
   if (draft.frequencyEvery) {
-    const created = await radio.createPlaylist({
-      ...base,
-      name,
+    const patch = {
       type: draft.frequencyMode === "minutes" ? "once_per_x_minutes" : "once_per_x_songs",
       play_per_songs: draft.frequencyMode === "minutes" ? 0 : Number(draft.frequencyEvery),
       play_per_minutes: draft.frequencyMode === "minutes" ? Number(draft.frequencyEvery) : 0,
-      play_per_hour_minute: 0,
-      weight: 4,
+      is_enabled: enabled,
       schedule_items: [{ start_time: 0, end_time: 2359, ...range }],
-    });
-    ids.push(created.id);
+    };
+    if (draft.frequencyPlaylistId) {
+      await radio.patchPlaylist(draft.frequencyPlaylistId, patch);
+      ids.push(Number(draft.frequencyPlaylistId));
+    } else {
+      const created = await radio.createPlaylist({ ...base, name, ...patch, play_per_hour_minute: 0, weight: 4, is_enabled: enabled });
+      ids.push(created.id);
+    }
   }
   if (draft.fixedTimes?.length) {
-    const created = await radio.createPlaylist({
-      ...base,
-      name: `${name} · שעות`.slice(0, 80),
-      type: "default",
-      play_per_songs: 0,
-      play_per_minutes: 0,
-      play_per_hour_minute: 0,
-      weight: 8,
-      backend_options: ["interrupt", "single_track"],
-      schedule_items: draft.fixedTimes.map((time) => {
-        const [h, m] = time.split(":").map(Number);
-        const start = h * 100 + m;
-        const endMinutes = h * 60 + m + 8;
-        const end = Math.min(2359, Math.floor(endMinutes / 60) * 100 + (endMinutes % 60));
-        return { start_time: start, end_time: end, ...range };
-      }),
+    const schedule_items = draft.fixedTimes.map((time) => {
+      const [h, m] = time.split(":").map(Number);
+      const start = h * 100 + m;
+      const endMinutes = h * 60 + m + 8;
+      const end = Math.min(2359, Math.floor(endMinutes / 60) * 100 + (endMinutes % 60));
+      return { start_time: start, end_time: end, ...range };
     });
-    ids.push(created.id);
+    if (draft.fixedPlaylistId) {
+      await radio.patchPlaylist(draft.fixedPlaylistId, { is_enabled: enabled, schedule_items, backend_options: ["interrupt", "single_track"] });
+      ids.push(Number(draft.fixedPlaylistId));
+    } else {
+      const created = await radio.createPlaylist({
+        ...base,
+        name: `${name} · שעות`.slice(0, 80),
+        type: "default",
+        play_per_songs: 0,
+        play_per_minutes: 0,
+        play_per_hour_minute: 0,
+        weight: 8,
+        backend_options: ["interrupt", "single_track"],
+        schedule_items,
+        is_enabled: enabled,
+      });
+      ids.push(created.id);
+    }
   }
   return ids;
 }
@@ -2309,7 +2325,7 @@ async function pauseCampaign(id) {
   for (const pid of [campaign.frequencyPlaylistId, campaign.fixedPlaylistId]) {
     if (!pid) continue;
     const pl = state.playlists.find((row) => Number(row.id) === Number(pid));
-    if (pl && radio.canTouch(pl, knownIds())) await radio.updatePlaylist(pid, { ...pl, is_enabled: !campaign.paused }).catch(() => toast("לא הצלחנו לעדכן את הפלייליסט"));
+    if (pl && radio.canTouch(pl, knownIds())) await radio.patchPlaylist(pid, { is_enabled: !campaign.paused }).catch(() => toast("לא הצלחנו לעדכן את הפלייליסט"));
   }
 }
 function deleteCampaign(id) {

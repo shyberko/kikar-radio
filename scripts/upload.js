@@ -2,12 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { DATA, TMP } from "./lib/paths.js";
 import { readJson, writeJson, log } from "./lib/io.js";
-import { requireKey, uploadBase64, setManagedPlaylists, updatePlaylist, listPlaylists } from "./lib/azura.js";
+import { requireKey, uploadBase64, setManagedPlaylists, listPlaylists, createPlaylist, patchPlaylist } from "./lib/azura.js";
 import { ensureCorePlaylists, ensureSweeperRotation, emptySystem, knownIdSet } from "./lib/playlists.js";
+import { PROTECTED_PLAYLIST_IDS, campaignEnded, frequencyPatch, fixedPatch } from "./lib/campaigns.js";
 import { downloadTo } from "./lib/fetch-media.js";
 import { transcodeToMp3, probeDuration } from "./lib/ffmpeg.js";
 import { PipelineError, asPipeline } from "./lib/errors.js";
-import { isProtectedName, collapseWs, endOfJerusalemDay, jerusalemParts, planRotationExpiry, playlistKeyForIntent, keepDespiteReplace, ROTATION_PLAYLIST_KEYS, ROTATION_MIN } from "../site/js/pure.js";
+import { isProtectedName, collapseWs, jerusalemParts, planRotationExpiry, playlistKeyForIntent, keepDespiteReplace, ROTATION_PLAYLIST_KEYS, ROTATION_MIN, MANAGED_MARKER } from "../site/js/pure.js";
 
 function intentFor(id, selections, auto) {
   const sel = selections.items?.[id];
@@ -236,7 +237,8 @@ async function main() {
     }
   }
 
-  await reconcileAds(key, ads, managedIds);
+  const adsChanged = await syncCampaigns(key, ads, managedIds);
+  if (adsChanged) writeJson(path.join(DATA, "ads.json"), ads);
   const meta = runMeta();
   uploads.updatedAt = new Date().toISOString();
   uploads.lastRun = {
@@ -292,12 +294,6 @@ async function replaceOlder(key, uploads, item, current, managedIds, selections)
   }
 }
 
-function campaignEnded(campaign, now) {
-  if (!campaign?.endDate) return false;
-  const end = endOfJerusalemDay(`${campaign.endDate}T12:00:00Z`);
-  return now > end;
-}
-
 function playlistIdsForFile(ads, mediaId, now) {
   const ids = [];
   const same = (file) => Number(file.mediaId) === Number(mediaId);
@@ -314,31 +310,95 @@ function playlistIdsForFile(ads, mediaId, now) {
   return ids;
 }
 
-async function reconcileAds(key, ads, managedIds) {
+function usablePlaylist(live, id) {
+  const n = Number(id);
+  if (!n || PROTECTED_PLAYLIST_IDS.has(n)) return null;
+  const pl = live.find((row) => Number(row.id) === n);
+  if (!pl || isProtectedName(pl.name) || !String(pl.name || "").startsWith("כיכר אוטו")) return null;
+  if (!String(pl.description || "").includes(MANAGED_MARKER)) return null;
+  return pl;
+}
+
+async function ensureCampaignPlaylist(key, live, existingId, name, description, patch) {
+  const found = usablePlaylist(live, existingId);
+  if (found) {
+    await patchPlaylist(key, found.id, patch);
+    return Number(found.id);
+  }
+  const created = await createPlaylist(key, {
+    name,
+    description,
+    source: "songs",
+    order: "sequential",
+    include_in_requests: false,
+    include_in_on_demand: false,
+    avoid_duplicates: true,
+    is_jingle: false,
+    play_per_hour_minute: 0,
+    weight: 4,
+    ...patch,
+  });
+  live.push(created);
+  return Number(created.id);
+}
+
+async function syncCampaigns(key, ads, managedIds) {
   const now = new Date();
   const live = await listPlaylists(key);
-  const byId = new Map(live.map((pl) => [Number(pl.id), pl]));
+  let changed = false;
   for (const campaign of ads.campaigns || []) {
-    if (!campaignEnded(campaign, now)) continue;
-    for (const pid of [campaign.frequencyPlaylistId, campaign.fixedPlaylistId]) {
-      if (!pid) continue;
-      const pl = byId.get(Number(pid));
-      if (!pl || isProtectedName(pl.name) || !managedIds.has(Number(pl.id))) continue;
-      if (pl.is_enabled) {
-        await updatePlaylist(key, pl, { is_enabled: false }, managedIds);
-        log("disabled ended campaign playlist", { id: pl.id, name: pl.name });
+    if (!campaign || campaign.draft) continue;
+    const baseName = `כיכר אוטו – פרסומת – ${String(campaign.name || "קמפיין").slice(0, 40)}`;
+    try {
+      if (campaign.frequencyEvery) {
+        const id = await ensureCampaignPlaylist(
+          key,
+          live,
+          campaign.frequencyPlaylistId,
+          baseName,
+          `${MANAGED_MARKER} ads:${campaign.id}:freq`,
+          frequencyPatch(campaign, now),
+        );
+        if (id !== Number(campaign.frequencyPlaylistId)) {
+          campaign.frequencyPlaylistId = id;
+          changed = true;
+        }
       }
-    }
-    for (const file of campaign.files || []) {
-      if (!file.mediaId) continue;
-      const keep = playlistIdsForFile(ads, file.mediaId, now).filter((id) => managedIds.has(id));
-      try {
-        await assignExact(key, file.mediaId, keep, managedIds);
-      } catch (err) {
-        log("campaign file detach failed", { mediaId: file.mediaId, message: String(err.message || err).slice(0, 160) });
+      if ((campaign.fixedTimes || []).length) {
+        const id = await ensureCampaignPlaylist(
+          key,
+          live,
+          campaign.fixedPlaylistId,
+          `${baseName} · שעות`.slice(0, 80),
+          `${MANAGED_MARKER} ads:${campaign.id}:fixed`,
+          fixedPatch(campaign, now),
+        );
+        if (id !== Number(campaign.fixedPlaylistId)) {
+          campaign.fixedPlaylistId = id;
+          changed = true;
+        }
       }
+      if (campaignEnded(campaign, now) || campaign.paused) {
+        for (const pid of [campaign.frequencyPlaylistId, campaign.fixedPlaylistId]) {
+          if (!usablePlaylist(live, pid)) continue;
+          await patchPlaylist(key, pid, { is_enabled: false });
+          log("campaign off rotation", { id: pid, campaign: campaign.id });
+        }
+        for (const file of campaign.files || []) {
+          if (!file.mediaId) continue;
+          const keep = playlistIdsForFile(ads, file.mediaId, now).filter((id) => managedIds.has(id) && !PROTECTED_PLAYLIST_IDS.has(id));
+          try {
+            await assignExact(key, file.mediaId, keep, managedIds);
+          } catch (err) {
+            log("campaign file detach failed", { mediaId: file.mediaId, message: String(err.message || err).slice(0, 160) });
+          }
+        }
+      }
+    } catch (err) {
+      log("campaign sync failed", { id: campaign.id, message: String(err.message || err).slice(0, 180) });
     }
   }
+  return changed;
 }
 
 main().catch((err) => {

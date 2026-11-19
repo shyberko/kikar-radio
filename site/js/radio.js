@@ -113,8 +113,25 @@ export function createRadio(getKey, getOrigin) {
     station: () => request("GET", "/station/1"),
     playlists: () => request("GET", "/station/1/playlists"),
     updatePlaylist: (id, body) => request("PUT", `/station/1/playlist/${id}`, body),
+    patchPlaylist: (id, body) => {
+      const n = Number(id);
+      if ([1, 2, 3, 5].includes(n)) {
+        const err = new Error("לא נוגעים בפלייליסט הזה");
+        err.code = "playlist";
+        throw err;
+      }
+      return request("PUT", `/station/1/playlist/${n}`, body);
+    },
     createPlaylist: (body) => request("POST", "/station/1/playlists", body),
-    deletePlaylist: (id) => request("DELETE", `/station/1/playlist/${id}`),
+    deletePlaylist: (id) => {
+      const n = Number(id);
+      if ([1, 2, 3, 5].includes(n)) {
+        const err = new Error("לא נוגעים בפלייליסט הזה");
+        err.code = "playlist";
+        throw err;
+      }
+      return request("DELETE", `/station/1/playlist/${n}`);
+    },
     uploadBase64,
     setFilePlaylists,
     history: (start) => request("GET", `/station/1/history?start=${encodeURIComponent(start)}`),

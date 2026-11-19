@@ -37,6 +37,7 @@ import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffA
 import { readFileSync } from "node:fs";
 import { schedulerTick, applySchedulerAction, cronOk, SCHEDULER_RUN_MINUTES } from "./scheduler-plan.js";
 import { knownIdSet, ROTATION_PATCH, SWEEPER_MEDIA_IDS } from "./lib/playlists.js";
+import { frequencyPatch, fixedPatch, campaignOnAir, PROTECTED_PLAYLIST_IDS } from "./lib/campaigns.js";
 
 assert.equal(parseIsoDuration("PT4M5S"), 245);
 assert.equal(parseIsoDuration("PT2M31S"), 151);
@@ -371,5 +372,25 @@ assert.deepEqual(SWEEPER_MEDIA_IDS, [47, 48]);
 for (const id of [1, 2, 3, 5]) {
   assert.equal(Object.values(ROTATION_PATCH).some((row) => row.id === id), false);
 }
+
+const liveCampaign = {
+  id: "c1",
+  name: "בדיקה",
+  frequencyEvery: 4,
+  frequencyMode: "songs",
+  fixedTimes: ["09:15"],
+  days: [0, 1, 2, 3, 4],
+  startDate: "2026-11-17",
+  endDate: "2026-11-20",
+  paused: false,
+};
+const later = new Date("2026-11-18T10:00:00Z");
+assert.equal(campaignOnAir(liveCampaign, later), true);
+assert.equal(frequencyPatch(liveCampaign, later).type, "once_per_x_songs");
+assert.equal(frequencyPatch(liveCampaign, later).play_per_songs, 4);
+assert.equal(frequencyPatch(liveCampaign, later).is_enabled, true);
+assert.equal(fixedPatch(liveCampaign, later).schedule_items[0].start_time, 915);
+assert.equal(frequencyPatch({ ...liveCampaign, endDate: "2026-11-01" }, later).is_enabled, false);
+assert.equal(PROTECTED_PLAYLIST_IDS.has(1) && PROTECTED_PLAYLIST_IDS.has(5), true);
 
 console.log("self-check ok");

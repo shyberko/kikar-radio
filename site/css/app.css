@@ -480,6 +480,10 @@ body.compact .teaser { display: none; }
 body.compact .card h3 { -webkit-line-clamp: 2; font-size: var(--fs-16); }
 .skeleton { height: 148px; border-radius: var(--radius-card); background: linear-gradient(90deg, var(--line), var(--surface), var(--line)); background-size: 200% 100%; }
 .progress-top { height: 3px; background: var(--brand); }
+#new-campaign { align-self: stretch; }
+@media (min-width: 700px) {
+  #new-campaign { align-self: flex-start; }
+}
 .fab { position: fixed; z-index: 4; inset-inline-start: 16px; bottom: calc(var(--nav-h) + 16px); min-height: 52px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--brand-ink); color: var(--bg); box-shadow: var(--shadow); }
 .drop { border: 1.5px dashed var(--line); border-radius: 16px; min-height: 120px; display: grid; place-items: center; text-align: center; padding: 16px; }
 
