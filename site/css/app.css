@@ -260,7 +260,7 @@ h3 { font-size: var(--fs-16); line-height: 1.35; font-weight: 700; }
   content: "";
   position: absolute;
   top: 6px;
-  width: 64px;
+  width: 48px;
   height: 32px;
   border-radius: 16px;
   background: color-mix(in srgb, var(--brand) 12%, transparent);
@@ -528,6 +528,27 @@ body.compact .card h3 { -webkit-line-clamp: 2; font-size: var(--fs-16); }
   .inbox-open { margin-inline-end: min(440px, 40vw); }
   .pill { max-width: 420px; }
 }
+.schedule-hour { margin: 18px 0 4px; color: var(--muted); font-size: var(--fs-14); font-weight: 600; }
+.schedule-list { list-style: none; padding: 0; margin: 0; }
+.play-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.play-row time { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.2em; }
+.play-row .ttl { flex: 1 1 160px; font-weight: 600; }
+.play-row .len { color: var(--muted); font-size: var(--fs-12); }
+.play-row.repeat, .play-row.repeat time, .play-row.repeat .ttl { color: var(--danger); }
+.kind { border-radius: 999px; padding: 2px 8px; font-size: var(--fs-12); font-weight: 600; background: var(--brand-soft); color: var(--brand-ink); }
+.kind-bulletin { background: var(--amber-soft); color: var(--amber); }
+.kind-sweeper, .kind-other, .kind-playlist { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.kind-ad { background: var(--danger-soft); color: var(--danger); }
+.now-card .bar { margin-top: 12px; }
+#schedule .spread { align-items: center; gap: 12px; }
+#hide-sweepers { flex: none; }
 body[data-route="/setup"] #rail,
 body[data-route="/setup"] #top { display: none; }
 body[data-route="/setup"] #view { padding: 16px; max-width: none; }

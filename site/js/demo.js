@@ -1,4 +1,4 @@
-import { windowEnd } from "./pure.js";
+import { windowEnd, jerusalemParts } from "./pure.js";
 
 /** Fixture for ?demo=1. Covers the states screenshots need, without live credentials. */
 export function demoBundle(now = new Date()) {
@@ -82,15 +82,66 @@ export function demoBundle(now = new Date()) {
       },
     },
     rules: { schemaVersion: 1, seriesMap: {}, rules: [] },
-    ads: { schemaVersion: 1, campaigns: [], jingles: { everySongs: 4, enabled: true, playlistId: null, files: [] }, sweepers: { everySongs: 3, enabled: true, playlistId: null, files: [] } },
+    ads: {
+      schemaVersion: 1,
+      campaigns: [demoCampaign(now)],
+      jingles: { everySongs: 4, enabled: true, playlistId: null, files: [] },
+      sweepers: { everySongs: 3, enabled: true, playlistId: null, files: [] },
+    },
+    history: demoHistory(now),
+    stationPlaylists: demoPlaylists(),
     np: {
       is_online: true,
       listeners: { current: 12 },
-      now_playing: { elapsed: 40, duration: 180, song: { text: "היום בכיכר — פרק שכבר בפלייליסט", title: "פרק שכבר בפלייליסט", artist: "היום בכיכר" } },
+      now_playing: {
+        elapsed: 40,
+        duration: 180,
+        playlist: "כיכר אוטו – תוכניות",
+        song: { text: "היום בכיכר — פרק שכבר בפלייליסט", title: "פרק שכבר בפלייליסט", artist: "היום בכיכר" },
+      },
     },
     pending: [{ dedupeKey: "put:data/selections.json", type: "put", path: "data/selections.json" }],
     inflight: { ids: ["uploading-vod"], at: now.getTime() },
     progress: { "uploading-vod": 0.62 },
+  };
+}
+
+function demoHistory(now) {
+  const unix = (minAgo) => Math.floor((now.getTime() - minAgo * 60000) / 1000);
+  const song = (title) => ({ title, text: title });
+  return [
+    { played_at: unix(8), duration: 180, playlist: "כיכר אוטו – מוזיקה", song: song("שיר בוקר") },
+    { played_at: unix(15), duration: 5, playlist: "כיכר אוטו – מעברונים", song: song("כיכר FM") },
+    { played_at: unix(40), duration: 620, playlist: "כיכר אוטו – תוכניות", song: song("הפגישה המוזרה") },
+    { played_at: unix(70), duration: 150, playlist: "כיכר אוטו – מבזק שעתי", song: song("מבזק השעה") },
+    { played_at: unix(200), duration: 620, playlist: "כיכר אוטו – תוכניות", song: song("הפגישה המוזרה") },
+    { played_at: unix(400), duration: 210, playlist: "Shows", song: song("תוכנית ישנה") },
+    { played_at: unix(26 * 60), duration: 100, playlist: "כיכר אוטו – מוזיקה", song: song("מחוץ לחלון") },
+  ];
+}
+
+function demoPlaylists() {
+  return [
+    { id: 6, name: "כיכר אוטו – מבזק שעתי", is_enabled: true, play_per_hour_minute: 15, schedule_items: [] },
+    { id: 8, name: "כיכר אוטו – מוזיקה", is_enabled: true, num_songs: 12, schedule_items: [] },
+    { id: 9, name: "כיכר אוטו – תוכניות", is_enabled: true, num_songs: 10, schedule_items: [] },
+    { id: 10, name: "כיכר אוטו – מעברונים", is_enabled: true, schedule_items: [] },
+    { id: 4, name: "תוכנית בוקר", is_enabled: true, schedule_items: [{ start_time: 700, end_time: 900, days: [1, 2, 3, 4, 5] }] },
+    { id: 1, name: "Shows", is_enabled: true, schedule_items: [{ start_time: 1800, end_time: 1900, days: [1] }] },
+  ];
+}
+
+function demoCampaign(now) {
+  const p = jerusalemParts(now);
+  const hour = (p.hour + 3) % 24;
+  return {
+    id: "demo-ad",
+    name: "חסות הצהריים",
+    paused: false,
+    startDate: "2026-01-01",
+    endDate: "2027-01-01",
+    days: [0, 1, 2, 3, 4, 5, 6],
+    fixedTimes: [`${String(hour).padStart(2, "0")}:20`],
   };
 }
 

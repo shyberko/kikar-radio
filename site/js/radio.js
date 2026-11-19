@@ -134,7 +134,13 @@ export function createRadio(getKey, getOrigin) {
     },
     uploadBase64,
     setFilePlaylists,
-    history: (start) => request("GET", `/station/1/history?start=${encodeURIComponent(start)}`),
+    history: (start, end) => {
+      const q = new URLSearchParams();
+      if (start) q.set("start", start);
+      if (end) q.set("end", end);
+      return request("GET", `/station/1/history?${q}`);
+    },
+    queue: () => request("GET", "/station/1/queue"),
     quota: () => request("GET", "/station/1/quota"),
     async nowPlaying() {
       const res = await fetch(`${apiBase()}/nowplaying/1`);

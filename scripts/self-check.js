@@ -32,6 +32,11 @@ import {
   rotationWarning,
   isSweeperPlaylist,
   existingSweeperId,
+  classifyPlaylist,
+  normalizeHistory,
+  markRepeats,
+  groupPlays,
+  projectSchedule,
 } from "../site/js/pure.js";
 import { planGithubResponse, planGithubPermissions, planAzuraError, bulletinOffAirAt, githubSetupMessage, mergeJsonDocs, coalesceWrites } from "../site/js/policy.js";
 import { readFileSync } from "node:fs";
@@ -392,5 +397,49 @@ assert.equal(frequencyPatch(liveCampaign, later).is_enabled, true);
 assert.equal(fixedPatch(liveCampaign, later).schedule_items[0].start_time, 915);
 assert.equal(frequencyPatch({ ...liveCampaign, endDate: "2026-11-01" }, later).is_enabled, false);
 assert.equal(PROTECTED_PLAYLIST_IDS.has(1) && PROTECTED_PLAYLIST_IDS.has(5), true);
+
+assert.equal(classifyPlaylist("כיכר אוטו – מוזיקה", 8), "music");
+assert.equal(classifyPlaylist("כיכר אוטו – תוכניות", 9), "shows");
+assert.equal(classifyPlaylist("כיכר אוטו – מבזק שעתי", 6), "bulletin");
+assert.equal(classifyPlaylist("כיכר אוטו – מעברונים", 10), "sweeper");
+assert.equal(classifyPlaylist("כיכר אוטו – מעברונים", null), "sweeper");
+assert.equal(classifyPlaylist("Shows", 1), "other");
+
+const noon = jerusalemToUtc(2026, 11, 19, 12, 0, 0);
+const historyRows = [
+  { played_at: Math.floor(jerusalemToUtc(2026, 11, 19, 11, 0, 0).getTime() / 1000), duration: 60, playlist: "כיכר אוטו – תוכניות", song: { title: "אותו פרק" } },
+  { played_at: Math.floor(jerusalemToUtc(2026, 11, 19, 8, 0, 0).getTime() / 1000), duration: 60, playlist: "כיכר אוטו – תוכניות", song: { title: "אותו פרק" } },
+  { played_at: Math.floor(jerusalemToUtc(2026, 11, 19, 9, 0, 0).getTime() / 1000), duration: 30, playlist: "כיכר אוטו – מוזיקה", song: { title: "שיר יחיד" } },
+  { played_at: Math.floor(jerusalemToUtc(2026, 11, 18, 10, 0, 0).getTime() / 1000), duration: 30, playlist: "כיכר אוטו – מוזיקה", song: { title: "מחוץ לחלון" } },
+];
+const played = markRepeats(normalizeHistory(historyRows, noon));
+assert.equal(played.some((row) => row.title === "מחוץ לחלון"), false);
+assert.equal(played.filter((row) => row.title === "אותו פרק" && row.repeat).length, 2);
+assert.equal(played.find((row) => row.title === "שיר יחיד").repeat, false);
+const hours = groupPlays(played);
+assert.equal(hours[0].plays[0].at >= hours[1].plays[0].at, true);
+
+const morning = jerusalemToUtc(2026, 11, 19, 10, 30, 0);
+const plan = projectSchedule({
+  now: morning,
+  playlists: [
+    { id: 6, name: "כיכר אוטו – מבזק שעתי", play_per_hour_minute: 15 },
+    { id: 4, name: "תוכנית בוקר", schedule_items: [{ start_time: 1100, end_time: 1200, days: [4] }] },
+    { id: 1, name: "Shows", schedule_items: [{ start_time: 1800, end_time: 1900, days: [1] }] },
+  ],
+  campaigns: [
+    { name: "חסות", paused: false, startDate: "2026-11-01", endDate: "2026-11-30", days: [4], fixedTimes: ["14:30"] },
+    { name: "נגמר", paused: false, startDate: "2026-11-01", endDate: "2026-11-18", days: [4], fixedTimes: ["16:00"] },
+  ],
+});
+const firstBulletin = plan.events.find((row) => row.kind === "bulletin");
+const bulletinParts = jerusalemParts(firstBulletin.at);
+assert.equal(bulletinParts.hour, 11);
+assert.equal(bulletinParts.minute, 15);
+assert.equal(plan.events.some((row) => row.title === "תוכנית בוקר"), true);
+assert.equal(plan.events.some((row) => row.title === "Shows"), false);
+assert.equal(plan.events.some((row) => row.title === "חסות" && row.kind === "ad"), true);
+assert.equal(plan.events.some((row) => row.title === "נגמר"), false);
+assert.match(plan.note, /כל 4 שירים/);
 
 console.log("self-check ok");

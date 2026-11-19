@@ -436,3 +436,196 @@ export function daysUntil(end, now) {
   const ms = new Date(end).getTime() - (now instanceof Date ? now : new Date(now)).getTime();
   return Math.ceil(ms / 86400000);
 }
+
+export const KIND_LABEL = {
+  music: "מוזיקה",
+  shows: "תוכניות",
+  bulletin: "מבזק",
+  sweeper: "מעברון",
+  ad: "פרסומת",
+  playlist: "מתוזמן",
+  other: "אחר",
+};
+
+export const ROTATION_NOTE = "תוכנית מתנגנת כל 4 שירים, ומעברון בין פריטים.";
+
+/** Tag a playlist name or id for the schedule. Read-only; it never decides a write. */
+export function classifyPlaylist(name, id) {
+  const n = Number(id);
+  const text = String(name || "");
+  if (n === 10 || text.includes("מעברון") || text.includes("מעברונ")) return "sweeper";
+  if (n === 6 || text.includes("מבזק שעתי")) return "bulletin";
+  if (n === 9 || text.includes("תוכניות")) return "shows";
+  if (n === 8 || text.includes("מוזיקה")) return "music";
+  if (text.includes("פרסומת")) return "ad";
+  return "other";
+}
+
+function playedAtMs(value) {
+  if (value == null || value === "") return NaN;
+  if (typeof value === "number") return value < 1e12 ? value * 1000 : value;
+  const text = String(value).trim();
+  if (/^\d+$/.test(text)) {
+    const n = Number(text);
+    return n < 1e12 ? n * 1000 : n;
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : NaN;
+}
+
+/** Plays from the last 24 hours, newest first. Accepts the history API or nowplaying song_history. */
+export function normalizeHistory(raw, now = new Date()) {
+  const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.rows) ? raw.rows : [];
+  const at = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  const cutoff = at - 24 * 60 * 60 * 1000;
+  const plays = [];
+  for (const row of rows) {
+    const when = playedAtMs(row?.played_at ?? row?.timestamp);
+    if (!Number.isFinite(when) || when < cutoff || when > at + 60 * 1000) continue;
+    const playlistName = typeof row.playlist === "string" ? row.playlist : row.playlist?.name || "";
+    const playlistId = typeof row.playlist === "object" && row.playlist ? row.playlist.id : row.playlist_id;
+    const song = row.song || {};
+    const title = String(song.title || song.text || row.title || "").trim() || "ללא שם";
+    plays.push({
+      at: when,
+      title,
+      duration: Number(row.duration ?? song.duration ?? 0) || 0,
+      playlistName,
+      playlistId: playlistId == null || playlistId === "" ? null : Number(playlistId),
+      kind: classifyPlaylist(playlistName, playlistId),
+    });
+  }
+  plays.sort((a, b) => b.at - a.at);
+  return plays;
+}
+
+/** Same title played again inside six hours. Compared by title, not by playlist. */
+export function markRepeats(plays, windowMs = 6 * 60 * 60 * 1000) {
+  const times = new Map();
+  for (const play of plays || []) {
+    const key = String(play.title || "").trim();
+    if (!times.has(key)) times.set(key, []);
+    times.get(key).push(play.at);
+  }
+  return (plays || []).map((play) => {
+    const hits = times.get(String(play.title || "").trim()) || [];
+    const repeat = hits.some((when) => when !== play.at && Math.abs(when - play.at) <= windowMs);
+    return { ...play, repeat };
+  });
+}
+
+/** Newest hour first. Plays inside an hour stay newest first. */
+export function groupPlays(plays) {
+  const groups = [];
+  const index = new Map();
+  for (const play of plays || []) {
+    const p = jerusalemParts(play.at);
+    const key = `${p.year}-${p.month}-${p.day}-${p.hour}`;
+    if (!index.has(key)) {
+      const row = { key, at: play.at, plays: [] };
+      index.set(key, row);
+      groups.push(row);
+    }
+    index.get(key).plays.push(play);
+  }
+  return groups;
+}
+
+function clockCode(value) {
+  if (value == null || value === "") return null;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.includes(":")) return hhmmToCode(value);
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function scheduleDayMatches(days, jsWeekday) {
+  if (!Array.isArray(days) || days.length === 0) return true;
+  const set = new Set(days.map(Number));
+  return set.has(toAzuraDay(jsWeekday)) || set.has(jsWeekday);
+}
+
+function dateKey(parts) {
+  return `${parts.year}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
+}
+
+function bulletinMinute(playlists) {
+  const pl = (playlists || []).find((row) => Number(row?.id) === 6);
+  const minute = Number(pl?.play_per_hour_minute);
+  if (Number.isInteger(minute) && minute >= 0 && minute <= 59) return minute;
+  return 8;
+}
+
+/**
+ * A projected plan for the next 24 hours. Bulletin slots, scheduled playlists, and ad fixed times.
+ * This is not the station queue.
+ */
+export function projectSchedule({ now = new Date(), playlists = [], campaigns = [] } = {}) {
+  const at = now instanceof Date ? now : new Date(now);
+  const until = at.getTime() + 24 * 60 * 60 * 1000;
+  const events = [];
+  const alwaysOn = [];
+  const minute = bulletinMinute(playlists);
+  const start = jerusalemParts(at);
+  const hour0 = jerusalemToUtc(start.year, start.month, start.day, start.hour, 0, 0);
+
+  for (let i = 0; i < 25; i++) {
+    const hour = jerusalemParts(new Date(hour0.getTime() + i * 60 * 60 * 1000));
+    const slot = jerusalemToUtc(hour.year, hour.month, hour.day, hour.hour, minute, 0).getTime();
+    if (slot <= at.getTime() || slot > until) continue;
+    events.push({ at: slot, kind: "bulletin", title: "מבזק שעתי", detail: `דקה ${minute}` });
+  }
+
+  for (const pl of playlists || []) {
+    if (!pl || pl.is_enabled === false || Number(pl.id) === 6) continue;
+    for (const item of pl.schedule_items || []) {
+      const startCode = clockCode(item.start_time);
+      const endCode = clockCode(item.end_time);
+      if (startCode == null) continue;
+      if (startCode === 0 && (endCode == null || endCode >= 2359)) {
+        if (pl.name) alwaysOn.push(pl.name);
+        continue;
+      }
+      const sh = Math.floor(startCode / 100);
+      const sm = startCode % 100;
+      if (sh > 23 || sm > 59) continue;
+      for (let day = 0; day < 2; day++) {
+        const p = jerusalemParts(new Date(at.getTime() + day * 86400000));
+        if (!scheduleDayMatches(item.days, p.weekday)) continue;
+        const slot = jerusalemToUtc(p.year, p.month, p.day, sh, sm, 0).getTime();
+        if (slot <= at.getTime() || slot > until) continue;
+        events.push({
+          at: slot,
+          kind: "playlist",
+          title: pl.name || "פלייליסט",
+          detail: endCode == null ? codeToHhmm(startCode) : `${codeToHhmm(startCode)}–${codeToHhmm(endCode)}`,
+        });
+      }
+    }
+  }
+
+  for (const campaign of campaigns || []) {
+    if (!campaign || campaign.paused || campaign.draft) continue;
+    for (const time of campaign.fixedTimes || []) {
+      const code = hhmmToCode(time);
+      if (code == null) continue;
+      const sh = Math.floor(code / 100);
+      const sm = code % 100;
+      if (sh > 23 || sm > 59) continue;
+      for (let day = 0; day < 2; day++) {
+        const p = jerusalemParts(new Date(at.getTime() + day * 86400000));
+        const key = dateKey(p);
+        if (campaign.startDate && key < campaign.startDate) continue;
+        if (campaign.endDate && key > campaign.endDate) continue;
+        const days = (campaign.days || []).map(Number);
+        if (days.length && !days.includes(p.weekday)) continue;
+        const slot = jerusalemToUtc(p.year, p.month, p.day, sh, sm, 0).getTime();
+        if (slot <= at.getTime() || slot > until) continue;
+        events.push({ at: slot, kind: "ad", title: campaign.name || "קמפיין", detail: "שעה קבועה" });
+      }
+    }
+  }
+
+  events.sort((a, b) => a.at - b.at);
+  return { events, alwaysOn: [...new Set(alwaysOn)], note: ROTATION_NOTE, bulletinMinute: minute };
+}

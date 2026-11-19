@@ -28,6 +28,12 @@ import {
   existingSweeperId,
   rotationSongCount,
   rotationWarning,
+  KIND_LABEL,
+  classifyPlaylist,
+  normalizeHistory,
+  markRepeats,
+  groupPlays,
+  projectSchedule,
   hePlural,
   hebrewWeekday,
   inboxRangeStart,
@@ -50,6 +56,7 @@ const TABS = [
   { path: "/playlists", label: "פלייליסטים", icon: "list" },
   { path: "/rules", label: "כללים", icon: "rules" },
   { path: "/ads", label: "פרסומות", icon: "ads" },
+  { path: "/schedule", label: "לוח", icon: "board" },
 ];
 const WINDOWS = [
   ["today", "היום"],
@@ -75,6 +82,7 @@ const state = {
   ads: emptyAds(),
   system: { playlists: {} },
   playlists: [],
+  schedule: { ready: false, plays: [], source: "", queue: null },
   np: null,
   npError: false,
   ui: {
@@ -88,6 +96,7 @@ const state = {
     toastTimer: null,
     menu: false,
     help: false,
+    hideSweepers: false,
     setupStep: 1,
     setupMsg: {},
     playingId: null,
@@ -162,6 +171,7 @@ function icon(name) {
     list: `<svg ${common}><path d="M8 7h11M8 12h11M8 17h11"/><path d="M4 7h.01M4 12h.01M4 17h.01"/></svg>`,
     rules: `<svg ${common}><path d="M12 4v16"/><path d="M12 8h6M12 12H8M12 16h6"/></svg>`,
     ads: `<svg ${common}><path d="M4 10v4h3l5 4V6L7 10H4z"/><path d="M16 9.5a3 3 0 0 1 0 5"/></svg>`,
+    board: `<svg ${common}><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>`,
     play: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l8-5-8-5z" fill="currentColor"/></svg>`,
     pause: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h3v12H8zM13 6h3v12h-3z" fill="currentColor"/></svg>`,
     check: `<svg ${common}><path d="M5 12.5 9.2 17 19 7"/></svg>`,
@@ -748,14 +758,7 @@ async function refreshNowPlaying() {
 }
 async function refreshPlaylists() {
   if (state.ui.demo) {
-    state.playlists = Object.values(state.system.playlists || {}).filter((row) => row?.id).map((row) => ({
-      ...row,
-      is_enabled: true,
-      weight: row.name?.includes("מבזק") ? 6 : 3,
-      num_songs: 4,
-      type: row.name?.includes("שעתי") ? "once_per_hour" : "default",
-      play_per_hour_minute: 8,
-    }));
+    if (!state.playlists.length) state.playlists = demoBundle().stationPlaylists;
     syncRotationNotice();
     return;
   }
@@ -790,6 +793,7 @@ function render() {
   else if (route === "/playlists") view.innerHTML = renderPlaylists();
   else if (route === "/rules") view.innerHTML = renderRules();
   else if (route === "/ads") view.innerHTML = renderAds();
+  else if (route === "/schedule") view.innerHTML = renderSchedule();
   else if (route === "/mapping") view.innerHTML = renderMapping();
   else if (route === "/settings") view.innerHTML = renderSettings();
   else if (route === "/log") view.innerHTML = renderLog();
@@ -1247,6 +1251,129 @@ function isPaused() {
   return new Date(state.control.pauseUntil).getTime() > Date.now();
 }
 
+function hourLabel(ms) {
+  const p = jerusalemParts(ms);
+  const n = jerusalemParts(new Date());
+  const hh = `${String(p.hour).padStart(2, "0")}:00`;
+  if (p.year === n.year && p.month === n.month && p.day === n.day) return `היום ${hh}`;
+  const y = addCalendarDays(n.year, n.month, n.day, -1);
+  if (p.year === y.year && p.month === y.month && p.day === y.day) return `אתמול ${hh}`;
+  return `${formatDayMonth(ms)} ${hh}`;
+}
+function kindChip(kind) {
+  const key = KIND_LABEL[kind] ? kind : "other";
+  return `<span class="kind kind-${key}">${esc(KIND_LABEL[key])}</span>`;
+}
+function renderPlay(play) {
+  return `<li class="play-row${play.repeat ? " repeat" : ""}">
+    <time><bdi>${esc(formatTime(play.at))}</bdi></time>
+    <span class="ttl"><bdi>${esc(play.title)}</bdi></span>
+    ${kindChip(play.kind)}
+    <span class="len num">${esc(formatDuration(play.duration))}</span>
+  </li>`;
+}
+function renderPlanEvent(event) {
+  return `<li class="play-row">
+    <time><bdi>${esc(formatTime(event.at))}</bdi></time>
+    <span class="ttl"><bdi>${esc(event.title)}</bdi></span>
+    ${kindChip(event.kind)}
+    <span class="len">${esc(event.detail || "")}</span>
+  </li>`;
+}
+function renderQueueItem(row) {
+  const song = row?.song || {};
+  const name = typeof row?.playlist === "string" ? row.playlist : row?.playlist?.name || "";
+  const id = row?.playlist && typeof row.playlist === "object" ? row.playlist.id : null;
+  const title = song.title || song.text || "ללא שם";
+  return `<li class="play-row">
+    <span class="ttl"><bdi>${esc(title)}</bdi></span>
+    ${kindChip(classifyPlaylist(name, id))}
+    <span class="len num">${esc(formatDuration(Number(row?.duration) || 0))}</span>
+  </li>`;
+}
+function renderSchedule() {
+  const schedule = state.schedule || { ready: false, plays: [], queue: null, source: "" };
+  const plays = state.ui.hideSweepers ? (schedule.plays || []).filter((play) => play.kind !== "sweeper") : schedule.plays || [];
+  const groups = groupPlays(plays);
+  const song = state.np?.now_playing?.song;
+  const playing = state.np?.now_playing?.playlist;
+  const npName = typeof playing === "string" ? playing : playing?.name || "";
+  const title = state.npError ? "הרדיו לא זמין כרגע" : song?.title || song?.text || "אין פריט בשידור";
+  const elapsed = Number(state.np?.now_playing?.elapsed) || 0;
+  const duration = Number(state.np?.now_playing?.duration) || 0;
+  const ratio = duration ? Math.min(100, Math.max(0, Math.round((elapsed / duration) * 100))) : 0;
+  const plan = projectSchedule({ now: new Date(), playlists: state.playlists, campaigns: state.ads?.campaigns || [] });
+  const queue = Array.isArray(schedule.queue) ? schedule.queue : null;
+  const pastNote = schedule.source === "history"
+    ? "24 השעות האחרונות מהיסטוריית התחנה."
+    : schedule.source === "nowplaying"
+      ? "היסטוריית התחנה לא זמינה. מוצגים השירים האחרונים מהשידור החי."
+      : schedule.source === "demo"
+        ? "נתוני הדגמה."
+        : "";
+  const pastBody = !schedule.ready
+    ? `<p class="muted">טוען…</p>`
+    : groups.length
+      ? groups.map((group) => `<h3 class="schedule-hour">${esc(hourLabel(group.at))}</h3><ul class="schedule-list">${group.plays.map(renderPlay).join("")}</ul>`).join("")
+      : `<div class="notice"><h2>אין השמעות ב־24 השעות האחרונות</h2></div>`;
+  const ahead = queue
+    ? `<p>זה התור שחזר מהשרת.</p>${queue.length ? `<ul class="schedule-list">${queue.map(renderQueueItem).join("")}</ul>` : `<div class="notice"><h2>התור ריק</h2></div>`}`
+    : `<p>זה תכנון ל־24 השעות הבאות, לא התור המדויק.</p>
+       <p>${esc(plan.note)}</p>
+       ${plan.alwaysOn.length ? `<p class="tiny">פעיל כל היום: ${plan.alwaysOn.map((name) => `<bdi>${esc(name)}</bdi>`).join(" · ")}</p>` : ""}
+       ${plan.events.length ? `<ul class="schedule-list">${plan.events.map(renderPlanEvent).join("")}</ul>` : `<div class="notice"><h2>אין אירועים מתוזמנים ב־24 השעות הבאות</h2></div>`}`;
+  return `<section class="stack" id="schedule">
+    <div class="spread"><h1>לוח שידורים</h1>
+      <button class="btn" type="button" id="hide-sweepers" data-act="hide-sweepers" aria-pressed="${state.ui.hideSweepers ? "true" : "false"}">${state.ui.hideSweepers ? "הצג מעברונים" : "הסתר מעברונים"}</button>
+    </div>
+    <h2>שודר</h2>
+    ${pastNote ? `<p class="tiny">${esc(pastNote)}</p>` : ""}
+    ${pastBody}
+    <h2>עכשיו</h2>
+    <article class="panel now-card">
+      <div class="meta">${kindChip(classifyPlaylist(npName, playing?.id))}<span class="num">${duration ? `${esc(formatDuration(elapsed))} / ${esc(formatDuration(duration))}` : ""}</span></div>
+      <h3><bdi>${esc(title)}</bdi></h3>
+      <div class="bar" aria-label="התקדמות"><span style="width:${ratio}%"></span></div>
+    </article>
+    <h2>מתוכנן</h2>
+    ${ahead}
+  </section>`;
+}
+async function loadSchedule() {
+  if (state.ui.demo) {
+    const demo = demoBundle();
+    state.schedule = { ready: true, plays: markRepeats(normalizeHistory(demo.history)), source: "demo", queue: null };
+    if (state.route.path === "/schedule") render();
+    return;
+  }
+  const now = new Date();
+  const start = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  let rows = null;
+  let source = "nowplaying";
+  if (state.settings.azuraKey) {
+    try {
+      rows = await radio.history(start, now.toISOString());
+      source = "history";
+    } catch {
+      rows = null;
+    }
+  }
+  if (rows == null) {
+    rows = state.np?.song_history || [];
+    source = state.np ? "nowplaying" : "";
+  }
+  let queue = null;
+  if (state.settings.azuraKey) {
+    try {
+      const data = await radio.queue();
+      if (Array.isArray(data)) queue = data;
+    } catch {
+      queue = null;
+    }
+  }
+  state.schedule = { ready: true, plays: markRepeats(normalizeHistory(rows, now)), source, queue };
+  if (state.route.path === "/schedule") render();
+}
 function renderPlaylists() {
   const ids = knownIds();
   const managed = (state.playlists || []).filter((pl) => radio.canTouch(pl, ids));
@@ -1590,7 +1717,7 @@ function renderSheet() {
     root.innerHTML = dialog(`<h2>קיצורי מקלדת</h2><ul>
       <li>↓ או J / ↑ או K — פריט הבא / הקודם</li><li>A אשר · S דלג · E חלון · רווח נגן</li>
       <li>X בחירה · Shift+A / Shift+S על המסומנים</li><li>Ctrl או ⌘ ו־Z ביטול · U העלה עכשיו</li>
-      <li>/ חיפוש · 1–5 מעבר מסך · ? העזרה הזו</li></ul><button class="btn" type="button" data-act="close-sheet">סגור</button>`);
+      <li>/ חיפוש · 1–6 מעבר מסך · ? העזרה הזו</li></ul><button class="btn" type="button" data-act="close-sheet">סגור</button>`);
     focusDialog();
     return;
   }
@@ -1657,6 +1784,11 @@ function onClick(event) {
   if (act === "sheet-scrim" && event.target !== button) return;
   const id = button.dataset.id;
   const item = id ? itemById(id) : null;
+  if (act === "hide-sweepers") {
+    state.ui.hideSweepers = !state.ui.hideSweepers;
+    render();
+    return;
+  }
   if (act === "nav") {
     state.ui.menu = false;
     go(button.dataset.path, button.dataset.path === "/inbox" ? { tab: "vod", range: "week", status: "new" } : {});
@@ -2558,6 +2690,7 @@ function bindKeys() {
     if (code === "Digit3") go("/playlists");
     if (code === "Digit4") go("/rules");
     if (code === "Digit5") go("/ads", { tab: "campaigns" });
+    if (code === "Digit6") go("/schedule");
     if (event.key === "?") {
       state.ui.help = true;
       render();
@@ -2662,6 +2795,13 @@ function installDemo() {
   state.rules = demo.rules;
   state.ads = demo.ads;
   state.np = demo.np;
+  state.playlists = demo.stationPlaylists;
+  state.schedule = {
+    ready: true,
+    plays: markRepeats(normalizeHistory(demo.history)),
+    source: "demo",
+    queue: null,
+  };
   state.pending = demo.pending;
   state.ui.inflight = demo.inflight;
   state.ui.progress = demo.progress;
@@ -2687,6 +2827,7 @@ async function boot() {
     if (state.route.path !== "/inbox") state.ui.filters = false;
     if (state.route.q.get("filters") === "1") state.ui.filters = true;
     if (state.route.path === "/playlists" || state.route.path === "/ads") refreshPlaylists();
+    if (state.route.path === "/schedule") loadSchedule();
     render();
   });
   window.addEventListener("online", flushQueue);
@@ -2696,11 +2837,14 @@ async function boot() {
   if (!state.settings.setupDone && state.route.path !== "/setup") go("/setup");
   render();
   await loadAll();
-  refreshNowPlaying();
-  refreshPlaylists();
+  await refreshNowPlaying();
+  await refreshPlaylists();
+  await loadSchedule();
   flushQueue();
   setInterval(() => {
-    refreshNowPlaying();
+    refreshNowPlaying().then(() => {
+      if (state.route.path === "/schedule") return loadSchedule();
+    });
     refreshPlaylists();
   }, 30000);
   setInterval(() => {
