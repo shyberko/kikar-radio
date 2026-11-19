@@ -1,0 +1,21 @@
+name: הורדת מבזקי יום
+on:
+  push:
+    branches: [cursor/daily-window-fbe0]
+    paths: [scripts/retire-daily.js]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: הורדה מהפלייליסט
+        env:
+          RADIOCAST_API_KEY: ${{ secrets.RADIOCAST_API_KEY }}
+        run: node scripts/retire-daily.js
