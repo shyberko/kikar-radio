@@ -606,11 +606,11 @@
       "windowStart": "2026-11-19T20:20:28.354Z",
       "windowEnd": "2026-11-20T21:59:59.000Z",
       "replacePrevious": false,
-      "uploadNow": false,
+      "uploadNow": true,
       "source": "manual",
       "ruleId": null,
-      "updatedAt": "2026-11-19T20:20:28.354Z",
-      "retryAt": null
+      "updatedAt": "2026-11-19T20:21:04.618Z",
+      "retryAt": "2026-11-19T20:21:04.618Z"
     },
     "47716b1e5786": {
       "status": "skipped",
