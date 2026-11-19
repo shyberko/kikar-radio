@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T16:45:33.147Z",
+  "updatedAt": "2026-11-19T17:00:33.250Z",
   "items": [
+    {
+      "id": "9a667002d39a",
+      "feed": "vod",
+      "title": "המו\"מ התקוע עם גוש השינוי, מבחן המעצרים של אריה דרעי והפגישה של בנט ונתניהו | אולפן ליל שישי",
+      "link": "https://www.kikar.co.il/friday-night-studio/toqxvq",
+      "guid": "https://www.kikar.co.il/friday-night-studio/toqxvq",
+      "pubDate": "2026-11-19T16:58:00.000Z",
+      "description": "באולפן 'ליל שישי' בהגשת ישי כהן, ניתחו חנני ברייטקופף, אבי וידרמן, אברהם קרויזר ואבי גרינצייג את השבוע הפוליטי הסוער: המבוי הסתום במו\"מ עם גוש השינוי בצל הוראת הגר\"ד לנדו נגד מכסות והחשד שמדובר בתרגיל להלחצת נתניהו; חשיפת השקר של קמפיין \"המשתמטים\" כשליברמן מציע לחרדים יותר מכולם; חוק המעצרים של דרעי והפגישה החשאית של בנט ונתניהו (אולפן)",
+      "poster": "https://i.kikar.co.il/2026/11/19/11b87ff0-e41b-11f1-8f51-c1656951607f__h1080_w1920.png",
+      "seriesSlug": "friday-night-studio",
+      "seriesName": "אולפן ליל שישי",
+      "mediaUrl": "https://stream.kikar.co.il/9dfcbb3f-8c35-4dcc-8e1a-1f83762a6140/play_480p.mp4",
+      "durationSec": 1609,
+      "durationIso": "PT26M49S"
+    },
     {
       "id": "07ec7e6078d3",
       "feed": "vod",
