@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T15:45:28.241Z",
+  "updatedAt": "2026-11-19T16:00:25.260Z",
   "items": [
+    {
+      "id": "07ec7e6078d3",
+      "feed": "vod",
+      "title": "חתן נעצר עשרה ימים לפני חתונתו, הפסגה ההיסטורית בסין, וההסתייגות של זיני",
+      "link": "https://www.kikar.co.il/ayom-bakikar/groom-arrest-china-summit-news-roundup",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/groom-arrest-china-summit-news-roundup",
+      "pubDate": "2026-11-19T15:04:51.000Z",
+      "description": "מעצר החתן: הפלג הירושלמי יוצא להפגין | יום זכויות הילד: בית שמש ובני ברק בראש | סין: טראמפ שי ופוטין בפסגה היסטורית | שוחד בחירות: סביבת זיני מסתייגת ממכתב סולברג | כבישים: מבצע אכיפה ארצי מהקרקע ומהאוויר | תחזית: סוף שבוע נוח וחמים ללא גשם | והתיעוד: כשהראש לא עובד וניסיונות הכניסה לבימבה מסתבכים |צפו (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/19/aed14b60-e429-11f1-ba73-3d8b832f931a__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/89558570-8238-4bd3-9b1c-d74d94187503/play_480p.mp4",
+      "durationSec": 231,
+      "durationIso": "PT3M51S"
+    },
     {
       "id": "edd3371a8c3f",
       "feed": "music",
