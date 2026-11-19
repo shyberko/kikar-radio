@@ -216,6 +216,24 @@
       "windowEnd": "2026-11-18T21:59:59.000Z",
       "replacePrevious": true,
       "approvedAt": "2026-11-18T19:30:33.550Z"
+    },
+    "edd3371a8c3f": {
+      "ruleId": "auto-music",
+      "playlistKey": "music",
+      "window": "week",
+      "windowStart": "2026-11-19T13:49:11.819Z",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "replacePrevious": false,
+      "approvedAt": "2026-11-19T13:49:11.819Z"
+    },
+    "96813420402e": {
+      "ruleId": "auto-music",
+      "playlistKey": "music",
+      "window": "week",
+      "windowStart": "2026-11-19T13:49:11.819Z",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "replacePrevious": false,
+      "approvedAt": "2026-11-19T13:49:11.819Z"
     }
   }
 }

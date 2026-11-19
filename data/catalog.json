@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T13:45:17.947Z",
+  "updatedAt": "2026-11-19T13:49:11.817Z",
   "items": [
+    {
+      "id": "edd3371a8c3f",
+      "feed": "music",
+      "title": "מנחם ברנשטיין ומיילך יוזעף במחרוזת שבת שתכניס אתכם לאווירה",
+      "link": "https://www.kikar.co.il/music/menachem-bernstein-mailech-yosef-shabbat-medley",
+      "guid": "https://www.kikar.co.il/music/menachem-bernstein-mailech-yosef-shabbat-medley",
+      "pubDate": "2026-11-19T12:58:07.000Z",
+      "description": "הזמרים משיקים מחרוזת שבת עוצמתית בקליפ מושקע • שילוב מיטב שירי השבת האהובים בביצוע נוגע ללב | 'קחו רגע לעצור את מרוץ השבוע' (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/19/05419c50-e418-11f1-8f51-c1656951607f__h2790_w4961.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/7c6356c3-99c0-4b19-9e5d-14ed5ef4a0bf/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "47716b1e5786",
       "feed": "vod",
@@ -16,6 +31,21 @@
       "mediaUrl": "https://stream.kikar.co.il/d799daae-f510-48a3-a20a-3bfc035c6118/play_480p.mp4",
       "durationSec": 3393,
       "durationIso": "PT56M33S"
+    },
+    {
+      "id": "96813420402e",
+      "feed": "music",
+      "title": "בנימין לייפער משיק קליפ חופה עם מקהלות מלכות וחסידימלעך",
+      "link": "https://www.kikar.co.il/music/binyamin-leifer-binyamins-chupa-wedding-clip",
+      "guid": "https://www.kikar.co.il/music/binyamin-leifer-binyamins-chupa-wedding-clip",
+      "pubDate": "2026-11-18T20:21:32.000Z",
+      "description": "הזמר משיק קליפ חופה מושקע עם מקהלות 'מלכות' ו'חסידימלעך' • נפתלי לנדסמן הפיק ולייבי בינדר ליווה | שורת להיטי חופה בביצוע מלא נשמה (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/18/d3e25c70-e38c-11f1-98e0-edd5111e9def__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/f1f85bba-4248-40f6-b3ed-d839e1a9421d/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
     },
     {
       "id": "14da48aaa278",
