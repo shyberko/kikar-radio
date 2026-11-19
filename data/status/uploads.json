@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T13:05:46.749Z",
+  "updatedAt": "2026-11-19T13:22:40.307Z",
   "lastRun": {
-    "startedAt": "2026-11-19T13:05:32.059Z",
-    "finishedAt": "2026-11-19T13:05:46.749Z",
+    "startedAt": "2026-11-19T13:21:52.569Z",
+    "finishedAt": "2026-11-19T13:22:40.307Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 3,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 44,
     "itemId": null,
-    "runId": "44529947897",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44529947897"
+    "runId": "44532648405",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44532648405"
   },
   "items": {
     "bd340631d488": {
@@ -1153,6 +1153,57 @@
       "errorCode": null,
       "errorMessage": null,
       "removedAt": "2026-11-18T22:05:45.305Z"
+    },
+    "14da48aaa278": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 134,
+      "azuraPath": "kikar-auto/vod/14da48aaa278.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-19T13:22:14.939Z",
+      "durationSec": 189,
+      "title": "הון, שלטון ומה שביניהם: האם האזרח הקטן נשאר מאחור?",
+      "seriesSlug": "kipot-shchorot",
+      "feed": "vod",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "8600374dd562": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 135,
+      "azuraPath": "kikar-auto/vod/8600374dd562.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-19T13:22:33.911Z",
+      "durationSec": 696,
+      "title": "סערת טוהר הבחירות במגזר הערבי: פרקליטו של המקור שהעביר את המידע למשטרה בראיון | צפו",
+      "seriesSlug": "news-interviews",
+      "feed": "vod",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "222440774e42": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 136,
+      "azuraPath": "kikar-auto/music/222440774e42.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-19T13:22:39.453Z",
+      "durationSec": 184,
+      "title": "הזמר החרדי שזכה בפרס אקו\"ם היוקרתי: \"מיצב את עצמו כגשר בין העולמות\"",
+      "seriesSlug": "tassel",
+      "feed": "music",
+      "windowEnd": "2026-11-20T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
     }
   }
 }
