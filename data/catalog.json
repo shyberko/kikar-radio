@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-19T12:45:31.850Z",
+  "updatedAt": "2026-11-19T13:00:30.784Z",
   "items": [
+    {
+      "id": "47716b1e5786",
+      "feed": "vod",
+      "title": "\"בלילה אנחנו חולמים כמו חילונים\" | הווידוי הגלוי של בעלי התשובה על העבר שלא נמחק",
+      "link": "https://www.kikar.co.il/chaim-beizy/baalei-teshuva-past-identity",
+      "guid": "https://www.kikar.co.il/chaim-beizy/baalei-teshuva-past-identity",
+      "pubDate": "2026-11-19T12:48:34.000Z",
+      "description": "הורדנו את הקוקו, לבשנו חליפה, והיינו בטוחים שהסיפור מאחורינו | אבל כשההתלהבות של ההתחלה נרגעת, העבר חוזר ודופק בדלת | למה אי אפשר למחוק את מי שהיינו | ואיך הופכים את העבר מכוח שמושך למטה לכלי של עלייה | פרק שלישי בסדרת \"מדברים על תשובה\" עם הרב אסף רצון והרב משה כהן • צפו/האזינו (חיים באיזי)",
+      "poster": "https://i.kikar.co.il/2026/11/16/ba3e7110-e1c4-11f1-a761-818aba60818f__h1080_w1920.jpg",
+      "seriesSlug": "chaim-beizy",
+      "seriesName": "חיים באיז\"י",
+      "mediaUrl": "https://stream.kikar.co.il/d799daae-f510-48a3-a20a-3bfc035c6118/play_480p.mp4",
+      "durationSec": 3393,
+      "durationIso": "PT56M33S"
+    },
     {
       "id": "14da48aaa278",
       "feed": "vod",
