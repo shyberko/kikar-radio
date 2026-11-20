@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-20T09:30:32.441Z",
+  "updatedAt": "2026-11-20T09:45:35.738Z",
   "items": [
+    {
+      "id": "214c56d3e0be",
+      "feed": "music",
+      "title": "לייזר ברוק בסינגל שבת מרגש: 'מי כמוך בעל גבורות' - עם אורח מיוחד",
+      "link": "https://www.kikar.co.il/music/layzer-brook-mi-kamocha-baal-gevurot-new-single",
+      "guid": "https://www.kikar.co.il/music/layzer-brook-mi-kamocha-baal-gevurot-new-single",
+      "pubDate": "2026-11-20T08:55:10.000Z",
+      "description": "הזמר משיק ביצוע מיוחד לתפילת שבת • שילוב ניגון אהוב בנוסח התפילה עם אחיו הזמר שלוימי | קליפ AI בסגנון העיירה (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/20/2a865850-e4bf-11f1-ba73-3d8b832f931a__h1920_w1080.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/241e7ec0-82a0-4fe2-8603-282aa7e48df4/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "9a667002d39a",
       "feed": "vod",
