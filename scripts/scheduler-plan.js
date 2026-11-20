@@ -5,7 +5,7 @@ import { jerusalemParts, jerusalemToUtc } from "../site/js/pure.js";
 export const SCHEDULER_RUN_MINUTES = 345;
 export const UPLOAD_MINUTE = 5;
 export const SCAN_EVERY_MINUTES = 15;
-export const BULLETIN_POLL_UNTIL = 20;
+export const BULLETIN_POLL_UNTIL = 54;
 export const BULLETIN_ARM_MINUTE = 50;
 
 export function hourKey(parts) {
@@ -20,7 +20,7 @@ export function nextHourKey(parts) {
 
 /**
  * What to start at this Israel clock tick.
- * Bulletin: once for the coming hour at :50, or once during :00–:20 if that was missed.
+ * Bulletin: once for the coming hour at :50, or once during :00–:54 if that was missed.
  * Upload: once an hour from minute 5.
  * Scan: once per 15-minute slot, caught up to 5 minutes late.
  */
