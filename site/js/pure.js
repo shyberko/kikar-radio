@@ -252,17 +252,17 @@ export function hePlural(n, one, two, many) {
 
 /**
  * How a bulletin watcher should behave at a Jerusalem clock time.
- * From :00 through :20 the first check runs immediately (a dispatch at :03
- * does not wait). A start in the last 15 minutes only sleeps until :00.
+ * An edition stays relevant for its whole hour, so polls run from :00 through
+ * :54 (a video that only appears late in the hour is still worth airing). A
+ * start in the last 5 minutes only sleeps until :00.
  */
 export function bulletinWatchPlan(parts) {
   const minute = parts.minute;
   const second = parts.second || 0;
-  if (minute >= 45) {
+  if (minute >= 55) {
     return { phase: "sleep-until-hour", waitMs: ((60 - minute) * 60 - second) * 1000, immediate: false };
   }
-  if (minute <= 20) return { phase: "poll", waitMs: 60_000, immediate: true };
-  return { phase: "once", waitMs: 0, immediate: true };
+  return { phase: "poll", waitMs: 60_000, immediate: true };
 }
 
 /** once_per_hour plays this minute. Two minutes from now, wrapping the hour. */
