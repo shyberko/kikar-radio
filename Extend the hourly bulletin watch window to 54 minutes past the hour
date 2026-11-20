@@ -52,7 +52,7 @@ GitHub Pages כבר מוגדר כ־workflow. דחיפה ל־`main` תחת `site/
 | סריקת פידים | כל 15 דקות | `.github/workflows/scan.yml` |
 | מתזמן | רץ ברצף ומפעיל את השאר. בסוף החלון מפעיל עותק חדש של עצמו | `.github/workflows/scheduler.yml` |
 | העלאה | פעם בשעה, מדקה 05 | `.github/workflows/upload.yml` |
-| מבזק | ב־:50 לשעה הבאה, או ב־:00 עד :20 אם ה־:50 פוספס | `.github/workflows/bulletin.yml` |
+| מבזק | ב־:50 לשעה הבאה, או ב־:00 עד :54 אם ה־:50 פוספס | `.github/workflows/bulletin.yml` |
 | בדיקת חיבור | ידנית: מעלה קובץ ל־`_test/` ומוחק אותו | `.github/workflows/test-upload.yml` |
 | אתר | בדחיפה ל־`main` | `.github/workflows/pages.yml` |
 
