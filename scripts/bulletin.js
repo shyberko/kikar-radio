@@ -72,6 +72,7 @@ async function runOnce() {
 
   const fingerprint = () => JSON.stringify({
     note: status.note,
+    hour: status.hour?.label || null,
     activeKey: status.active?.key || null,
     onAir: status.active?.onAir ?? null,
     removed: (status.history || []).map((row) => [row.key, row.removedAt || null, row.deletedAt || null, row.failed || false]),
@@ -414,8 +415,9 @@ function finish(result) {
 async function watch() {
   let uploaded = false;
   let failed = false;
+  let armed = false;
   const notes = [];
-  for (let loop = 0; loop < 30; loop += 1) {
+  for (let loop = 0; loop < 70; loop += 1) {
     const plan = bulletinWatchPlan(jerusalemParts(new Date()));
     const clock = jerusalemParts(new Date());
     log("bulletin watch", {
@@ -424,6 +426,8 @@ async function watch() {
       loop,
     });
     if (plan.phase === "sleep-until-hour") {
+      if (armed) break;
+      armed = true;
       await sleep(plan.waitMs);
       continue;
     }
@@ -437,7 +441,6 @@ async function watch() {
     if (result.failed) failed = true;
     if (result.note) notes.push(result.note);
     commitStatus();
-    if (plan.phase === "once") break;
     await sleep(plan.waitMs);
   }
   return { uploaded, failed, note: [...new Set(notes.filter(Boolean))].join(" | ").slice(0, 500) };
