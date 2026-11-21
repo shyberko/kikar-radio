@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-21T21:05:46.341Z",
+  "updatedAt": "2026-11-21T22:05:57.609Z",
   "lastRun": {
-    "startedAt": "2026-11-21T21:05:32.398Z",
-    "finishedAt": "2026-11-21T21:05:46.341Z",
+    "startedAt": "2026-11-21T22:05:43.887Z",
+    "finishedAt": "2026-11-21T22:05:57.609Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 0,
+    "removed": 1,
     "held": 0,
-    "reassigned": 34,
+    "reassigned": 33,
     "itemId": null,
-    "runId": "44949659985",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44949659985"
+    "runId": "44954876131",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44954876131"
   },
   "items": {
     "bd340631d488": {
@@ -1342,7 +1342,7 @@
       "removedAt": "2026-11-20T22:06:02.057Z"
     },
     "032a323f5dc1": {
-      "state": "active",
+      "state": "expired",
       "attempts": 2,
       "azuraFileId": 146,
       "azuraPath": "kikar-auto/vod/032a323f5dc1.mp3",
@@ -1357,7 +1357,7 @@
       "seriesSlug": "davar-rishon",
       "feed": "vod",
       "windowEnd": "2026-11-21T21:59:59.000Z",
-      "removedAt": null
+      "removedAt": "2026-11-21T22:05:56.996Z"
     }
   }
 }
