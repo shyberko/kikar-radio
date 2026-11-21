@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-21T19:06:04.022Z",
+  "updatedAt": "2026-11-21T20:02:17.163Z",
   "lastRun": {
-    "startedAt": "2026-11-21T19:05:48.137Z",
-    "finishedAt": "2026-11-21T19:06:04.022Z",
-    "ok": true,
+    "startedAt": "2026-11-21T19:59:03.076Z",
+    "finishedAt": "2026-11-21T20:02:17.163Z",
+    "ok": false,
     "uploaded": 0,
-    "failed": 0,
+    "failed": 1,
     "removed": 0,
     "held": 0,
     "reassigned": 33,
     "itemId": null,
-    "runId": "44939026392",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44939026392"
+    "runId": "44943771253",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/44943771253"
   },
   "items": {
     "bd340631d488": {
@@ -1340,6 +1340,17 @@
       "errorCode": null,
       "errorMessage": null,
       "removedAt": "2026-11-20T22:06:02.057Z"
+    },
+    "032a323f5dc1": {
+      "state": "failed",
+      "attempts": 1,
+      "azuraFileId": null,
+      "azuraPath": null,
+      "playlistKey": null,
+      "playlistId": null,
+      "errorCode": "timeout",
+      "errorMessage": "timeout",
+      "failedAt": "2026-11-21T20:02:16.385Z"
     }
   }
 }
