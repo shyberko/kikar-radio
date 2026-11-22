@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T13:07:06.747Z",
+  "updatedAt": "2026-11-22T14:06:08.112Z",
   "lastRun": {
-    "startedAt": "2026-11-22T13:05:58.118Z",
-    "finishedAt": "2026-11-22T13:07:06.747Z",
+    "startedAt": "2026-11-22T14:05:30.317Z",
+    "finishedAt": "2026-11-22T14:06:08.112Z",
     "ok": true,
-    "uploaded": 3,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
-    "reassigned": 34,
+    "reassigned": 37,
     "itemId": null,
-    "runId": "45025633649",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45025633649"
+    "runId": "45030878576",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45030878576"
   },
   "items": {
     "bd340631d488": {
@@ -1360,7 +1360,7 @@
       "removedAt": "2026-11-21T22:05:56.996Z"
     },
     "f3ef25944ddd": {
-      "state": "active",
+      "state": "replaced",
       "attempts": 1,
       "azuraFileId": 149,
       "azuraPath": "kikar-auto/vod/f3ef25944ddd.mp3",
@@ -1374,7 +1374,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-22T14:06:07.901Z"
     },
     "0c5e8a3de07b": {
       "state": "active",
@@ -1423,6 +1423,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "fd3d54a8ff0e": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 158,
+      "azuraPath": "kikar-auto/vod/fd3d54a8ff0e.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-22T14:06:07.561Z",
+      "durationSec": 753,
+      "title": "\"כואב! הוא נלחם\": העוף הדורס נשלף מהארגז ותקף • הצצה מקרוב לבז מצוי",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
