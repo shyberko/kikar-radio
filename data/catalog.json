@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T08:45:30.119Z",
+  "updatedAt": "2026-11-22T09:00:24.530Z",
   "items": [
+    {
+      "id": "f3ef25944ddd",
+      "feed": "vod",
+      "title": "\"הקב\"ה לא חבר בליכוד\": נבואת המלחמה ליום שישי והסערה סביב 'חוק התפילין'",
+      "link": "https://www.kikar.co.il/davar-rishon/political-hypocrisy-tefillin-law-war-prophecy",
+      "guid": "https://www.kikar.co.il/davar-rishon/political-hypocrisy-tefillin-law-war-prophecy",
+      "pubDate": "2026-11-22T08:56:28.000Z",
+      "description": "בראיון סוער בתוכנית \"דבר השבוע\" השדרן יוסי בן עטר לא חוסך ביקורת מאף צד במפה הפוליטית: הוא חושף כיצד הכרזתו של ראש עיריית דימונה בני ביטון על מלחמה ביום שישי גרמה לאנשים לבטל נסיעות ותוקף בחריפות את הצביעות סביב חוק התפילין ואת אנשי התקשורת שמזהירים שהחרדים \"יאבדו את האמונה\" אם ישבו עם גדי איזנקוט (דבר השבוע)",
+      "poster": "https://i.kikar.co.il/2026/11/19/72dca5c0-e422-11f1-8f51-c1656951607f__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/ec08268d-2a1d-4d17-b014-821a5699704c/play_480p.mp4",
+      "durationSec": 526,
+      "durationIso": "PT8M46S"
+    },
     {
       "id": "032a323f5dc1",
       "feed": "vod",
