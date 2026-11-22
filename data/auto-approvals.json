@@ -333,6 +333,15 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "replacePrevious": true,
       "approvedAt": "2026-11-22T15:30:35.584Z"
+    },
+    "806c5a4fbab4": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-22T16:15:30.835Z",
+      "windowEnd": "2026-11-22T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-22T16:15:30.835Z"
     }
   }
 }
