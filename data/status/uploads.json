@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T19:06:09.543Z",
+  "updatedAt": "2026-11-22T20:06:48.390Z",
   "lastRun": {
-    "startedAt": "2026-11-22T19:05:49.949Z",
-    "finishedAt": "2026-11-22T19:06:09.543Z",
+    "startedAt": "2026-11-22T20:05:29.736Z",
+    "finishedAt": "2026-11-22T20:06:48.390Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 41,
     "itemId": null,
-    "runId": "45058733813",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45058733813"
+    "runId": "45064383263",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45064383263"
   },
   "items": {
     "bd340631d488": {
@@ -1374,7 +1374,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-22T19:06:07.520Z"
+      "removedAt": "2026-11-22T20:05:43.365Z"
     },
     "0c5e8a3de07b": {
       "state": "active",
@@ -1442,7 +1442,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-22T19:06:08.869Z"
+      "removedAt": "2026-11-22T20:05:44.386Z"
     },
     "05c7242db6c2": {
       "state": "active",
@@ -1462,7 +1462,7 @@
       "removedAt": null
     },
     "37319d7b1c77": {
-      "state": "active",
+      "state": "replaced",
       "attempts": 1,
       "azuraFileId": 162,
       "azuraPath": "kikar-auto/vod/37319d7b1c77.mp3",
@@ -1476,7 +1476,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-22T20:06:48.187Z"
     },
     "806c5a4fbab4": {
       "state": "active",
@@ -1489,6 +1489,23 @@
       "durationSec": 213,
       "title": "מחריד: בעט בילדה מול המצלמה | תיעוד של טיבי נפגש עם תומך טרור",
       "seriesSlug": "ayom-bakikar",
+      "feed": "vod",
+      "windowEnd": "2026-11-22T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "b39609d4c052": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 164,
+      "azuraPath": "kikar-auto/vod/b39609d4c052.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-22T20:06:47.846Z",
+      "durationSec": 2188,
+      "title": "הסטירה בחיידר, הגיטרה מהשוק הערבי והסילוק מהישיבה: כך נולד הרוקר החרדי",
+      "seriesSlug": "davar-rishon",
       "feed": "vod",
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
