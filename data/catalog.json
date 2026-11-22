@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T14:00:15.346Z",
+  "updatedAt": "2026-11-22T14:15:19.927Z",
   "items": [
     {
       "id": "fd3d54a8ff0e",
@@ -16,6 +16,21 @@
       "mediaUrl": "https://stream.kikar.co.il/6734e7a3-8665-4201-91e7-da8084ba0d50/play_480p.mp4",
       "durationSec": 753,
       "durationIso": "PT12M33S"
+    },
+    {
+      "id": "05c7242db6c2",
+      "feed": "music",
+      "title": "ישי שפירא בסינגל חדש שמזכיר: גם מהמעמקים אפשר להגיע למעלה",
+      "link": "https://www.kikar.co.il/music/yishai-shapira-chazak-mitamid-new-single",
+      "guid": "https://www.kikar.co.il/music/yishai-shapira-chazak-mitamid-new-single",
+      "pubDate": "2026-11-22T11:11:35.000Z",
+      "description": "הזמר משחרר שיר חדש עם מסר של אמונה ותקווה • מילים ולחן: אלחנן אלחדד, עיבוד והפקה: יאיר ואייל שריקי | הקליפ המלא (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/22/198c3360-e665-11f1-ba73-3d8b832f931a__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/e838f8b5-94dc-4d70-a74e-de488cf2e473/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
     },
     {
       "id": "f3ef25944ddd",
