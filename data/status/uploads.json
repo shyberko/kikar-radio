@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T21:39:26.319Z",
+  "updatedAt": "2026-11-22T22:06:17.587Z",
   "lastRun": {
-    "startedAt": "2026-11-22T21:39:10.588Z",
-    "finishedAt": "2026-11-22T21:39:26.319Z",
+    "startedAt": "2026-11-22T22:06:05.199Z",
+    "finishedAt": "2026-11-22T22:06:17.587Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 0,
+    "removed": 2,
     "held": 0,
-    "reassigned": 42,
+    "reassigned": 37,
     "itemId": null,
-    "runId": "45073258978",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45073258978"
+    "runId": "45075695188",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45075695188"
   },
   "items": {
     "bd340631d488": {
@@ -1360,7 +1360,7 @@
       "removedAt": "2026-11-21T22:05:56.996Z"
     },
     "f3ef25944ddd": {
-      "state": "replaced",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 149,
       "azuraPath": "kikar-auto/vod/f3ef25944ddd.mp3",
@@ -1428,7 +1428,7 @@
       "removedAt": null
     },
     "fd3d54a8ff0e": {
-      "state": "replaced",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 158,
       "azuraPath": "kikar-auto/vod/fd3d54a8ff0e.mp3",
@@ -1462,7 +1462,7 @@
       "removedAt": null
     },
     "37319d7b1c77": {
-      "state": "replaced",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 162,
       "azuraPath": "kikar-auto/vod/37319d7b1c77.mp3",
@@ -1479,7 +1479,7 @@
       "removedAt": "2026-11-22T21:39:26.133Z"
     },
     "806c5a4fbab4": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 163,
       "azuraPath": "kikar-auto/vod/806c5a4fbab4.mp3",
@@ -1493,10 +1493,10 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-22T22:06:16.827Z"
     },
     "b39609d4c052": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 164,
       "azuraPath": "kikar-auto/vod/b39609d4c052.mp3",
@@ -1510,7 +1510,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-22T22:06:17.131Z"
     }
   }
 }
