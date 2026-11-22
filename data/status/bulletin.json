@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T20:00:04.262Z",
+  "updatedAt": "2026-11-22T21:00:04.362Z",
   "active": {
     "key": "2026-11-22-18:00",
     "label": "18:00",
@@ -743,19 +743,19 @@
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-22T20:00:00.773Z",
+  "lastCheck": "2026-11-22T21:00:00.478Z",
   "note": "source",
   "paused": false,
   "sourcePending": true,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
-    "label": "22:00",
-    "start": "2026-11-22T20:00:00.000Z",
-    "expires": "2026-11-22T21:00:00.000Z"
+    "label": "23:00",
+    "start": "2026-11-22T21:00:00.000Z",
+    "expires": "2026-11-22T22:00:00.000Z"
   },
   "failure": null,
-  "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 22:00. נמשיך לבדוק.",
+  "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 23:00. נמשיך לבדוק.",
   "slotPending": null,
   "slotFor": "2026-11-22-18:00",
   "playMinute": 3
