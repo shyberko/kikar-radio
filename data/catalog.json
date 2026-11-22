@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T19:00:31.782Z",
+  "updatedAt": "2026-11-22T19:15:30.420Z",
   "items": [
+    {
+      "id": "b39609d4c052",
+      "feed": "vod",
+      "title": "הסטירה בחיידר, הגיטרה מהשוק הערבי והסילוק מהישיבה: כך נולד הרוקר החרדי",
+      "link": "https://www.kikar.co.il/davar-rishon/haredi-rocker-yerucham-katsinelbogen",
+      "guid": "https://www.kikar.co.il/davar-rishon/haredi-rocker-yerucham-katsinelbogen",
+      "pubDate": "2026-11-22T18:59:42.000Z",
+      "description": "\"העיפו אותי מהישיבה בגלל גיטרה ואני לגמרי מבין את הרבנים\" | ראיון נוקב עם האמן והיוצר ירוחם קצינלבוגן | חרדי ביום, רוקר בלילה: \"אני לא 'גם וגם', אני מרגיש זר בשני המקומות\" | הרוקנרול כבד אך הנשמה יהודית | וגם, הקטע המרגש: אחרי תשע שנות ציפייה ודמעות הנס המצמרר והפוסט שגרם לאביו להחמיא (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/19/a81b8480-e423-11f1-8f51-c1656951607f__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/519ba572-1806-45a7-b7b0-6feb50ea3f5d/play_480p.mp4",
+      "durationSec": 2189,
+      "durationIso": "PT36M29S"
+    },
     {
       "id": "806c5a4fbab4",
       "feed": "vod",
