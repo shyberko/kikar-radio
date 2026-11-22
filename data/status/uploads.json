@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T08:05:47.625Z",
+  "updatedAt": "2026-11-22T09:06:21.568Z",
   "lastRun": {
-    "startedAt": "2026-11-22T08:05:34.911Z",
-    "finishedAt": "2026-11-22T08:05:47.625Z",
+    "startedAt": "2026-11-22T09:05:50.208Z",
+    "finishedAt": "2026-11-22T09:06:21.568Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 33,
     "itemId": null,
-    "runId": "45001145773",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45001145773"
+    "runId": "45005819239",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45005819239"
   },
   "items": {
     "bd340631d488": {
@@ -1358,6 +1358,23 @@
       "feed": "vod",
       "windowEnd": "2026-11-21T21:59:59.000Z",
       "removedAt": "2026-11-21T22:05:56.996Z"
+    },
+    "f3ef25944ddd": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 149,
+      "azuraPath": "kikar-auto/vod/f3ef25944ddd.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-22T09:06:21.370Z",
+      "durationSec": 526,
+      "title": "\"הקב\"ה לא חבר בליכוד\": נבואת המלחמה ליום שישי והסערה סביב 'חוק התפילין'",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-22T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
     }
   }
 }
