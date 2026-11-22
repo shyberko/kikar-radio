@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T13:30:14.258Z",
+  "updatedAt": "2026-11-22T13:45:14.544Z",
   "items": [
+    {
+      "id": "fd3d54a8ff0e",
+      "feed": "vod",
+      "title": "\"כואב! הוא נלחם\": העוף הדורס נשלף מהארגז ותקף • הצצה מקרוב לבז מצוי",
+      "link": "https://www.kikar.co.il/davar-rishon/common-kestrel-rescue-live-broadcast",
+      "guid": "https://www.kikar.co.il/davar-rishon/common-kestrel-rescue-live-broadcast",
+      "pubDate": "2026-11-22T13:30:43.000Z",
+      "description": "בדרך לאולפן 'כיכר השבת' הבחין המגיש בציפור טרף חבולה מדדה על הכביש • כשהצפר אדם רוזנפלד פתח את הארגז מול המצלמות, הבז המצוי התאושש במהירות ונעץ את טפריו החדים בידיהם • כך מזהים זכר צעיר לפי ה\"איפור\" שמתחת לעין, איך מבדילים בינו לבין מין בסכנת הכחדה, ולמה אסור לשחרר אותו רחוק מהבית (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/19/d08871e0-e422-11f1-8f51-c1656951607f__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/6734e7a3-8665-4201-91e7-da8084ba0d50/play_480p.mp4",
+      "durationSec": 753,
+      "durationIso": "PT12M33S"
+    },
     {
       "id": "f3ef25944ddd",
       "feed": "vod",
