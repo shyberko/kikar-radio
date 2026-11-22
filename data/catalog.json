@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T12:15:31.022Z",
+  "updatedAt": "2026-11-22T12:30:30.069Z",
   "items": [
     {
       "id": "f3ef25944ddd",
@@ -18,6 +18,21 @@
       "durationIso": "PT8M46S"
     },
     {
+      "id": "0c5e8a3de07b",
+      "feed": "music",
+      "title": "מרדכי קאהן במחרוזת שתסחוף אתכם: 'אידעלעך' עם מקהלת שירה",
+      "link": "https://www.kikar.co.il/music/mordechai-kahan-shira-choir-yidelach-medley",
+      "guid": "https://www.kikar.co.il/music/mordechai-kahan-shira-choir-yidelach-medley",
+      "pubDate": "2026-11-21T22:34:36.000Z",
+      "description": "הזמר הצטרף למקהלת שירה ותזמורת יושע קאלער באירוע מיוחד • מחרוזת עוצמתית על הגאווה להיות יהודי | הקליפ המלא יצא (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/21/4e0e7b80-e5fb-11f1-8f51-c1656951607f__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/972db4dd-a04f-4924-86a2-1b9b173138ac/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
       "id": "032a323f5dc1",
       "feed": "vod",
       "title": "עוף דורס \"תקף\" את המגיש באולפן, סערת חוק התפילין ורוק חרדי בועט בביצוע לייב",
@@ -33,6 +48,21 @@
       "durationIso": "PT54M6S"
     },
     {
+      "id": "832d0fa0e20b",
+      "feed": "music",
+      "title": "יואלי קליין, אברהם יוסף הירש ודודי פולק בהפתעה מיוחדת: 'אלחנן'ס טאנץ'",
+      "link": "https://www.kikar.co.il/music/yoeli-klein-avraham-yosef-hirsch-dudi-folk-elchana",
+      "guid": "https://www.kikar.co.il/music/yoeli-klein-avraham-yosef-hirsch-dudi-folk-elchana",
+      "pubDate": "2026-11-21T19:36:45.000Z",
+      "description": "שלושת הזמרים הפתיעו את חברם החתן בסינגל מיוחד • עיבוד והפקה מוזיקלית של מוישי כהנא | 'אלחנן'ס טאנץ' יצא לאור (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/21/8d8ca390-e5e2-11f1-ba73-3d8b832f931a__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/417c9dda-382b-4388-ba01-600750857ea1/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
       "id": "214c56d3e0be",
       "feed": "music",
       "title": "לייזר ברוק בסינגל שבת מרגש: 'מי כמוך בעל גבורות' - עם אורח מיוחד",
@@ -44,6 +74,21 @@
       "seriesSlug": "music",
       "seriesName": "מוזיקה",
       "mediaUrl": "https://stream.kikar.co.il/241e7ec0-82a0-4fe2-8603-282aa7e48df4/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
+      "id": "584455121566",
+      "feed": "music",
+      "title": "שרוליק רוט בשיר חדש שירגש אתכם: 'נאר צו דיר' - תפילה מהלב",
+      "link": "https://www.kikar.co.il/music/shrulik-rot-nar-tzu-dir-new-single",
+      "guid": "https://www.kikar.co.il/music/shrulik-rot-nar-tzu-dir-new-single",
+      "pubDate": "2026-11-20T08:27:13.000Z",
+      "description": "הזמר והיוצר בשיר חדש עם לחן אישי למילים 'לעשות רצונך אלוקי חפצתי' • עיבוד והפקה של מוישי כהנא | 'השתוקקות אמיתית של הלב' (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/20/621fe230-e4bb-11f1-ba73-3d8b832f931a__h2160_w3840.png",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/f9810fae-1d17-46ea-9e3b-48963bcd7a32/play_480p.mp4",
       "durationSec": null,
       "durationIso": null
     },
