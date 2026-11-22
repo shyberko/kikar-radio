@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T15:15:24.003Z",
+  "updatedAt": "2026-11-22T15:30:35.582Z",
   "items": [
+    {
+      "id": "37319d7b1c77",
+      "feed": "vod",
+      "title": "\"'חרדי' שלא שומר שבת חי באומללות\": הוויכוח שפוצץ את האולפן על הגדרת המגזר",
+      "link": "https://www.kikar.co.il/davar-rishon/haredi-society-debate-davar-rishon",
+      "guid": "https://www.kikar.co.il/davar-rishon/haredi-society-debate-davar-rishon",
+      "pubDate": "2026-11-22T15:16:35.000Z",
+      "description": "מי הוא חרדי? | \"אבא, או שאני עם הסמארטפון בבית או שאני ברחוב\": הווידוי האישי המפתיע של שלומי כהן | הגרלות טסלה ב-200 אלף שקל ו-60 אלף מצטרפים: כך הפך הסטטוס בווטסאפ למפלצת שיווקית | התשובה המפתיעה של הרב הירש לבנות שיוצאות למסעדות ומה הקשר לכריכים מושקעים? | בעקבות מהומות בית שמש הקריאה המפתיעה למפכ\"ל להפריד בין פשיעה פלילית לאכיפת גיוס",
+      "poster": "https://i.kikar.co.il/2026/11/22/aa147050-e67e-11f1-8f51-c1656951607f__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/250241e6-5800-4037-ae22-8d6e7e9d1b19/play_480p.mp4",
+      "durationSec": 3249,
+      "durationIso": "PT54M9S"
+    },
     {
       "id": "fd3d54a8ff0e",
       "feed": "vod",
