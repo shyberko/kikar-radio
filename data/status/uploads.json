@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T16:05:59.858Z",
+  "updatedAt": "2026-11-22T16:34:39.065Z",
   "lastRun": {
-    "startedAt": "2026-11-22T16:05:43.390Z",
-    "finishedAt": "2026-11-22T16:05:59.858Z",
+    "startedAt": "2026-11-22T16:34:14.447Z",
+    "finishedAt": "2026-11-22T16:34:39.065Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 40,
     "itemId": null,
-    "runId": "45041855165",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45041855165"
+    "runId": "45044537115",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45044537115"
   },
   "items": {
     "bd340631d488": {
@@ -1374,7 +1374,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-22T16:05:58.486Z"
+      "removedAt": "2026-11-22T16:34:27.155Z"
     },
     "0c5e8a3de07b": {
       "state": "active",
@@ -1442,7 +1442,7 @@
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": "2026-11-22T16:05:59.646Z"
+      "removedAt": "2026-11-22T16:34:28.123Z"
     },
     "05c7242db6c2": {
       "state": "active",
@@ -1472,6 +1472,23 @@
       "durationSec": 3248,
       "title": "\"'חרדי' שלא שומר שבת חי באומללות\": הוויכוח שפוצץ את האולפן על הגדרת המגזר",
       "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-22T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "806c5a4fbab4": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 163,
+      "azuraPath": "kikar-auto/vod/806c5a4fbab4.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-22T16:34:38.889Z",
+      "durationSec": 213,
+      "title": "מחריד: בעט בילדה מול המצלמה | תיעוד של טיבי נפגש עם תומך טרור",
+      "seriesSlug": "ayom-bakikar",
       "feed": "vod",
       "windowEnd": "2026-11-22T21:59:59.000Z",
       "errorCode": null,
