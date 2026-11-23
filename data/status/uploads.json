@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T15:06:50.095Z",
+  "updatedAt": "2026-11-23T16:08:19.595Z",
   "lastRun": {
-    "startedAt": "2026-11-23T15:06:34.628Z",
-    "finishedAt": "2026-11-23T15:06:50.095Z",
+    "startedAt": "2026-11-23T16:06:44.375Z",
+    "finishedAt": "2026-11-23T16:08:19.595Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 39,
     "itemId": null,
-    "runId": "45201260014",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45201260014"
+    "runId": "45212481243",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45212481243"
   },
   "items": {
     "bd340631d488": {
@@ -1542,6 +1542,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "fbe105cdbe2f": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 176,
+      "azuraPath": "kikar-auto/vod/fbe105cdbe2f.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-23T16:08:19.355Z",
+      "durationSec": 2210,
+      "title": "\"מאשים רק את הלקוחות\": מאות עסקאות 20-80 השאירו משפחות בלי כלום",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-23T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
