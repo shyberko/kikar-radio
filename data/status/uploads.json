@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T21:05:51.182Z",
+  "updatedAt": "2026-11-23T22:12:25.674Z",
   "lastRun": {
-    "startedAt": "2026-11-23T21:05:46.627Z",
-    "finishedAt": "2026-11-23T21:05:51.182Z",
+    "startedAt": "2026-11-23T22:12:19.683Z",
+    "finishedAt": "2026-11-23T22:12:25.674Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 0,
+    "removed": 3,
     "held": 0,
-    "reassigned": 13,
+    "reassigned": 10,
     "itemId": null,
-    "runId": "45266047487",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45266047487"
+    "runId": "45276203416",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45276203416"
   },
   "items": {
     "bd340631d488": {
@@ -67,7 +67,7 @@
       "removedAt": "2026-11-20T22:05:43.748Z"
     },
     "0b753f28819e": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 42,
       "azuraPath": "kikar-auto/music/0b753f28819e.mp3",
@@ -81,7 +81,7 @@
       "windowEnd": "2026-11-23T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-23T22:12:20.162Z"
     },
     "c6dfd167f415": {
       "state": "active",
@@ -1547,7 +1547,7 @@
       "removedAt": null
     },
     "fbe105cdbe2f": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 176,
       "azuraPath": "kikar-auto/vod/fbe105cdbe2f.mp3",
@@ -1561,7 +1561,7 @@
       "windowEnd": "2026-11-23T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-23T22:12:24.240Z"
     },
     "4f5658f524ca": {
       "state": "active",
@@ -1581,7 +1581,7 @@
       "removedAt": null
     },
     "bef28e69d6f8": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 178,
       "azuraPath": "kikar-auto/vod/bef28e69d6f8.mp3",
@@ -1595,7 +1595,7 @@
       "windowEnd": "2026-11-23T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-23T22:12:25.042Z"
     }
   }
 }
