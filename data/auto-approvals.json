@@ -378,6 +378,24 @@
       "windowEnd": "2026-11-23T21:59:59.000Z",
       "replacePrevious": true,
       "approvedAt": "2026-11-23T16:00:45.057Z"
+    },
+    "4f5658f524ca": {
+      "ruleId": "auto-music",
+      "playlistKey": "music",
+      "window": "week",
+      "windowStart": "2026-11-23T16:30:40.002Z",
+      "windowEnd": "2026-11-27T21:59:59.000Z",
+      "replacePrevious": false,
+      "approvedAt": "2026-11-23T16:30:40.002Z"
+    },
+    "bef28e69d6f8": {
+      "ruleId": "auto-ayom-bakikar",
+      "playlistKey": "shows",
+      "window": "day",
+      "windowStart": "2026-11-23T16:30:40.002Z",
+      "windowEnd": "2026-11-23T21:59:59.000Z",
+      "replacePrevious": true,
+      "approvedAt": "2026-11-23T16:30:40.002Z"
     }
   }
 }

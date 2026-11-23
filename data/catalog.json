@@ -1,7 +1,37 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T16:15:38.495Z",
+  "updatedAt": "2026-11-23T16:30:40.000Z",
   "items": [
+    {
+      "id": "4f5658f524ca",
+      "feed": "music",
+      "title": "הניגון שיקרב לבבות: מנדי גולדברג משחרר סינגל מרגש מאלבום חדש",
+      "link": "https://www.kikar.co.il/music/mendy-goldberg-new-single-modzhitz-wedding-nigun",
+      "guid": "https://www.kikar.co.il/music/mendy-goldberg-new-single-modzhitz-wedding-nigun",
+      "pubDate": "2026-11-23T16:08:57.000Z",
+      "description": "הזמר משחרר את הסינגל הראשון מאלבומו 'מענדיס הארץ' • ניגון עתיק בלבוש מוזיקלי מחודש | 'התפילה לקרב לבבות בעם ישראל' (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/23/adee9f30-e72c-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/5e78877a-1c44-4dd4-be1e-6df1e91f2d85/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
+      "id": "bef28e69d6f8",
+      "feed": "vod",
+      "title": "מעיני הטייס: כך נראה יירוט מהקוקפיט | בנט חותר לאחדות עם נתניהו",
+      "link": "https://www.kikar.co.il/ayom-bakikar/cockpit-interception-footage-bennett-unity",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/cockpit-interception-footage-bennett-unity",
+      "pubDate": "2026-11-23T16:08:44.000Z",
+      "description": "פוליטיקה: בנט וגולן חלוקים על הקמת הממשלה | גיוס: חוק הקפאת המעצרים של ש\"ס אושר בנשיאות | כנסת: מהומה בוועדה עם משפחות שכולות | איראן: דדי ברנע קורא להפיל את המשטר | ביטחון: סוכל פיגוע בהר הבית על ידי עוזר רוקח | כנסת: עימות בין אחמד טיבי לגיא הוכמן | תחזית: בהיר ונוח | והתיעוד: יירוט כטב\"ם מתוך הקוקפיט | צפו (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/23/8289ee70-e755-11f1-a6bd-67c8e77c571b__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/f3611cb9-b719-4b20-8e51-628fa3562139/play_480p.mp4",
+      "durationSec": 191,
+      "durationIso": "PT3M11S"
+    },
     {
       "id": "fbe105cdbe2f",
       "feed": "vod",
