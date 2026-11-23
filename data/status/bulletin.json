@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T16:01:13.319Z",
+  "updatedAt": "2026-11-23T16:06:26.501Z",
   "active": {
     "key": "2026-11-23-17:00",
     "label": "17:00",
@@ -887,8 +887,8 @@
     }
   ],
   "consecutiveFailures": 1,
-  "lastCheck": "2026-11-23T16:01:11.173Z",
-  "note": "failed",
+  "lastCheck": "2026-11-23T16:06:19.585Z",
+  "note": "source",
   "paused": false,
   "sourcePending": false,
   "pauseRemovalFor": null,
