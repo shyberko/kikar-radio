@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T15:00:13.996Z",
+  "updatedAt": "2026-11-23T16:00:09.380Z",
   "active": {
     "key": "2026-11-23-17:00",
     "label": "17:00",
@@ -14,10 +14,11 @@
     "poster": "https://i.kikar.co.il/2026/11/23/8a02e340-e724-11f1-a577-d1963366cedb__h1080_w1920.jpg",
     "mediaUrl": "https://stream.kikar.co.il/d4332896-fc0a-4769-b974-f3d2f3218cb6/play_480p.mp4",
     "title": "מבזק חדשות כיכר FM | מהדורת השעה 17:00",
-    "onAir": true,
-    "removedAt": null,
+    "onAir": false,
+    "removedAt": "2026-11-23T16:00:02.920Z",
     "failed": false,
-    "dateLabel": "23.11"
+    "dateLabel": "23.11",
+    "deletedAt": "2026-11-23T16:00:03.208Z"
   },
   "history": [
     {
@@ -33,10 +34,11 @@
       "poster": "https://i.kikar.co.il/2026/11/23/8a02e340-e724-11f1-a577-d1963366cedb__h1080_w1920.jpg",
       "mediaUrl": "https://stream.kikar.co.il/d4332896-fc0a-4769-b974-f3d2f3218cb6/play_480p.mp4",
       "title": "מבזק חדשות כיכר FM | מהדורת השעה 17:00",
-      "onAir": true,
-      "removedAt": null,
+      "onAir": false,
+      "removedAt": "2026-11-23T16:00:02.920Z",
       "failed": false,
-      "dateLabel": "23.11"
+      "dateLabel": "23.11",
+      "deletedAt": "2026-11-23T16:00:03.208Z"
     },
     {
       "key": "2026-11-23-15:00",
@@ -874,8 +876,8 @@
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-23T15:00:00.574Z",
-  "note": "on-air",
+  "lastCheck": "2026-11-23T16:00:00.996Z",
+  "note": "source",
   "paused": false,
   "sourcePending": false,
   "pauseRemovalFor": null,
