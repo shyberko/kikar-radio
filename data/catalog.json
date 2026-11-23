@@ -1,7 +1,37 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T11:45:17.342Z",
+  "updatedAt": "2026-11-23T12:00:26.397Z",
   "items": [
+    {
+      "id": "479ae3cef292",
+      "feed": "music",
+      "title": "שמילי לאנדא משיק אלבום חתונה מיוחד עם חיים הורוויץ ושרולי גרין",
+      "link": "https://www.kikar.co.il/music/shmily-landa-wedding-album-chaim-horowitz-shrulik",
+      "guid": "https://www.kikar.co.il/music/shmily-landa-wedding-album-chaim-horowitz-shrulik",
+      "pubDate": "2026-11-23T11:46:41.000Z",
+      "description": "החתן משיק אלבום לכבוד חתונתו השבוע • בהשתתפות חיים הורוויץ, שרולי גרין, ארי סאמעט ושייע גרוס | 'לשמוח', 'יגדל', 'אדרבה' ו'אשר ברא' (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/23/cd1439a0-e70a-11f1-8a4f-1524124699b0__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/6af74e2a-31fe-4500-ab9c-6f8c8babf891/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
+      "id": "a75de577e2eb",
+      "feed": "music",
+      "title": "שרוליק אלישע משחרר סינגל בכורה: \"גשר\" על פי תורתו של רבי נחמן",
+      "link": "https://www.kikar.co.il/music/shrulik-elisha-gesher-debut-single-rabbi-nachman",
+      "guid": "https://www.kikar.co.il/music/shrulik-elisha-gesher-debut-single-rabbi-nachman",
+      "pubDate": "2026-11-23T11:46:01.000Z",
+      "description": "שרוליק אלישע, מייסד ארגון \"למען אחי\", משחרר את השיר הראשון שלו • \"כל העולם כולו גשר צר מאוד, והעיקר לא לפחד כלל\"",
+      "poster": "https://i.kikar.co.il/2026/11/23/e876db00-e71c-11f1-8a4f-1524124699b0__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/7f740a67-8f11-478d-b62a-49608dd41ec2/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "88c68b0578df",
       "feed": "vod",
