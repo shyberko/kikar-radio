@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T11:15:11.559Z",
+  "updatedAt": "2026-11-23T11:30:19.623Z",
   "items": [
+    {
+      "id": "88c68b0578df",
+      "feed": "vod",
+      "title": "עימותים בשכונה: \"מגנים על נער בלי רישיון - הגיוס הוא תירוץ לאנרכיה\"",
+      "link": "https://www.kikar.co.il/news-interviews/ramot-bet-shemesh-traffic-enforcement-protests",
+      "guid": "https://www.kikar.co.il/news-interviews/ramot-bet-shemesh-traffic-enforcement-protests",
+      "pubDate": "2026-11-23T11:18:50.000Z",
+      "description": "סערה ברמת בית שמש ד' לאחר שקיצוניים מנעו את מעצרו של נער בן 16 שנתפס נוהג בפראות וללא רישיון • בראיון לאולפן 'כיכר השבת', תוקף הפעיל החברתי בני קמפינסקי את התנהלות המוחים: \"השוטרים באו להגן על הילדים שלנו מסכנת נפשות; חייבים להפריד בין מאבק על עולם התורה להגנה על עבריינות\" |צפו",
+      "poster": "https://i.kikar.co.il/2026/11/22/74ae3e00-e67e-11f1-8f51-c1656951607f__h1080_w1920.png",
+      "seriesSlug": "news-interviews",
+      "seriesName": "ראיונות חדשותיים",
+      "mediaUrl": "https://stream.kikar.co.il/ad2eaa96-7c70-43bb-95fe-b1c48777c288/play_480p.mp4",
+      "durationSec": 515,
+      "durationIso": "PT8M35S"
+    },
     {
       "id": "b39609d4c052",
       "feed": "vod",
