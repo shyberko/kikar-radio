@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T17:30:40.770Z",
+  "updatedAt": "2026-11-24T17:45:29.664Z",
   "items": [
+    {
+      "id": "d78fdf6dc0e2",
+      "feed": "music",
+      "title": "משולם זושא בסינגל קליפ חדש שישנה את המשחק: 'הייב מיר'",
+      "link": "https://www.kikar.co.il/music/meshulam-zusha-heib-mir-new-single-clip",
+      "guid": "https://www.kikar.co.il/music/meshulam-zusha-heib-mir-new-single-clip",
+      "pubDate": "2026-11-24T15:17:52.000Z",
+      "description": "הזמר חוזר עם סינגל קליפ מלא אנרגיה • לחן של חזקי דויטש והפקה של יענקי פאזען | קליפ רטרו חדשני בשחור לבן (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/24/7c711c10-e819-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/2f267a77-a6b4-47a1-919a-facde0808325/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "5ab52d96dff3",
       "feed": "vod",
