@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T12:15:16.733Z",
+  "updatedAt": "2026-11-24T12:30:22.433Z",
   "items": [
+    {
+      "id": "24aa7f5d474c",
+      "feed": "music",
+      "title": "שימי יונייב, אברהם פריד, גיל ישראלוב וזבולון נתנוב: 'אתם שלום' בביצוע מחודש",
+      "link": "https://www.kikar.co.il/music/avraham-fried-shimi-yunaev-atem-shalom-bukharian-n",
+      "guid": "https://www.kikar.co.il/music/avraham-fried-shimi-yunaev-atem-shalom-bukharian-n",
+      "pubDate": "2026-11-24T11:33:55.000Z",
+      "description": "שימי יונייב, אברהם פריד, גיל ישראלוב וזבולון נתנוב בביצוע מחודש • הפיוט שהגיע לחצר הרבי מלובביץ' בשנות השבעים | מעגל מוזיקלי ומשפחתי מרגש (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/24/0e413230-e7fa-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/cf0fa041-48f8-486b-a0b6-7681e7112093/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "4f5658f524ca",
       "feed": "music",
