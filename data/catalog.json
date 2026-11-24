@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T21:00:26.282Z",
+  "updatedAt": "2026-11-24T21:15:31.532Z",
   "items": [
+    {
+      "id": "bb0b21d69198",
+      "feed": "vod",
+      "title": "חוסר ריכוז גרם לתאונה הזוייה | והתגובה המפתיעה של הגר\"ד לנדו",
+      "link": "https://www.kikar.co.il/ayom-bakikar/targeted-elimination-gaza-rabbi-lando-response",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/targeted-elimination-gaza-rabbi-lando-response",
+      "pubDate": "2026-11-24T21:05:07.000Z",
+      "description": "גיוס: עקרונות המתווה מול איזנקוט נחשפים | כנסת: סערה סביב מינוי עבאס וג'בארין | עזה: חוסל ראש ביטחון הפנים של חמאס | איראן: עיר טילים תת-קרקעית חדשה | תיעוד: תגובת הגר\"ד לנדו לתואר שהוצמד לו | רוסיה: סוכל פיגוע בבית כנסת | תחזית: נוח עם סיכוי לגשם קל | והתיעוד: כשהראש לא עובד כל הגוף סובל | (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/24/3366fe80-e833-11f1-a6bd-67c8e77c571b__h1080_w1920.jpg",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/7706878c-ebce-4d6b-8157-6df9b5965bf2/play_480p.mp4",
+      "durationSec": 234,
+      "durationIso": "PT3M54S"
+    },
     {
       "id": "446fbd596108",
       "feed": "vod",
