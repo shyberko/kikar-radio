@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T19:06:24.100Z",
+  "updatedAt": "2026-11-24T20:01:43.270Z",
   "lastRun": {
-    "startedAt": "2026-11-24T19:06:18.635Z",
-    "finishedAt": "2026-11-24T19:06:24.100Z",
+    "startedAt": "2026-11-24T20:00:44.756Z",
+    "finishedAt": "2026-11-24T20:01:43.270Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 12,
     "itemId": null,
-    "runId": "45466444625",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45466444625"
+    "runId": "45476132729",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45476132729"
   },
   "items": {
     "bd340631d488": {
@@ -1627,6 +1627,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "446fbd596108": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 190,
+      "azuraPath": "kikar-auto/vod/446fbd596108.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-24T20:01:43.097Z",
+      "durationSec": 1454,
+      "title": "ההבטחה: \"תביא תעודת זהות, תשב בכולל ותקבל כסף\" | התוצאה: חוב של 2 מיליון",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-24T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
