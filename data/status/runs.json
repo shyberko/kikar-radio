@@ -3,6 +3,20 @@
   "runs": [
     {
       "kind": "upload",
+      "startedAt": "2026-11-24T23:05:41.741Z",
+      "finishedAt": "2026-11-24T23:05:45.248Z",
+      "ok": true,
+      "uploaded": 0,
+      "failed": 0,
+      "removed": 0,
+      "held": 0,
+      "reassigned": 12,
+      "itemId": null,
+      "runId": "45506870209",
+      "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45506870209"
+    },
+    {
+      "kind": "upload",
       "startedAt": "2026-11-24T22:05:37.376Z",
       "finishedAt": "2026-11-24T22:05:41.589Z",
       "ok": true,
@@ -546,20 +560,6 @@
       "itemId": null,
       "runId": "45190429954",
       "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45190429954"
-    },
-    {
-      "kind": "upload",
-      "startedAt": "2026-11-23T13:09:47.285Z",
-      "finishedAt": "2026-11-23T13:10:04.315Z",
-      "ok": true,
-      "uploaded": 0,
-      "failed": 0,
-      "removed": 0,
-      "held": 0,
-      "reassigned": 39,
-      "itemId": null,
-      "runId": "45180419053",
-      "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45180419053"
     }
   ]
 }
