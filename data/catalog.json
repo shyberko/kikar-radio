@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T19:15:27.814Z",
+  "updatedAt": "2026-11-24T19:30:28.274Z",
   "items": [
+    {
+      "id": "446fbd596108",
+      "feed": "vod",
+      "title": "ההבטחה: \"תביא תעודת זהות, תשב בכולל ותקבל כסף\" | התוצאה: חוב של 2 מיליון",
+      "link": "https://www.kikar.co.il/davar-rishon/consumer-fraud-avrechim-tax-scam",
+      "guid": "https://www.kikar.co.il/davar-rishon/consumer-fraud-avrechim-tax-scam",
+      "pubDate": "2026-11-24T19:12:14.000Z",
+      "description": "היום בתוכנית התארח ר' דוד ויינשטוק מהפורום להגנת הצרכן החרדי וחשף כיצד נוכלים מנצלים את נקודות הזיכוי של אברכים כדי להלבין הון ומשאירים אותם עם עיקולים וקריסה כלכלית |התביעות הכי הזויות בבתי המשפט ומי שולט בשוק המזון בישראל | וגם, מה זה ביטקויין בשבילכם ופנינת הדף היומי בשביל הנשמה (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/24/ab316f90-e81f-11f1-a6bd-67c8e77c571b__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/420044d0-3dd4-496b-a5bc-6190d01b34b3/play_480p.mp4",
+      "durationSec": 1455,
+      "durationIso": "PT24M15S"
+    },
     {
       "id": "908dd684b34f",
       "feed": "vod",
