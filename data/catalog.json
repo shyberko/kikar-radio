@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T18:00:18.143Z",
+  "updatedAt": "2026-11-24T18:15:18.829Z",
   "items": [
+    {
+      "id": "908dd684b34f",
+      "feed": "vod",
+      "title": "\"ליברמן וגולן יזרקו אתכם, האירוע יתנפץ על ראש החרדים\" • המשא ומתן שהתפוצץ ב\"כיפות שחורות\"",
+      "link": "https://www.kikar.co.il/kipot-shchorot/kippahs",
+      "guid": "https://www.kikar.co.il/kipot-shchorot/kippahs",
+      "pubDate": "2026-11-24T18:00:00.000Z",
+      "description": "פאנל 'כיפות שחורות' התכנס לדיון סוער ב'אולפן כיכר' | האם מתווה הגיוס החדש ללא יעדים ומכסות הוא מופע צביעות של השמאל או פתרון אמיתי לעולם התורה? | הרב הדתי לאומי הודה: \"הייתי אידיוט שימושי\" | חוק המעצרים החדש יחבל במגעים? | העימות בין נתניהו לאיזנקוט בדרך למלחמה עם איראן והשיחה המפתיעה בין בחור הישיבה לשוטר בהפגנה • צפו (כיפות שחורות)",
+      "poster": "https://i.kikar.co.il/2026/11/24/34d7ef40-e815-11f1-a6bd-67c8e77c571b__h1080_w1920.jpg",
+      "seriesSlug": "kipot-shchorot",
+      "seriesName": "כיפות שחורות",
+      "mediaUrl": "https://stream.kikar.co.il/19be01bd-6eb4-4e86-9a15-5735b94adbd2/play_480p.mp4",
+      "durationSec": 2583,
+      "durationIso": "PT43M3S"
+    },
     {
       "id": "d78fdf6dc0e2",
       "feed": "music",
