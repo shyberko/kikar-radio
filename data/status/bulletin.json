@@ -1,26 +1,43 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T10:00:04.650Z",
+  "updatedAt": "2026-11-25T10:05:24.017Z",
   "active": {
-    "key": "2026-11-25-11:00",
-    "label": "11:00",
-    "editionStart": "2026-11-25T09:00:00.000Z",
-    "expiresAt": "2026-11-25T10:00:00.000Z",
-    "uploadedAt": "2026-11-25T09:01:16.484Z",
-    "durationSec": 161,
-    "fileId": 192,
-    "path": "kikar-auto/bulletins/20261125-1100.mp3",
-    "link": "https://www.kikar.co.il/kikar-scoop-news/news-flash-11am-edition",
+    "key": "2026-11-25-12:00",
+    "label": "12:00",
+    "editionStart": "2026-11-25T10:00:00.000Z",
+    "expiresAt": "2026-11-25T11:00:00.000Z",
+    "uploadedAt": "2026-11-25T10:05:23.169Z",
+    "durationSec": 210,
+    "fileId": 193,
+    "path": "kikar-auto/bulletins/20261125-1200.mp3",
+    "link": "https://www.kikar.co.il/kikar-scoop-news/kikar-fm-news-12pm-bulletin-3",
     "poster": "https://i.kikar.co.il/2026/11/24/a111a7e0-e807-11f1-a577-d1963366cedb__h720_w1280.jpg",
-    "mediaUrl": "https://stream.kikar.co.il/2c36a11f-e114-435a-a07b-2a46b3a8a652/play_480p.mp4",
-    "title": "מבזק חדשות כיכר FM | מהדורת השעה 11:00",
-    "onAir": false,
-    "removedAt": "2026-11-25T10:00:03.125Z",
+    "mediaUrl": "https://stream.kikar.co.il/6e8ef386-ab44-4e3c-89e1-2a12e7b84e08/play_480p.mp4",
+    "title": "מבזק חדשות כיכר FM | מהדורת השעה 12:00",
+    "onAir": true,
+    "removedAt": null,
     "failed": false,
-    "dateLabel": "25.11",
-    "deletedAt": "2026-11-25T10:00:03.381Z"
+    "dateLabel": "25.11"
   },
   "history": [
+    {
+      "key": "2026-11-25-12:00",
+      "label": "12:00",
+      "editionStart": "2026-11-25T10:00:00.000Z",
+      "expiresAt": "2026-11-25T11:00:00.000Z",
+      "uploadedAt": "2026-11-25T10:05:23.169Z",
+      "durationSec": 210,
+      "fileId": 193,
+      "path": "kikar-auto/bulletins/20261125-1200.mp3",
+      "link": "https://www.kikar.co.il/kikar-scoop-news/kikar-fm-news-12pm-bulletin-3",
+      "poster": "https://i.kikar.co.il/2026/11/24/a111a7e0-e807-11f1-a577-d1963366cedb__h720_w1280.jpg",
+      "mediaUrl": "https://stream.kikar.co.il/6e8ef386-ab44-4e3c-89e1-2a12e7b84e08/play_480p.mp4",
+      "title": "מבזק חדשות כיכר FM | מהדורת השעה 12:00",
+      "onAir": true,
+      "removedAt": null,
+      "failed": false,
+      "dateLabel": "25.11"
+    },
     {
       "key": "2026-11-25-11:00",
       "label": "11:00",
@@ -1104,10 +1121,10 @@
     }
   ],
   "consecutiveFailures": 0,
-  "lastCheck": "2026-11-25T10:00:00.982Z",
-  "note": "source",
+  "lastCheck": "2026-11-25T10:05:11.337Z",
+  "note": "on-air",
   "paused": false,
-  "sourcePending": true,
+  "sourcePending": false,
   "pauseRemovalFor": null,
   "alert": null,
   "hour": {
@@ -1118,6 +1135,6 @@
   "failure": null,
   "sourceMessage": "כיכר עדיין לא פרסמו את מהדורת 12:00. נמשיך לבדוק.",
   "slotPending": null,
-  "slotFor": "2026-11-25-11:00",
-  "playMinute": 3
+  "slotFor": "2026-11-25-12:00",
+  "playMinute": 7
 }
