@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T16:45:23.278Z",
+  "updatedAt": "2026-11-25T17:00:34.655Z",
   "items": [
+    {
+      "id": "b40e4b26bd87",
+      "feed": "vod",
+      "title": "רעידת האדמה במשפט נתניהו, והתיעוד המצמרר מפקיסטן",
+      "link": "https://www.kikar.co.il/ayom-bakikar/netanyahu-trial-earthquake-pakistan-footage",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/netanyahu-trial-earthquake-pakistan-footage",
+      "pubDate": "2026-11-25T16:55:16.000Z",
+      "description": "משפט: השופטים הציעו לוותר על תיק 4000 | פוליטיקה: יהדות התורה מתקרבת למו\"מ עם איזנקוט | כנסת: אושרה בטרומית ועדת חקירה ממלכתית | בריאות: בת 47 נפטרה מסיבוכי שפעת | גיוס: סערה סביב מעצר אברך בכביש 90 | בעולם: תיעוד מצמרר מדרך הילדים בפקיסטן | תחזית: עלייה קלה בטמפרטורות | והתיעוד: רגע לפני אסון בשבריר שנייה",
+      "poster": "https://i.kikar.co.il/2026/11/25/46059bc0-e8ea-11f1-a6bd-67c8e77c571b__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/5029451a-ca11-42aa-b59b-0c7972c84b48/play_480p.mp4",
+      "durationSec": 231,
+      "durationIso": "PT3M51S"
+    },
     {
       "id": "dadd1347e585",
       "feed": "music",
