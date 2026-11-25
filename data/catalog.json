@@ -1,7 +1,37 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T14:00:43.918Z",
+  "updatedAt": "2026-11-25T14:15:34.598Z",
   "items": [
+    {
+      "id": "dadd1347e585",
+      "feed": "music",
+      "title": "מוטי כהן מארח את אהרלה סמעט ויענקי דסקל בניגון חב\"ד דוקשיץ לקראת י\"ט כסליו",
+      "link": "https://www.kikar.co.il/music/moti-cohen-aharleh-yanky-daskal-chabad-nigun",
+      "guid": "https://www.kikar.co.il/music/moti-cohen-aharleh-yanky-daskal-chabad-nigun",
+      "pubDate": "2026-11-25T14:06:55.000Z",
+      "description": "הזמר משיק ביצוע מרומם לקראת חג הגאולה • אהרלה סמעט ויענקי דסקל מצטרפים | עיבוד והפקה של יענקי שטיינמץ (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/24/22307320-e834-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/a52c99b7-b19a-4cb3-8dd7-1e32f9b579a9/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
+      "id": "1bb451ef38e4",
+      "feed": "vod",
+      "title": "כשר אבל מסריח: מצלמים אתכם בלי שתדעו - סכנת משקפי הרשת הנסתרים והוויכוח על תלמידי הישיבות",
+      "link": "https://www.kikar.co.il/davar-rishon/haredi-politics-government-change",
+      "guid": "https://www.kikar.co.il/davar-rishon/haredi-politics-government-change",
+      "pubDate": "2026-11-25T13:59:34.000Z",
+      "description": "\"נתניהו משלם על השקרים\": ישי כהן חושף את ההתקדמות הדרמטית בדרך לממשלת שינוי | \"במחיר של שלושה צימרים קונים טלוויזיה הביתה\" הוויכוח הלוהט על היציאות של בני הישיבות | \"כשסוגרים בחור כמו בקבוק קולה, הכול מתפוצץ\": המסר החריף של ראש הישיבה | הסערה סביב הדלפת החתונה שפורסמה בתקשורת (דבר ראשון)",
+      "poster": "https://i.kikar.co.il/2026/11/25/895a3cb0-e8d0-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "davar-rishon",
+      "seriesName": "דבר ראשון",
+      "mediaUrl": "https://stream.kikar.co.il/8216fb81-ccb8-492d-bb74-ece43b1c5a2c/play_480p.mp4",
+      "durationSec": 2492,
+      "durationIso": "PT41M32S"
+    },
     {
       "id": "bb0b21d69198",
       "feed": "vod",
