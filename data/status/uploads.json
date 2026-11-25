@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T16:05:58.819Z",
+  "updatedAt": "2026-11-25T17:05:58.151Z",
   "lastRun": {
-    "startedAt": "2026-11-25T16:05:53.678Z",
-    "finishedAt": "2026-11-25T16:05:58.819Z",
+    "startedAt": "2026-11-25T17:05:42.374Z",
+    "finishedAt": "2026-11-25T17:05:58.151Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 14,
     "itemId": null,
-    "runId": "45650917442",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45650917442"
+    "runId": "45660952816",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45660952816"
   },
   "items": {
     "bd340631d488": {
@@ -1684,6 +1684,23 @@
       "durationSec": 2492,
       "title": "כשר אבל מסריח: מצלמים אתכם בלי שתדעו - סכנת משקפי הרשת הנסתרים והוויכוח על תלמידי הישיבות",
       "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-25T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "b40e4b26bd87": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 197,
+      "azuraPath": "kikar-auto/vod/b40e4b26bd87.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-25T17:05:57.939Z",
+      "durationSec": 230,
+      "title": "רעידת האדמה במשפט נתניהו, והתיעוד המצמרר מפקיסטן",
+      "seriesSlug": "ayom-bakikar",
       "feed": "vod",
       "windowEnd": "2026-11-25T21:59:59.000Z",
       "errorCode": null,
