@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T19:18:26.944Z",
+  "updatedAt": "2026-11-25T19:36:47.475Z",
   "items": [
+    {
+      "id": "36302c7de1c3",
+      "feed": "vod",
+      "title": "\"צריך להקים ועדת חקירה\": פרקליטו לשעבר של נתניהו תוקף",
+      "link": "https://www.kikar.co.il/news-interviews/avichai-yosef",
+      "guid": "https://www.kikar.co.il/news-interviews/avichai-yosef",
+      "pubDate": "2026-11-25T19:01:30.000Z",
+      "description": "עו\"ד אביחי יהוסף, ששימש בצוות ההגנה של בנימין נתניהו בתיקי 1000 ו-2000 ומייצג כיום את עד המדינה ניר חפץ, מנתח בריאיון ליוסי סרגובסקי את המלצת השופטים לסגת מתיק 4000 • \"אני איש שמאל שמעולם לא הצביע לימין, אבל אחרי שקראתי הררים של קלסרים – מדובר באחד מראשי הממשלה הנקיים ביותר שהיו כאן\"",
+      "poster": "https://i.kikar.co.il/2026/11/25/697e73a0-e8dc-11f1-a6bd-67c8e77c571b__h1080_w1920.png",
+      "seriesSlug": "news-interviews",
+      "seriesName": "ראיונות חדשותיים",
+      "mediaUrl": "https://stream.kikar.co.il/9b69f824-9ea4-43b8-8e91-03bae672712b/play_480p.mp4",
+      "durationSec": 619,
+      "durationIso": "PT10M19S"
+    },
     {
       "id": "b40e4b26bd87",
       "feed": "vod",
