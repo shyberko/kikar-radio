@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T20:15:28.759Z",
+  "updatedAt": "2026-11-25T20:30:30.318Z",
   "items": [
+    {
+      "id": "490b6d77e68f",
+      "feed": "music",
+      "title": "הניגון שמרגש את לעלוב כבר עשרות שנים – עכשיו בהפקה מיוחדת",
+      "link": "https://www.kikar.co.il/music/hanerot-halalu-lealov-goldberg-gelbshtein-koritz",
+      "guid": "https://www.kikar.co.il/music/hanerot-halalu-lealov-goldberg-gelbshtein-koritz",
+      "pubDate": "2026-11-25T19:23:27.000Z",
+      "description": "הניגון העתיק מחצר לעלוב חוזר בהפקה חדשה • אברימי גולדברג ושמעון גלבשטיין מארחים את בעל המנגן ר' יצחק דוד קוריץ | \"מפגש מוזיקלי נדיר שמחבר בין השורשים לעיבוד מיוחד\" (מוזיקה)",
+      "poster": "https://i.kikar.co.il/2026/11/25/e6028870-e905-11f1-a6bd-67c8e77c571b__h1080_w1920.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/1aa224d2-4018-4108-9fe0-36a9952afb7f/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "36302c7de1c3",
       "feed": "vod",
