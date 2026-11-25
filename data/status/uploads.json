@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T14:05:46.075Z",
+  "updatedAt": "2026-11-25T15:07:15.523Z",
   "lastRun": {
-    "startedAt": "2026-11-25T14:05:42.417Z",
-    "finishedAt": "2026-11-25T14:05:46.075Z",
+    "startedAt": "2026-11-25T15:05:25.548Z",
+    "finishedAt": "2026-11-25T15:07:15.523Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 2,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 12,
     "itemId": null,
-    "runId": "45630253611",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45630253611"
+    "runId": "45641145375",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45641145375"
   },
   "items": {
     "bd340631d488": {
@@ -1655,6 +1655,40 @@
       "azuraPath": null,
       "playlistKey": null,
       "playlistId": null
+    },
+    "dadd1347e585": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 195,
+      "azuraPath": "kikar-auto/music/dadd1347e585.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-25T15:05:39.930Z",
+      "durationSec": 228,
+      "title": "מוטי כהן מארח את אהרלה סמעט ויענקי דסקל בניגון חב\"ד דוקשיץ לקראת י\"ט כסליו",
+      "seriesSlug": "music",
+      "feed": "music",
+      "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "1bb451ef38e4": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 196,
+      "azuraPath": "kikar-auto/vod/1bb451ef38e4.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-25T15:07:15.329Z",
+      "durationSec": 2492,
+      "title": "כשר אבל מסריח: מצלמים אתכם בלי שתדעו - סכנת משקפי הרשת הנסתרים והוויכוח על תלמידי הישיבות",
+      "seriesSlug": "davar-rishon",
+      "feed": "vod",
+      "windowEnd": "2026-11-25T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
     }
   }
 }
