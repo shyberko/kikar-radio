@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T14:15:41.101Z",
+  "updatedAt": "2026-11-26T14:30:37.915Z",
   "items": [
     {
       "id": "56926b9e3ee0",
@@ -16,6 +16,21 @@
       "mediaUrl": "https://stream.kikar.co.il/faba267b-4dbe-47ee-aff0-404c238cad26/play_480p.mp4",
       "durationSec": 2645,
       "durationIso": "PT44M5S"
+    },
+    {
+      "id": "a3657aa0def9",
+      "feed": "music",
+      "title": "החיבור המפתיע: יהודה שמעה ועוזיאל סבתו בשיר חדש שמשלב פיוט ופופ",
+      "link": "https://www.kikar.co.il/singles-clips/yehuda-shemea-uziel-sabato-collaboration",
+      "guid": "https://www.kikar.co.il/singles-clips/yehuda-shemea-uziel-sabato-collaboration",
+      "pubDate": "2026-11-26T11:27:38.000Z",
+      "description": "הזמר והיוצר שמעה והפייטן סבתו בשיתוף פעולה מוזיקלי מיוחד • השיר משלב צלילי עוּד וטעם ים־תיכוני | כשהפיוט פוגש את הפופ (סינגלים וקליפים)",
+      "poster": "https://i.kikar.co.il/2026/11/26/9a1310b0-e98c-11f1-a6bd-67c8e77c571b__h1080_w1920.jpg",
+      "seriesSlug": "singles-clips",
+      "seriesName": "סינגלים וקליפים",
+      "mediaUrl": "https://stream.kikar.co.il/b831ffa4-1969-44c9-adfe-1e223b45d774/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
     },
     {
       "id": "1119096ddf8e",
