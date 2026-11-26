@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T16:15:21.691Z",
+  "updatedAt": "2026-11-26T16:30:27.785Z",
   "items": [
+    {
+      "id": "8b58cf596a2b",
+      "feed": "vod",
+      "title": "טירוף: קפץ והתרסק | חוק גיוס מוסכם מתקרב בצעדי ענק • צפו",
+      "link": "https://www.kikar.co.il/ayom-bakikar/utj-draft-law-agreement-progress",
+      "guid": "https://www.kikar.co.il/ayom-bakikar/utj-draft-law-agreement-progress",
+      "pubDate": "2026-11-26T16:13:10.000Z",
+      "description": "גיוס: גורם ביהדות התורה מצהיר כי העקרונות סוכמו | עזה: חוסל אחראי הכלכלה והחינוך בחמאס | ארה\"ב: קושנר במסר מפתיע לישראל | פלילי: ערן חייא הוסגר מארה\"ב ונחת בנתב\"ג | כנסת: אושר בקריאה ראשונה ביטול חוק השידורים | מפרץ: פיצוץ ליד מכלית מול דובאי | אפריקה: מעל 12 אלף חולי אבולה בקונגו | תחזית: סוף שבוע חמים | והתיעוד: כשהראש לא עובד כל הגוף סובל | (היום בכיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/26/0170f0c0-e9b4-11f1-a6bd-67c8e77c571b__h1081_w1921.png",
+      "seriesSlug": "ayom-bakikar",
+      "seriesName": "היום בכיכר",
+      "mediaUrl": "https://stream.kikar.co.il/43c5f2c1-53a5-4e8f-abfd-f5768e995f69/play_480p.mp4",
+      "durationSec": 255,
+      "durationIso": "PT4M15S"
+    },
     {
       "id": "56926b9e3ee0",
       "feed": "vod",
