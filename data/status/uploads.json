@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T12:05:44.973Z",
+  "updatedAt": "2026-11-26T12:34:10.118Z",
   "lastRun": {
-    "startedAt": "2026-11-26T12:05:40.355Z",
-    "finishedAt": "2026-11-26T12:05:44.973Z",
+    "startedAt": "2026-11-26T12:33:53.574Z",
+    "finishedAt": "2026-11-26T12:34:10.118Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 14,
     "itemId": null,
-    "runId": "45816391976",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45816391976"
+    "runId": "45820719012",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45820719012"
   },
   "items": {
     "bd340631d488": {
@@ -1717,6 +1717,23 @@
       "uploadedAt": "2026-11-25T21:06:39.666Z",
       "durationSec": 394,
       "title": "הניגון שמרגש את לעלוב כבר עשרות שנים – עכשיו בהפקה מיוחדת",
+      "seriesSlug": "music",
+      "feed": "music",
+      "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "1119096ddf8e": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 199,
+      "azuraPath": "kikar-auto/music/1119096ddf8e.mp3",
+      "playlistKey": "music",
+      "playlistId": 8,
+      "uploadedAt": "2026-11-26T12:34:09.905Z",
+      "durationSec": 338,
+      "title": "\"ויהי בישורון מלך\": היצירה המרגשת שנשמעה במעמד ההיסטורי של גור",
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-27T21:59:59.000Z",
