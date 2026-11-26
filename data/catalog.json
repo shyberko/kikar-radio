@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T14:00:26.870Z",
+  "updatedAt": "2026-11-26T14:15:41.101Z",
   "items": [
+    {
+      "id": "56926b9e3ee0",
+      "feed": "vod",
+      "title": "הסבתא, הדוד, והפלאפון: למה במוסדות לא מקבלים ילדים של בעלי תשובה?",
+      "link": "https://www.kikar.co.il/chaim-beizy/chaim-beizi-asaf-ratzon-moshe-cohen",
+      "guid": "https://www.kikar.co.il/chaim-beizy/chaim-beizi-asaf-ratzon-moshe-cohen",
+      "pubDate": "2026-11-26T14:00:24.000Z",
+      "description": "שלוש שנים התפללת שהבן שלך יהיה תלמיד חכם, אבל כשהגעת לרישום - לא היה אפילו צורך במכתב סירוב. מבט אחד הספיק כדי להבין שאין על מה לדבר | על תאומים, על פוליטיקה ועל התובנה שאנחנו באים מעולם אחר | פרק רביעי בסדרת \"מדברים על תשובה\" עם הרב אסף רצון והרב משה כהן • צפו/האזינו (חיים באיזי)",
+      "poster": "https://i.kikar.co.il/2026/11/26/871ba5d0-e969-11f1-a577-d1963366cedb__h384_w688.jpeg",
+      "seriesSlug": "chaim-beizy",
+      "seriesName": "חיים באיז\"י",
+      "mediaUrl": "https://stream.kikar.co.il/faba267b-4dbe-47ee-aff0-404c238cad26/play_480p.mp4",
+      "durationSec": 2645,
+      "durationIso": "PT44M5S"
+    },
     {
       "id": "1119096ddf8e",
       "feed": "music",
