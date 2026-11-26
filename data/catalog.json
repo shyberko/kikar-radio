@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T12:00:28.864Z",
+  "updatedAt": "2026-11-26T12:15:30.127Z",
   "items": [
+    {
+      "id": "1119096ddf8e",
+      "feed": "music",
+      "title": "\"ויהי בישורון מלך\": היצירה המרגשת שנשמעה במעמד ההיסטורי של גור",
+      "link": "https://www.kikar.co.il/music/vayehi-beyeshurun-melech-yaakov-rozmaryn-neranena",
+      "guid": "https://www.kikar.co.il/music/vayehi-beyeshurun-melech-yaakov-rozmaryn-neranena",
+      "pubDate": "2026-11-26T10:41:18.000Z",
+      "description": "היצירה הולחנה לכבוד מעמד 'בהתאסף' • מקהלת נרננה ומקהלת ילדים ביצעו | תחינה לבריאות צדיקי הדור (חסידים ואנ\"ש)",
+      "poster": "https://i.kikar.co.il/2026/11/26/196bf130-e986-11f1-a577-d1963366cedb__h800_w1423.jpg",
+      "seriesSlug": "music",
+      "seriesName": "מוזיקה",
+      "mediaUrl": "https://stream.kikar.co.il/956b41d0-3931-4a6c-ad0d-71126162b33f/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "63b20a45a797",
       "feed": "vod",

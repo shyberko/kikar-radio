@@ -468,6 +468,15 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "replacePrevious": false,
       "approvedAt": "2026-11-25T20:30:30.320Z"
+    },
+    "1119096ddf8e": {
+      "ruleId": "auto-music",
+      "playlistKey": "music",
+      "window": "week",
+      "windowStart": "2026-11-26T12:15:30.130Z",
+      "windowEnd": "2026-11-27T21:59:59.000Z",
+      "replacePrevious": false,
+      "approvedAt": "2026-11-26T12:15:30.130Z"
     }
   }
 }
