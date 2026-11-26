@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T16:07:32.486Z",
+  "updatedAt": "2026-11-26T17:07:35.677Z",
   "lastRun": {
-    "startedAt": "2026-11-26T16:07:27.121Z",
-    "finishedAt": "2026-11-26T16:07:32.486Z",
+    "startedAt": "2026-11-26T17:07:22.801Z",
+    "finishedAt": "2026-11-26T17:07:35.677Z",
     "ok": true,
-    "uploaded": 0,
+    "uploaded": 1,
     "failed": 0,
     "removed": 0,
     "held": 0,
     "reassigned": 15,
     "itemId": null,
-    "runId": "45855406072",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45855406072"
+    "runId": "45864646870",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45864646870"
   },
   "items": {
     "bd340631d488": {
@@ -1737,6 +1737,23 @@
       "seriesSlug": "music",
       "feed": "music",
       "windowEnd": "2026-11-27T21:59:59.000Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "removedAt": null
+    },
+    "8b58cf596a2b": {
+      "state": "active",
+      "attempts": 1,
+      "azuraFileId": 200,
+      "azuraPath": "kikar-auto/vod/8b58cf596a2b.mp3",
+      "playlistKey": "shows",
+      "playlistId": 9,
+      "uploadedAt": "2026-11-26T17:07:35.497Z",
+      "durationSec": 255,
+      "title": "טירוף: קפץ והתרסק | חוק גיוס מוסכם מתקרב בצעדי ענק • צפו",
+      "seriesSlug": "ayom-bakikar",
+      "feed": "vod",
+      "windowEnd": "2026-11-26T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
       "removedAt": null
