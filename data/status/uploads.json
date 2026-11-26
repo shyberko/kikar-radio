@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T22:05:45.031Z",
+  "updatedAt": "2026-11-26T23:05:56.333Z",
   "lastRun": {
-    "startedAt": "2026-11-26T22:05:39.596Z",
-    "finishedAt": "2026-11-26T22:05:45.031Z",
+    "startedAt": "2026-11-26T23:05:49.941Z",
+    "finishedAt": "2026-11-26T23:05:56.333Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 1,
+    "removed": 0,
     "held": 0,
     "reassigned": 15,
     "itemId": null,
-    "runId": "45902470003",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45902470003"
+    "runId": "45908804483",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/45908804483"
   },
   "items": {
     "bd340631d488": {
