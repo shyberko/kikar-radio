@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T16:45:28.347Z",
+  "updatedAt": "2026-11-26T17:00:32.155Z",
   "items": [
+    {
+      "id": "e3539efcd23d",
+      "feed": "vod",
+      "title": "דרמה פוליטית: 'יהדות התורה' בדרך לתמוך ב'ממשלת השינוי' וקריסת תיקי רה\"מ נתניהו | אולפן ליל שישי",
+      "link": "https://www.kikar.co.il/friday-night-studio/yahadut-hatorah-backs-change-government-netanyahu",
+      "guid": "https://www.kikar.co.il/friday-night-studio/yahadut-hatorah-backs-change-government-netanyahu",
+      "pubDate": "2026-11-26T16:58:00.000Z",
+      "description": "באולפן 'ליל שישי' בהגשת ישי כהן, ניתחו אבי וידרמן, הרב יוסף שווינגר, איציק סודרי ואבי גרינצייג את ההתקדמות במגעים בין 'יהדות התורה' לאיזנקוט על חוק גיוס ללא מכסות, את החשש החרדי משחזור תסריט 2013, את האזהרות החריפות של אריה דרעי מפני הישארות \"קרח מכאן ומכאן\" - ואת רעידת האדמה המשפטית ב קריסת תיקי נתניהו | משדר מיוחד (אולפן כיכר)",
+      "poster": "https://i.kikar.co.il/2026/11/26/d665fec0-e99a-11f1-a577-d1963366cedb__h1080_w1920.png",
+      "seriesSlug": "friday-night-studio",
+      "seriesName": "אולפן ליל שישי",
+      "mediaUrl": "https://stream.kikar.co.il/5b960be3-e064-4c52-af3b-010c493473a9/play_480p.mp4",
+      "durationSec": 2031,
+      "durationIso": "PT33M51S"
+    },
     {
       "id": "8b58cf596a2b",
       "feed": "vod",
