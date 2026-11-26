@@ -1,7 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T10:00:21.724Z",
+  "updatedAt": "2026-11-26T10:15:18.628Z",
   "items": [
+    {
+      "id": "63b20a45a797",
+      "feed": "vod",
+      "title": "השף אבי מילר מכין סטייק עסיסי עם צריבה משגעת - צפו",
+      "link": "https://www.kikar.co.il/בשר/juicy-steak-cooking-guide",
+      "guid": "https://www.kikar.co.il/בשר/juicy-steak-cooking-guide",
+      "pubDate": "2026-11-26T10:05:08.000Z",
+      "description": "איך מכינים סטייק עסיסי במחבת ביתית, בלי להוסיף אפילו טיפת שמן לצריבה? בפרק נוסף של \"מבשלים בכיכר\", השף אבי מילר מכין נתח דנבר קאט משויש לצד צ'ימיצ'ורי רענן ועשיר בטעמים, ומדגים את הדגשים הקטנים שעושים את ההבדל בין סטייק טוב לסטייק מצוין | צפו והכינו (אוכל ומתכונים)",
+      "poster": "https://i.kikar.co.il/2026/11/26/614df260-e980-11f1-a577-d1963366cedb__h215_w592.jpg",
+      "seriesSlug": "בשר",
+      "seriesName": "בשר",
+      "mediaUrl": "https://stream.kikar.co.il/29fa59cf-d06e-48b8-ad19-85ab52c85f7b/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
     {
       "id": "490b6d77e68f",
       "feed": "music",
