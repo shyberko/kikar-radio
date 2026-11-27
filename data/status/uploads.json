@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T21:05:44.926Z",
+  "updatedAt": "2026-11-27T22:05:46.301Z",
   "lastRun": {
-    "startedAt": "2026-11-27T21:05:40.199Z",
-    "finishedAt": "2026-11-27T21:05:44.926Z",
+    "startedAt": "2026-11-27T22:05:41.756Z",
+    "finishedAt": "2026-11-27T22:05:46.301Z",
     "ok": true,
     "uploaded": 0,
     "failed": 0,
-    "removed": 0,
-    "held": 0,
-    "reassigned": 15,
+    "removed": 10,
+    "held": 2,
+    "reassigned": 3,
     "itemId": null,
-    "runId": "46067956673",
-    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/46067956673"
+    "runId": "46074435902",
+    "runUrl": "https://github.com/shyberko/kikar-radio/actions/runs/46074435902"
   },
   "items": {
     "bd340631d488": {
@@ -1391,7 +1391,8 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": null,
+      "heldForRotation": true
     },
     "832d0fa0e20b": {
       "state": "active",
@@ -1408,10 +1409,11 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": null,
+      "heldForRotation": true
     },
     "584455121566": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 156,
       "azuraPath": "kikar-auto/music/584455121566.mp3",
@@ -1425,7 +1427,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:42.784Z"
     },
     "fd3d54a8ff0e": {
       "state": "expired",
@@ -1445,7 +1447,7 @@
       "removedAt": "2026-11-22T21:39:25.110Z"
     },
     "05c7242db6c2": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 160,
       "azuraPath": "kikar-auto/music/05c7242db6c2.mp3",
@@ -1459,7 +1461,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:43.135Z"
     },
     "37319d7b1c77": {
       "state": "expired",
@@ -1513,7 +1515,7 @@
       "removedAt": "2026-11-22T22:06:17.131Z"
     },
     "479ae3cef292": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 170,
       "azuraPath": "kikar-auto/music/479ae3cef292.mp3",
@@ -1527,10 +1529,10 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:43.468Z"
     },
     "a75de577e2eb": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 171,
       "azuraPath": "kikar-auto/music/a75de577e2eb.mp3",
@@ -1544,7 +1546,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:43.799Z"
     },
     "fbe105cdbe2f": {
       "state": "expired",
@@ -1564,7 +1566,7 @@
       "removedAt": "2026-11-23T22:12:24.240Z"
     },
     "4f5658f524ca": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 177,
       "azuraPath": "kikar-auto/music/4f5658f524ca.mp3",
@@ -1578,7 +1580,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:44.133Z"
     },
     "bef28e69d6f8": {
       "state": "expired",
@@ -1598,7 +1600,7 @@
       "removedAt": "2026-11-23T22:12:25.042Z"
     },
     "24aa7f5d474c": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 185,
       "azuraPath": "kikar-auto/music/24aa7f5d474c.mp3",
@@ -1612,10 +1614,10 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:44.459Z"
     },
     "d78fdf6dc0e2": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 189,
       "azuraPath": "kikar-auto/music/d78fdf6dc0e2.mp3",
@@ -1629,7 +1631,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:44.795Z"
     },
     "446fbd596108": {
       "state": "expired",
@@ -1657,7 +1659,7 @@
       "playlistId": null
     },
     "dadd1347e585": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 195,
       "azuraPath": "kikar-auto/music/dadd1347e585.mp3",
@@ -1671,7 +1673,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:45.132Z"
     },
     "1bb451ef38e4": {
       "state": "expired",
@@ -1708,7 +1710,7 @@
       "removedAt": "2026-11-25T22:06:02.598Z"
     },
     "490b6d77e68f": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 198,
       "azuraPath": "kikar-auto/music/490b6d77e68f.mp3",
@@ -1722,10 +1724,10 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:45.463Z"
     },
     "1119096ddf8e": {
-      "state": "active",
+      "state": "expired",
       "attempts": 1,
       "azuraFileId": 199,
       "azuraPath": "kikar-auto/music/1119096ddf8e.mp3",
@@ -1739,7 +1741,7 @@
       "windowEnd": "2026-11-27T21:59:59.000Z",
       "errorCode": null,
       "errorMessage": null,
-      "removedAt": null
+      "removedAt": "2026-11-27T22:05:45.776Z"
     },
     "8b58cf596a2b": {
       "state": "expired",
