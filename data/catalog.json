@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T06:45:36.350Z",
+  "updatedAt": "2026-11-27T07:00:28.710Z",
   "items": [
     {
       "id": "e3539efcd23d",
@@ -59,6 +59,21 @@
       "seriesSlug": "singles-clips",
       "seriesName": "סינגלים וקליפים",
       "mediaUrl": "https://stream.kikar.co.il/b831ffa4-1969-44c9-adfe-1e223b45d774/play_480p.mp4",
+      "durationSec": null,
+      "durationIso": null
+    },
+    {
+      "id": "05d37d272e96",
+      "feed": "vod",
+      "title": "יזם הגרלת החלומות חושף: מה מחכה לזוכה בדירה בירושלים?",
+      "link": "https://www.kikar.co.il/haredim-news/lottery-winner-jerusalem-apartment-revealed",
+      "guid": "https://www.kikar.co.il/haredim-news/lottery-winner-jerusalem-apartment-revealed",
+      "pubDate": "2026-11-26T11:08:06.000Z",
+      "description": "דירת פאר חדשה בלב ירושלים, הגרלות ביניים בשווי 15 אלף דולר ואברך צעיר בן 22 שחייו השתנו ברגע אחד | שמואל סקט, יזם \"הגרלת החלומות\" של קרן עם ישראל חי, הגיע לאולפן כיכר השבת וסיפר ליוסי סרגובסקי על ההגרלה שמגשימה חלומות כבר תשע שנים ברציפות | וגם: מה גילה לאחרונה בבניין שבו נמצאת הדירה? | צפו",
+      "poster": "https://i.kikar.co.il/2026/11/26/fe0bd3f0-e98b-11f1-a577-d1963366cedb__h1080_w1920.jpg",
+      "seriesSlug": "haredim-news",
+      "seriesName": "חדשות חרדים",
+      "mediaUrl": "https://stream.kikar.co.il/c684f0ce-533f-40df-a6e7-58f337c94b47/play_480p.mp4",
       "durationSec": null,
       "durationIso": null
     },
